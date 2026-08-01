@@ -6,7 +6,7 @@
 **Status:** 🏃‍♂️ In Progress
 
 ## 📈 Epics Overview
-- [ ] **Epic 1: Workspace Scaffolding**
+- [x] **Epic 1: Workspace Scaffolding**
 - [ ] **Epic 2: Backend Base & Database**
 - [ ] **Epic 3: Backend Normalizers (API-Football)**
 - [ ] **Epic 4: Backend Schedulers & Real-Time**
@@ -34,24 +34,24 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 1: Workspace Scaffolding
 
-#### Task 1.1: Initialize Monorepo
+#### Task 1.1: Initialize Monorepo (DONE)
 - **Story:** Create base folder structure for Next.js and NestJS.
 - **Action:** Scaffold `package.json` for npm workspaces and `.gitignore`.
 - **Acceptance Criteria:**
-  - [ ] Workspaces configured for `frontend` and `backend`.
-  - [ ] Pipeline: Passes `.pre-flight-check`.
+  - [x] Workspaces configured for `frontend` and `backend`.
+  - [x] Pipeline: Passes `.pre-flight-check`.
 
-#### Task 1.2: Setup Secrets (.env.local)
+#### Task 1.2: Setup Secrets (.env.local) (DONE)
 - **Story:** Store DB and API keys securely.
 - **Action:** Create `.env.local` with Postgres URL, JWT Secret, and API-Football keys.
 - **Acceptance Criteria:**
-  - [ ] File exists and is in `.gitignore`.
+  - [x] File exists and is in `.gitignore`.
 
 ---
 
 ### Epic 2: Backend Base & Database
 
-#### Task 2.1: Scaffold NestJS App
+#### Task 2.1: Scaffold NestJS App (DONE)
 - **Action:** Generate base NestJS app in `backend/`.
 
 #### Task 2.2: Setup Prisma & PostgreSQL

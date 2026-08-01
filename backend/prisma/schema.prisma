@@ -1,0 +1,182 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum SportType {
+  FOOTBALL
+  TENNIS
+  HOCKEY
+  UFC
+}
+
+enum MatchStatus {
+  SCHEDULED
+  LIVE
+  HALFTIME
+  FINISHED
+  POSTPONED
+  CANCELLED
+}
+
+enum VoteChoice {
+  HOME
+  DRAW
+  AWAY
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  password  String     // Hashed password
+  name      String?
+  isAdmin   Boolean    @default(false)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  favorites Bookmark[]
+  votes     Vote[]
+}
+
+model Bookmark {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sport     SportType @default(FOOTBALL)
+  
+  // Dynamic polymorphic association keys:
+  leagueId  Int?
+  teamId    Int?
+  matchId   Int?
+  
+  createdAt DateTime  @default(now())
+  
+  @@unique([userId, leagueId, teamId, matchId])
+}
+
+model Vote {
+  id        Int        @id @default(autoincrement())
+  userId    Int
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  matchId   Int
+  choice    VoteChoice
+  createdAt DateTime   @default(now())
+
+  @@unique([userId, matchId])
+}
+
+model League {
+  id           Int        @id                     // Matches external API ID
+  name         String
+  country      String
+  logo         String?
+  sport        SportType  @default(FOOTBALL)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  seasons      Season[]
+  teams        Team[]
+  matches      Match[]
+  standings    Standing[]
+}
+
+model Season {
+  id        Int      @id @default(autoincrement())
+  year      Int
+  current   Boolean  @default(false)
+  leagueId  Int
+  league    League   @relation(fields: [leagueId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Team {
+  id          Int       @id                     // Matches external API ID
+  name        String
+  code        String?
+  logo        String?
+  founded     Int?
+  venueName   String?
+  venueCity   String?
+  sport       SportType @default(FOOTBALL)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  leagues     League[]
+  players     Player[]
+  homeMatches Match[]   @relation("HomeTeam")
+  awayMatches Match[]   @relation("AwayTeam")
+}
+
+model Player {
+  id          Int       @id                     // Matches external API ID
+  name        String
+  firstname   String?
+  lastname    String?
+  age         Int?
+  birthDate   String?
+  nationality String?
+  height      String?
+  weight      String?
+  photo       String?
+  position    String?   // e.g., Goalkeeper, Defender, Midfielder, Attacker
+  injured     Boolean   @default(false)
+  sport       SportType @default(FOOTBALL)
+  teamId      Int?
+  team        Team?     @relation(fields: [teamId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Match {
+  id             Int         @id                // Matches external API ID
+  date           DateTime                       // Kickoff timestamp
+  status         MatchStatus @default(SCHEDULED)
+  elapsedTime    Int?                           // Minute of play
+  sport          SportType   @default(FOOTBALL)
+  
+  leagueId       Int
+  league         League      @relation(fields: [leagueId], references: [id])
+  
+  homeTeamId     Int
+  homeTeam       Team        @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeamId     Int
+  awayTeam       Team        @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  
+  homeScore      Int?        @default(0)
+  awayScore      Int?        @default(0)
+  
+  homeScoreHT    Int?        @default(0)
+  awayScoreHT    Int?        @default(0)
+  
+  stats          Json?                          // Standardized match statistics
+  lineups        Json?                          // Standardized squad lineups
+  events         Json?                          // Standardized event timeline
+  h2h            Json?                          // Standardized H2H matches
+  momentum       Json?                          // Calculated visual momentum graph datapoints
+  
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@index([date])
+  @@index([status])
+}
+
+model Standing {
+  id         Int      @id @default(autoincrement())
+  leagueId   Int
+  league     League   @relation(fields: [leagueId], references: [id])
+  season     Int
+  rank       Int
+  teamId     Int
+  points     Int
+  goalsDiff  Int
+  form       String?  // e.g., "WDLWW"
+  played     Int
+  win        Int
+  draw       Int
+  lose       Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
