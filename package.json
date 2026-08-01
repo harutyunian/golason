@@ -1,0 +1,15 @@
+{
+  "name": "golason-monorepo",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "backend:dev": "npm run start:dev --workspace=backend",
+    "frontend:dev": "npm run dev --workspace=frontend",
+    "db:migrate": "npm run prisma:migrate --workspace=backend",
+    "lint": "echo 'No files to lint yet'",
+    "test": "echo 'No tests yet'"
+  }
+}
