@@ -121,12 +121,12 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 6.2: Global CSS & Fonts (DONE)
 - **Action:** Set up Vanilla CSS variables, clean resets, and optimized font loading.
 
-#### Task 6.3: Main Root Layout & SEO Meta Tags
+#### Task 6.3: Main Root Layout & SEO Meta Tags (DONE)
 - **Action:** Configure `app/layout.tsx` with default OpenGraph, Twitter cards, and Title templates.
 - **Acceptance Criteria:**
-  - [ ] SEO: Default meta tags are fully compliant.
+  - [x] SEO: Default meta tags are fully compliant.
 
-#### Task 6.4: Yandex Metrika Integration
+#### Task 6.4: Yandex Metrika Integration (DONE)
 - **Action:** Add Yandex.Metrika script using `next/script` in the root layout.
 
 ---
