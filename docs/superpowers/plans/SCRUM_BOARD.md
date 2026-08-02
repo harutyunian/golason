@@ -14,8 +14,8 @@
 - [ ] **Epic 6: Frontend Base & Layout (SEO Core)**
 - [x] **Epic 7: Frontend Micro-Components**
 - [x] **Epic 8: Frontend Dashboard (Main Page)**
-- [x] **Epic 9: Frontend Match Profile**
-- [x] **Epic 10: Frontend Team & Player Profiles**
+- [ ] **Epic 9: Frontend Match Profile**
+- [ ] **Epic 10: Frontend Team & Player Profiles**
 - [ ] **Epic 11: Deployment (Ubuntu VPS)**
 
 ---
@@ -199,6 +199,18 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 9.6: User Prediction Poll Component (DONE)
 - **Action:** Build interactive Home/Draw/Away voting buttons with progress bars.
 
+#### Task 9.7: Symmetrical Duels & Defending SVG Gauges
+- **Action:** Create circular radial progress loops for duels, tackles won, and pass accuracy segments matching the premium comparison dashboards.
+
+#### Task 9.8: Play-by-Play Live Commentary Feed
+- **Action:** Build scrollable vertical play-by-play commentary timber with custom action headers (GOAL, Card, Save, Corner) and player headshots.
+
+#### Task 9.9: Shotmap & Match Momentum Dominance Widgets
+- **Action:** Implement the horizontal penalty-box shotmap coordinates visualizer and the bar- dominance Match Momentum dominance graph.
+
+#### Task 9.10: Player of the Match Race Card
+- **Action:** Extract and display live player rating leaders in a high-visibility race box under the scoreboard.
+
 ---
 
 ### Epic 10: Frontend Team & Player Profiles
@@ -218,6 +230,9 @@ Our subagents will strictly utilize the following skills during execution:
 
 #### Task 10.4: Dynamic XML Sitemap (DONE)
 - **Action:** Create `/sitemap.xml/route.ts` that dynamically lists all match, team, and player URLs for search engines.
+
+#### Task 10.5: H2H Comparison & Team Streaks Card
+- **Action:** Build the H2H page layout displaying overall historic records, past games comparisons, and streak indicators.
 
 ---
 
