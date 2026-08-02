@@ -14,7 +14,7 @@
 - [ ] **Epic 6: Frontend Base & Layout (SEO Core)**
 - [x] **Epic 7: Frontend Micro-Components**
 - [x] **Epic 8: Frontend Dashboard (Main Page)**
-- [ ] **Epic 9: Frontend Match Profile**
+- [x] **Epic 9: Frontend Match Profile**
 - [ ] **Epic 10: Frontend Team & Player Profiles**
 - [ ] **Epic 11: Deployment (Ubuntu VPS)**
 
@@ -196,7 +196,7 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 9.5: Match Timeline Component (DONE)
 - **Action:** Build vertical chronological list of goals and events.
 
-#### Task 9.6: User Prediction Poll Component
+#### Task 9.6: User Prediction Poll Component (DONE)
 - **Action:** Build interactive Home/Draw/Away voting buttons with progress bars.
 
 ---

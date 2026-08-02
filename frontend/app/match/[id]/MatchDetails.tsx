@@ -8,6 +8,7 @@ import { MatchStatus } from "@/components/MatchCard";
 import MatchStats, { StandardMatchStats } from "@/components/MatchStats";
 import LineupPitch, { StandardMatchLineups } from "@/components/LineupPitch";
 import MatchTimeline, { StandardMatchEvent } from "@/components/MatchTimeline";
+import PredictionPoll from "@/components/PredictionPoll";
 import styles from "./match.module.css";
 
 export type SportType = 'FOOTBALL' | 'TENNIS' | 'HOCKEY' | 'UFC';
@@ -279,7 +280,15 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
       {/* Tab Panels */}
       <div className={styles.tabContentPanel}>
         {activeTab === 'overview' && (
-          <MatchStats stats={match.stats} />
+          <>
+            <PredictionPoll 
+              matchId={match.id} 
+              homeTeamName={match.homeTeam.name} 
+              awayTeamName={match.awayTeam.name} 
+            />
+            <MatchStats stats={match.stats} />
+            <MatchTimeline events={match.events} homeTeamId={match.homeTeam.id} />
+          </>
         )}
 
         {activeTab === 'lineups' && (
