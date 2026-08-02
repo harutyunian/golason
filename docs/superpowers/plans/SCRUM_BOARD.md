@@ -211,7 +211,7 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 9.10: Player of the Match Race Card & Voting Widgets (DONE)
 - **Action:** Parse active ratings on the server to display a high-visibility "Player of the Match" race card next to the scoreboard.
 
-#### Task 9.11: Standings Tab Integration
+#### Task 9.11: Standings Tab Integration (DONE)
 - **Action:** Embed our fully functional StandingTable points table directly inside the dedicated "Standings" tab panel.
 
 #### Task 9.12: Shotmap & Graphical Penalty Box coordinates
