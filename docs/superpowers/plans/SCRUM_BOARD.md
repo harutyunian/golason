@@ -115,10 +115,10 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 6: Frontend Base & Layout (SEO Core)
 
-#### Task 6.1: Scaffold Next.js App Router
+#### Task 6.1: Scaffold Next.js App Router (DONE)
 - **Action:** Initialize Next.js app in `frontend/`. Install a UI library (e.g., Lucide React for icons).
 
-#### Task 6.2: Global CSS & Fonts
+#### Task 6.2: Global CSS & Fonts (DONE)
 - **Action:** Set up Vanilla CSS variables, clean resets, and optimized font loading.
 
 #### Task 6.3: Main Root Layout & SEO Meta Tags
