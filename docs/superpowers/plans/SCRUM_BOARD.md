@@ -220,7 +220,7 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 9.13: H2H Comparison & Team Streaks Card (DONE)
 - **Action:** Render Head-to-Head overall historic win ratios, comparison bars (e.g. 3 wins vs 3 wins), and team streak details.
 
-#### Task 9.14: Injuries & Suspensions Roster Lists
+#### Task 9.14: Injuries & Suspensions Roster Lists (DONE)
 - **Action:** Render a comparative lists of injured and suspended players under the lineups tab panel.
 
 ---
