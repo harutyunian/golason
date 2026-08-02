@@ -217,7 +217,7 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 9.12: Shotmap & Graphical Penalty Box coordinates (DONE)
 - **Action:** Build the horizontal visual pitch shotmap coordinate plot showing where goals/saves occurred inside the Statistics tab.
 
-#### Task 9.13: H2H Comparison & Team Streaks Card
+#### Task 9.13: H2H Comparison & Team Streaks Card (DONE)
 - **Action:** Render Head-to-Head overall historic win ratios, comparison bars (e.g. 3 wins vs 3 wins), and team streak details.
 
 #### Task 9.14: Injuries & Suspensions Roster Lists
