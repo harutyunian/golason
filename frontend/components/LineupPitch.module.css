@@ -538,11 +538,112 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ==========================================================================
+   Injuries & Suspensions Layout (Missing Players)
+   ========================================================================== */
+.missingSection {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  margin-top: 1.5rem;
+}
+
+.missingGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.missingColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.missingList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.missingItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--card-border);
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.missingItem:hover {
+  background-color: var(--bg-hover);
+}
+
+.missingPlayerInfo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.missingIconWrap {
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.missingTextGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.missingName {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.missingDetail {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.missingStatus {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.statusOut {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.statusDoubtful {
+  background-color: rgba(234, 179, 8, 0.1);
+  color: #eab308;
+}
+
+.statusSuspended {
+  background-color: rgba(249, 115, 22, 0.1);
+  color: #f97316;
+}
+
 /* Symmetrical mobile alignments */
 @media (max-width: 768px) {
   .managersGrid,
-  .benchGrid {
+  .benchGrid,
+  .missingGrid {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.5rem;
   }
 }
