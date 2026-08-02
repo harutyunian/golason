@@ -170,4 +170,63 @@ describe('FootballNormalizerService', () => {
       expect(results[1].status).toBe('SCHEDULED');
     });
   });
+
+  describe('normalizeStandings', () => {
+    it('should map arrays of raw API-Football standings correctly', () => {
+      const rawStandings = [
+        {
+          rank: 1,
+          team: {
+            id: 42,
+            name: 'Arsenal',
+            logo: 'https://media.api-sports.io/football/teams/42.png',
+          },
+          points: 3,
+          goalsDiff: 2,
+          form: 'W',
+          all: { played: 1, win: 1, draw: 0, lose: 0 },
+        },
+        {
+          rank: 2,
+          team: {
+            id: 49,
+            name: 'Chelsea',
+            logo: 'https://media.api-sports.io/football/teams/49.png',
+          },
+          points: 0,
+          goalsDiff: -2,
+          form: 'L',
+          all: { played: 1, win: 0, draw: 0, lose: 1 },
+        },
+      ];
+
+      const results = service.normalizeStandings(rawStandings, 39, 2026);
+      expect(results).toHaveLength(2);
+      expect(results[0]).toEqual({
+        leagueId: 39,
+        season: 2026,
+        rank: 1,
+        teamId: 42,
+        points: 3,
+        goalsDiff: 2,
+        form: 'W',
+        played: 1,
+        win: 1,
+        draw: 0,
+        lose: 0,
+        team: {
+          id: 42,
+          name: 'Arsenal',
+          logo: 'https://media.api-sports.io/football/teams/42.png',
+        },
+      });
+      expect(results[1].rank).toBe(2);
+      expect(results[1].teamId).toBe(49);
+    });
+
+    it('should handle empty standings arrays gracefully', () => {
+      expect(service.normalizeStandings([], 39, 2026)).toEqual([]);
+      expect(service.normalizeStandings(null as any, 39, 2026)).toEqual([]);
+    });
+  });
 });

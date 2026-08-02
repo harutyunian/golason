@@ -4,6 +4,7 @@ import {
   StandardMatch,
   StandardLeague,
   StandardTeam,
+  StandardStandingWithTeam,
 } from './interfaces/sports.types';
 
 export interface StandardMatchWithDetails extends StandardMatch {
@@ -81,5 +82,57 @@ export class FootballNormalizerService {
       return [];
     }
     return rawFixtures.map((fixture) => this.normalizeFixture(fixture));
+  }
+
+  /**
+   * Normalizes a single raw standing row from API-Football.
+   * @param raw The raw standing object.
+   * @param leagueId The league identifier.
+   * @param season The season year.
+   * @returns StandardStandingWithTeam
+   */
+  normalizeStandingRow(
+    raw: any,
+    leagueId: number,
+    season: number,
+  ): StandardStandingWithTeam {
+    return {
+      leagueId,
+      season,
+      rank: raw.rank,
+      teamId: raw.team.id,
+      points: raw.points,
+      goalsDiff: raw.goalsDiff,
+      form: raw.form,
+      played: raw.all.played,
+      win: raw.all.win,
+      draw: raw.all.draw,
+      lose: raw.all.lose,
+      team: {
+        id: raw.team.id,
+        name: raw.team.name,
+        logo: raw.team.logo,
+      },
+    };
+  }
+
+  /**
+   * Normalizes an array of raw standings from API-Football.
+   * @param rawStandings The raw standings array.
+   * @param leagueId The league identifier.
+   * @param season The season year.
+   * @returns StandardStandingWithTeam[]
+   */
+  normalizeStandings(
+    rawStandings: any[],
+    leagueId: number,
+    season: number,
+  ): StandardStandingWithTeam[] {
+    if (!rawStandings || !Array.isArray(rawStandings)) {
+      return [];
+    }
+    return rawStandings.map((raw) =>
+      this.normalizeStandingRow(raw, leagueId, season),
+    );
   }
 }

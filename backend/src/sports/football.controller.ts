@@ -13,6 +13,7 @@ import {
   StandardLeague,
   StandardTeam,
   StandardStanding,
+  StandardStandingWithTeam,
 } from './interfaces/sports.types';
 import { ApiFootballClientService } from './api-football-client.service';
 import { FootballNormalizerService } from './football-normalizer.service';
@@ -21,14 +22,6 @@ export interface StandardMatchWithDetails extends StandardMatch {
   league: StandardLeague;
   homeTeam: StandardTeam;
   awayTeam: StandardTeam;
-}
-
-export interface StandardStandingWithTeam extends StandardStanding {
-  team: {
-    id: number;
-    name: string;
-    logo?: string | null;
-  };
 }
 
 const mapApiFootballToStandardPlayer = (raw: any) => {
@@ -473,17 +466,7 @@ export class FootballController {
     };
 
     try {
-      const url = `https://v3.football.api-sports.io/standings?league=${targetLeague}&season=${targetSeason}`;
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: this.getHeaders(),
-      });
-
-      if (!response.ok) {
-        throw new Error(`External API returned status: ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await this.apiFootballClient.getStandings(targetLeague, targetSeason);
 
       if (data.errors && Object.keys(data.errors).length > 0) {
         console.error('[API-Football] Standings Error payload:', data.errors);
@@ -501,24 +484,11 @@ export class FootballController {
       }
 
       const rawStandings = results[0].league.standings[0];
-      const normalized = rawStandings.map((raw: any) => ({
-        leagueId: targetLeague,
-        season: targetSeason,
-        rank: raw.rank,
-        teamId: raw.team.id,
-        points: raw.points,
-        goalsDiff: raw.goalsDiff,
-        form: raw.form,
-        played: raw.all.played,
-        win: raw.all.win,
-        draw: raw.all.draw,
-        lose: raw.all.lose,
-        team: {
-          id: raw.team.id,
-          name: raw.team.name,
-          logo: raw.team.logo,
-        },
-      }));
+      const normalized = this.footballNormalizer.normalizeStandings(
+        rawStandings,
+        targetLeague,
+        targetSeason,
+      );
 
       console.log(
         `[API-Football] Successfully fetched and normalized ${normalized.length} standings rows for league: ${targetLeague}`,
@@ -629,13 +599,7 @@ export class FootballController {
     };
 
     try {
-      const url = `https://v3.football.api-sports.io/players?id=${playerId}&season=2026`;
-      const response = await fetch(url, { method: 'GET', headers });
-      if (!response.ok) {
-        throw new Error(`Players API failed: status ${response.status}`);
-      }
-
-      const data = await response.json();
+      const data = await this.apiFootballClient.getPlayerProfile(playerId, 2026);
       const results = data.response || [];
 
       if (results.length === 0) {

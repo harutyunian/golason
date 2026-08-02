@@ -1,22 +1,58 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FootballController } from './football.controller';
-import { LiveScoreGateway } from '../gateway/live-score.gateway';
+import { ApiFootballClientService } from './api-football-client.service';
+import { FootballNormalizerService } from './football-normalizer.service';
+import { HttpException } from '@nestjs/common';
 
 describe('FootballController', () => {
   let controller: FootballController;
-  let mockLiveScoreGateway: Partial<LiveScoreGateway>;
+  let mockApiFootballClient: any;
+  let mockFootballNormalizer: any;
 
   beforeEach(async () => {
-    mockLiveScoreGateway = {
-      broadcastMatchUpdate: jest.fn(),
+    mockApiFootballClient = {
+      getFixturesByDate: jest.fn().mockResolvedValue({ response: [] }),
+      getFixtureById: jest.fn().mockResolvedValue({ response: [] }),
+      getStandings: jest.fn().mockResolvedValue({
+        response: [
+          {
+            league: {
+              standings: [
+                [
+                  {
+                    rank: 1,
+                    team: { id: 42, name: "Arsenal", logo: null },
+                    points: 3,
+                    goalsDiff: 2,
+                    form: "W",
+                    all: { played: 1, win: 1, draw: 0, lose: 0 },
+                  },
+                ],
+              ],
+            },
+          },
+        ],
+      }),
+      getTeamProfile: jest.fn().mockResolvedValue({ response: [] }),
+      getPlayerProfile: jest.fn().mockResolvedValue({ response: [] }),
+    };
+
+    mockFootballNormalizer = {
+      normalizeFixture: jest.fn().mockReturnValue({ id: 101, status: 'FINISHED' }),
+      normalizeFixtures: jest.fn().mockReturnValue([{ id: 101, status: 'FINISHED' }]),
+      normalizeStandings: jest.fn().mockReturnValue([]),
     };
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [FootballController],
       providers: [
         {
-          provide: LiveScoreGateway,
-          useValue: mockLiveScoreGateway,
+          provide: ApiFootballClientService,
+          useValue: mockApiFootballClient,
+        },
+        {
+          provide: FootballNormalizerService,
+          useValue: mockFootballNormalizer,
         },
       ],
     }).compile();
@@ -29,58 +65,35 @@ describe('FootballController', () => {
   });
 
   describe('getFixtures', () => {
-    it('should return fixtures with targetDate', () => {
-      const fixtures = controller.getFixtures('2026-08-02');
-      expect(Array.isArray(fixtures)).toBe(true);
-      expect(fixtures.length).toBeGreaterThan(0);
-      expect(fixtures[0].date).toContain('2026-08-02');
-      expect(fixtures[0].homeTeam.name).toBeDefined();
-      expect(fixtures[0].awayTeam.name).toBeDefined();
-    });
-
-    it('should default targetDate if none provided', () => {
-      const fixtures = controller.getFixtures();
-      expect(fixtures[0].date).toContain('2026-08-02');
+    it('should call getFixturesByDate and normalizeFixtures', async () => {
+      const results = await controller.getFixtures('2026-08-02');
+      expect(mockApiFootballClient.getFixturesByDate).toHaveBeenCalledWith('2026-08-02');
+      expect(mockFootballNormalizer.normalizeFixtures).toHaveBeenCalled();
+      expect(results).toHaveLength(1);
+      expect(results[0].id).toBe(101);
     });
   });
 
   describe('getFixtureById', () => {
-    it('should return a fixture matching static list id', () => {
-      const fixture = controller.getFixtureById('101');
-      expect(fixture).toBeDefined();
-      expect(fixture.id).toBe(101);
-      expect(fixture.homeTeam.name).toBe('Arsenal');
+    it('should throw HttpException if fixture not found', async () => {
+      mockApiFootballClient.getFixtureById.mockResolvedValueOnce({ response: [] });
+      await expect(controller.getFixtureById('999')).rejects.toThrow(HttpException);
     });
 
-    it('should return dynamic mock fixture if id not in static list', () => {
-      const fixture = controller.getFixtureById('999');
-      expect(fixture).toBeDefined();
-      expect(fixture.id).toBe(999);
-      expect(fixture.homeTeam.name).toBe('Home Team');
+    it('should return normalized fixture if found', async () => {
+      mockApiFootballClient.getFixtureById.mockResolvedValueOnce({ response: [{ fixture: { id: 101 } }] });
+      const result = await controller.getFixtureById('101');
+      expect(mockApiFootballClient.getFixtureById).toHaveBeenCalledWith(101);
+      expect(mockFootballNormalizer.normalizeFixture).toHaveBeenCalled();
+      expect(result.id).toBe(101);
     });
   });
 
-  describe('mockGoal', () => {
-    it('should increment home score by default and broadcast update', () => {
-      const fixtureBefore = controller.getFixtureById('101');
-      const initialHomeScore = fixtureBefore.homeScore || 0;
-
-      const updated = controller.mockGoal('101', { team: 'home' });
-      expect(updated.homeScore).toBe(initialHomeScore + 1);
-      expect(mockLiveScoreGateway.broadcastMatchUpdate).toHaveBeenCalledWith(
-        updated,
-      );
-    });
-
-    it('should increment away score if specified and broadcast update', () => {
-      const fixtureBefore = controller.getFixtureById('101');
-      const initialAwayScore = fixtureBefore.awayScore || 0;
-
-      const updated = controller.mockGoal('101', { team: 'away' });
-      expect(updated.awayScore).toBe(initialAwayScore + 1);
-      expect(mockLiveScoreGateway.broadcastMatchUpdate).toHaveBeenCalledWith(
-        updated,
-      );
+  describe('getStandings', () => {
+    it('should call normalizeStandings', async () => {
+      const result = await controller.getStandings('39', '2026');
+      expect(mockFootballNormalizer.normalizeStandings).toHaveBeenCalled();
+      expect(Array.isArray(result)).toBe(true);
     });
   });
 });

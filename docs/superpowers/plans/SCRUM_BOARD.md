@@ -8,7 +8,7 @@
 ## 📈 Epics Overview
 - [x] **Epic 1: Workspace Scaffolding**
 - [x] **Epic 2: Backend Base & Database**
-- [ ] **Epic 3: Backend Normalizers (API-Football)**
+- [x] **Epic 3: Backend Normalizers (API-Football)**
 - [ ] **Epic 4: Backend Schedulers & Real-Time**
 - [ ] **Epic 5: Backend Auth & Users**
 - [ ] **Epic 6: Frontend Base & Layout (SEO Core)**
@@ -79,7 +79,7 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 3.3: Implement Match Normalizer (DONE)
 - **Action:** Create mapping logic converting API-Football fixtures to `StandardMatch`. Add unit tests.
 
-#### Task 3.4: Implement Standings Normalizer
+#### Task 3.4: Implement Standings Normalizer (DONE)
 - **Action:** Create mapping logic for league standings. Add unit tests.
 
 ---

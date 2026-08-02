@@ -214,3 +214,11 @@ export interface StandardStanding {
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }
+
+export interface StandardStandingWithTeam extends StandardStanding {
+  team: {
+    id: number;
+    name: string;
+    logo?: string | null;
+  };
+}
