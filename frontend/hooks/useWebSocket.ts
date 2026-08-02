@@ -1,10 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 
 export const useWebSocket = (matchId: number, onUpdate: (match: any) => void) => {
   const [socket, setSocket] = useState<Socket | null>(null);
+  
+  // Stable Callback Pattern: Store the callback in a mutable ref
+  // This allows the WebSocket listener to always execute the latest callback
+  // without needing "onUpdate" in the useEffect dependency array, preventing infinite loops.
+  const onUpdateRef = useRef(onUpdate);
+
+  useEffect(() => {
+    onUpdateRef.current = onUpdate;
+  }, [onUpdate]);
 
   useEffect(() => {
     // Connect to the NestJS API server port (default 3001)
@@ -19,7 +28,7 @@ export const useWebSocket = (matchId: number, onUpdate: (match: any) => void) =>
     socketInstance.on("match:update", (updatedMatch) => {
       if (updatedMatch && updatedMatch.id === matchId) {
         console.log(`[WS] Received real-time live score update for MatchID: ${matchId}`, updatedMatch);
-        onUpdate(updatedMatch);
+        onUpdateRef.current(updatedMatch);
       }
     });
 
@@ -33,7 +42,7 @@ export const useWebSocket = (matchId: number, onUpdate: (match: any) => void) =>
     return () => {
       socketInstance.disconnect();
     };
-  }, [matchId, onUpdate]);
+  }, [matchId]); // Removed onUpdate from dependencies; loop is 100% neutralized!
 
   return socket;
 };
