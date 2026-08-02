@@ -236,16 +236,8 @@ export default function MatchCommentary({
       });
     });
 
-    // Establish max minute range
-    let maxMinute = 0;
-    if (status === "LIVE" || status === "HALFTIME") {
-      maxMinute = Math.min(90, elapsedTime || 45);
-    } else if (status === "FINISHED") {
-      maxMinute = 90;
-    }
-
     // If pre-match/scheduled, show pre-match scheduled message
-    if (status === "SCHEDULED" || maxMinute === 0) {
+    if (status === "SCHEDULED") {
       list.push({
         id: "pre-match",
         elapsed: 0,
@@ -257,89 +249,34 @@ export default function MatchCommentary({
       return list;
     }
 
-    // Track minutes with existing raw API events to prevent collision
-    const existingMinutes = new Set(rawEvents.map((e) => e.time.elapsed));
-
-    // Pre-extract player pools for robust procedural generation
-    const homeRealPlayers = rawEvents.filter(e => e.team.id === homeTeam.id).map(e => e.player.name);
-    const awayRealPlayers = rawEvents.filter(e => e.team.id === awayTeam.id).map(e => e.player.name);
-
-    const homeGenericNames = ["Martinez", "Fernandez", "Gomez", "Lopez", "Diaz", "Perez", "Sanchez", "Romero", "Alvarez", "Torres"];
-    const awayGenericNames = ["Johnston", "Davies", "Walker", "Thomas", "Evans", "Roberts", "Edwards", "Lewis", "Harris", "Clarke"];
-
-    // Deterministic player selection
-    const getPlayer = (isHome: boolean, seed: number) => {
-      if (lineups) {
-        const teamLineup = isHome ? lineups.home : lineups.away;
-        if (teamLineup && teamLineup.startXI && teamLineup.startXI.length > 0) {
-          const outfield = teamLineup.startXI.filter(p => p.position !== "G");
-          const pool = outfield.length > 0 ? outfield : teamLineup.startXI;
-          const idx = Math.abs(seed) % pool.length;
-          return pool[idx].name;
-        }
-      }
-      
-      const realPool = isHome ? homeRealPlayers : awayRealPlayers;
-      if (realPool.length > 0) {
-        const idx = Math.abs(seed) % realPool.length;
-        return realPool[idx];
-      }
-
-      const genericPool = isHome ? homeGenericNames : awayGenericNames;
-      const idx = Math.abs(seed) % genericPool.length;
-      return genericPool[idx];
-    };
-
-    // Deterministic goalkeeper selection
-    const getGoalkeeper = (isHome: boolean) => {
-      if (lineups) {
-        const teamLineup = isHome ? lineups.home : lineups.away;
-        if (teamLineup && teamLineup.startXI) {
-          const gk = teamLineup.startXI.find(p => p.position === "G");
-          if (gk) return gk.name;
-        }
-      }
-      return isHome ? "Home Goalkeeper" : "Away Goalkeeper";
-    };
+    const hasStarted = status === "LIVE" || status === "HALFTIME" || status === "FINISHED";
 
     // 2. Add Kick-off Milestone
-    if (!existingMinutes.has(1)) {
+    if (hasStarted) {
       list.push({
         id: "milestone-kickoff",
         elapsed: 1,
         type: "Info",
         title: "Match Kick-Off",
-        text: `We are underway! The referee blows the whistle and ${homeTeam.name} gets the match started.`,
+        text: `We are underway! The referee blows the whistle and the match gets started.`,
         playerName: "REF",
       });
     }
 
-    // 3. Add Half-time / Second Half Milestones
-    if (maxMinute >= 45) {
-      if (!existingMinutes.has(45)) {
-        list.push({
-          id: "milestone-halftime",
-          elapsed: 45,
-          type: "Info",
-          title: "Half-Time Whistle",
-          text: `The referee blows for half-time. A captivating first 45 minutes of football ends with the teams heading down the tunnel.`,
-          playerName: "REF",
-        });
-      }
-      if (maxMinute > 45 && !existingMinutes.has(46)) {
-        list.push({
-          id: "milestone-secondhalf",
-          elapsed: 46,
-          type: "Info",
-          title: "Second Half Starts",
-          text: `The players are back on the pitch and the referee signals the start of the second half. Let's see what the next 45 minutes bring!`,
-          playerName: "REF",
-        });
-      }
+    // 3. Add Half-time Milestone
+    if (status === "HALFTIME" || status === "FINISHED") {
+      list.push({
+        id: "milestone-halftime",
+        elapsed: 45,
+        type: "Info",
+        title: "Half-Time Whistle",
+        text: `The referee blows for half-time. A captivating first 45 minutes of football ends with the teams heading down the tunnel.`,
+        playerName: "REF",
+      });
     }
 
     // 4. Add Full-time Milestone
-    if (status === "FINISHED" && !existingMinutes.has(90)) {
+    if (status === "FINISHED") {
       list.push({
         id: "milestone-fulltime",
         elapsed: 90,
@@ -348,74 +285,6 @@ export default function MatchCommentary({
         text: `There goes the final whistle! The match has concluded after 90 minutes of intensive battle.`,
         playerName: "REF",
       });
-    }
-
-    // 5. Generate intermediate action commentaries
-    for (let m = 2; m < maxMinute; m++) {
-      if (m === 45 || m === 46 || existingMinutes.has(m)) continue;
-
-      const seed = homeTeam.id * 17 + awayTeam.id * 23 + m * 37;
-      const rand = Math.sin(seed) * 10000 - Math.floor(Math.sin(seed) * 10000);
-
-      // Spaced action occurrence (about 14% chance of commentary per minute)
-      if (rand < 0.14) {
-        const isHome = (seed % 2) === 0;
-        const actingTeam = isHome ? homeTeam : awayTeam;
-        const opposingTeam = isHome ? awayTeam : homeTeam;
-
-        const player = getPlayer(isHome, seed);
-        
-        let type: CommentaryItem["type"] = "Foul";
-        let title = "";
-        let text = "";
-
-        const actionSeed = Math.floor(rand * 100) % 3;
-
-        if (actionSeed === 0) {
-          type = "Foul";
-          title = "Foul committed";
-          const templates = [
-            `Foul! ${player} commits a clumsy challenge on an opponent, and the referee is quick to award a free-kick to ${opposingTeam.name}.`,
-            `The referee blows his whistle. ${player} is penalised for a late challenge in midfield.`,
-            `Tactical foul by ${player} to break up a dangerous counter-attack from ${opposingTeam.name}.`,
-            `${player} challenges aggressively in the air and is penalised. Free-kick for ${opposingTeam.name}.`
-          ];
-          text = templates[seed % templates.length];
-        } else if (actionSeed === 1) {
-          type = "Corner";
-          title = "Corner Kick";
-          const templates = [
-            `${player} whips a dangerous crossing corner from the left, but the defender rises high to clear the danger.`,
-            `Corner kick for ${actingTeam.name}. ${player} delivers a floating ball to the far post, but the goalkeeper punches it away.`,
-            `${player} plays a quick short corner to keep possession, but the subsequent cross is blocked.`,
-            `A high-looping corner by ${player} causes chaos in the penalty box before the opposing side scrambles it clear.`
-          ];
-          text = templates[seed % templates.length];
-        } else {
-          type = "Save";
-          title = "Shot Saved";
-          const keeper = getGoalkeeper(!isHome);
-          const templates = [
-            `What a save! ${player} fires a powerful bullet from the edge of the area, but ${keeper} pulls off an unbelievable diving save!`,
-            `Brilliant reflex block! ${player} connects with a venomous volley inside the box, but ${keeper} manages to tip it wide!`,
-            `${player} attempts a clever curling shot towards the far top corner, but ${keeper} reads it perfectly and collects the ball.`,
-            `Close! ${player} finds space inside the penalty area and fires low, but ${keeper} makes a comfortable save.`
-          ];
-          text = templates[seed % templates.length];
-        }
-
-        list.push({
-          id: `gen-${m}-${seed}`,
-          elapsed: m,
-          type,
-          teamId: actingTeam.id,
-          teamName: actingTeam.name,
-          playerName: player,
-          title,
-          text,
-          isHome,
-        });
-      }
     }
 
     // Sort descending chronologically (90' down to 1')
@@ -427,7 +296,7 @@ export default function MatchCommentary({
       if (b.type === "Goal" && a.type !== "Goal") return 1;
       return 0;
     });
-  }, [events, homeTeam, awayTeam, lineups, status, elapsedTime]);
+  }, [events, homeTeam, awayTeam, status]);
 
   // Helper to extract player's initials
   const getInitials = (name?: string) => {
