@@ -1,0 +1,298 @@
+.timelineCard {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.timelineTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 0.75rem;
+}
+
+.timelineTitleIcon {
+  color: var(--color-primary);
+}
+
+.timelineContainer {
+  position: relative;
+  margin: 1rem 0;
+  padding: 1rem 0;
+  min-height: 100px;
+}
+
+/* Centered vertical line */
+.timelineLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background-color: var(--card-border);
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.eventRow {
+  display: flex;
+  width: 100%;
+  margin-bottom: 2rem;
+  position: relative;
+  align-items: center;
+}
+
+.eventRow:last-child {
+  margin-bottom: 1rem;
+}
+
+/* Center Minute Badge */
+.minuteBadge {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--card-bg);
+  border: 1.5px solid var(--card-border);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 0.75rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+/* Content wrapper cards */
+.eventContentHome {
+  width: calc(50% - 24px);
+  text-align: right;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 0.75rem;
+  padding-right: 1.25rem;
+  z-index: 2;
+}
+
+.eventContentAway {
+  margin-left: auto;
+  width: calc(50% - 24px);
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  padding-left: 1.25rem;
+  z-index: 2;
+}
+
+/* Inner block that houses the text info */
+.textBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.eventContentHome .textBlock {
+  align-items: flex-end;
+}
+
+.eventContentAway .textBlock {
+  align-items: flex-start;
+}
+
+/* Icon Wrap - positioned closest to the timeline */
+.iconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: var(--bg-hover);
+  border: 1px solid var(--card-border);
+  color: var(--text-secondary);
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* Highlighted Event styling */
+.iconWrapGoal {
+  background-color: rgba(2, 184, 117, 0.1);
+  border-color: rgba(2, 184, 117, 0.2);
+  color: var(--color-primary);
+}
+
+.iconWrapCard {
+  background-color: var(--bg-hover);
+}
+
+.iconWrapSub {
+  background-color: rgba(59, 130, 246, 0.05);
+  border-color: rgba(59, 130, 246, 0.1);
+  color: var(--color-accent);
+}
+
+.iconWrapVar {
+  background-color: rgba(239, 68, 68, 0.05);
+  border-color: rgba(239, 68, 68, 0.1);
+  color: var(--color-red-card);
+}
+
+/* Text Element Styling */
+.playerName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.playerNameGoal {
+  color: var(--color-primary-dark);
+}
+
+.playerNameOwnGoal {
+  color: var(--color-red-card);
+  text-decoration: line-through;
+  text-decoration-color: rgba(239, 68, 68, 0.5);
+}
+
+.eventDetail {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+  margin-top: 0.125rem;
+}
+
+.assistText {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.2;
+  margin-top: 0.125rem;
+}
+
+/* Substitution specific layout */
+.subPlayerIn {
+  font-weight: 600;
+  color: #10e090;
+  font-size: 0.875rem;
+}
+
+.subPlayerOut {
+  font-weight: 500;
+  color: #ef4444;
+  font-size: 0.8125rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* CSS Card Badges */
+.cardBadge {
+  width: 11px;
+  height: 15px;
+  border-radius: 2px;
+  display: inline-block;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.yellowCard {
+  background-color: var(--color-yellow-card, #f59e0b);
+}
+
+.redCard {
+  background-color: var(--color-red-card, #ef4444);
+}
+
+/* Special Labels */
+.specialLabel {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+}
+
+.penaltyLabel {
+  background-color: rgba(2, 184, 117, 0.15);
+  color: var(--color-primary-dark);
+  border: 1px solid rgba(2, 184, 117, 0.3);
+}
+
+.ownGoalLabel {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--color-red-card);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* Empty State */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  color: var(--text-secondary);
+  background-color: var(--card-bg);
+  border: 1px dashed var(--card-border);
+  border-radius: 8px;
+}
+
+.emptyIcon {
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  opacity: 0.7;
+}
+
+.emptyText {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Responsive adjustment for Mobile screens */
+@media (max-width: 640px) {
+  .timelineLine {
+    left: 20px;
+    transform: none;
+  }
+
+  .minuteBadge {
+    left: 20px;
+    transform: translate(-50%, -50%);
+  }
+
+  .eventContentHome, .eventContentAway {
+    width: calc(100% - 44px);
+    margin-left: 44px !important;
+    padding-left: 0.5rem;
+    padding-right: 0;
+    text-align: left;
+    flex-direction: row; /* Always icon first, then text on mobile */
+  }
+
+  .eventContentHome .textBlock {
+    align-items: flex-start;
+  }
+
+  .timelineContainer {
+    padding-left: 0.5rem;
+  }
+}

@@ -193,7 +193,7 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 9.4: Lineups Pitch Component (DONE)
 - **Action:** Build CSS grid visual football pitch displaying player formations.
 
-#### Task 9.5: Match Timeline Component
+#### Task 9.5: Match Timeline Component (DONE)
 - **Action:** Build vertical chronological list of goals and events.
 
 #### Task 9.6: User Prediction Poll Component

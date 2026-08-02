@@ -7,6 +7,7 @@ import { useWebSocket } from "@/hooks/useWebSocket";
 import { MatchStatus } from "@/components/MatchCard";
 import MatchStats, { StandardMatchStats } from "@/components/MatchStats";
 import LineupPitch, { StandardMatchLineups } from "@/components/LineupPitch";
+import MatchTimeline, { StandardMatchEvent } from "@/components/MatchTimeline";
 import styles from "./match.module.css";
 
 export type SportType = 'FOOTBALL' | 'TENNIS' | 'HOCKEY' | 'UFC';
@@ -40,6 +41,7 @@ interface StandardMatchWithDetails {
   awayTeam: TeamDetails;
   stats?: StandardMatchStats | null;
   lineups?: StandardMatchLineups | null;
+  events?: StandardMatchEvent[] | null;
 }
 
 interface MatchDetailsProps {

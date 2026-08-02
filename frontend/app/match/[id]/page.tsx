@@ -3,6 +3,7 @@ import MatchDetails from "./MatchDetails";
 import { MatchStatus } from "@/components/MatchCard";
 import { StandardMatchStats } from "@/components/MatchStats";
 import { StandardMatchLineups } from "@/components/LineupPitch";
+import { StandardMatchEvent } from "@/components/MatchTimeline";
 
 // Dynamic support types
 export type SportType = 'FOOTBALL' | 'TENNIS' | 'HOCKEY' | 'UFC';
@@ -39,6 +40,7 @@ interface StandardMatchWithDetails {
   awayTeam: TeamDetails;
   stats?: StandardMatchStats | null;
   lineups?: StandardMatchLineups | null;
+  events?: StandardMatchEvent[] | null;
 }
 
 interface MatchPageProps {
@@ -133,6 +135,46 @@ const getFallbackMatch = (idStr: string): StandardMatchWithDetails => {
           coach: { id: 150, name: "Graham Potter" },
         },
       },
+      events: [
+        {
+          time: { elapsed: 14 },
+          team: { id: 11, name: "Arsenal" },
+          player: { id: 10, name: "Jesus" },
+          assist: { id: 6, name: "Odegaard" },
+          type: "Goal",
+          detail: "Normal Goal",
+        },
+        {
+          time: { elapsed: 32 },
+          team: { id: 12, name: "Chelsea" },
+          player: { id: 111, name: "Havertz" },
+          type: "Goal",
+          detail: "Penalty",
+        },
+        {
+          time: { elapsed: 41 },
+          team: { id: 11, name: "Arsenal" },
+          player: { id: 8, name: "Xhaka" },
+          type: "Card",
+          detail: "Yellow Card",
+        },
+        {
+          time: { elapsed: 58 },
+          team: { id: 11, name: "Arsenal" },
+          player: { id: 11, name: "Martinelli" },
+          assist: { id: 9, name: "Saka" },
+          type: "Goal",
+          detail: "Normal Goal",
+        },
+        {
+          time: { elapsed: 61 },
+          team: { id: 12, name: "Chelsea" },
+          player: { id: 110, name: "Mudryk" },
+          assist: { id: 115, name: "Sterling" },
+          type: "subst",
+          detail: "Substitution",
+        },
+      ],
     },
     102: {
       id: 102,
