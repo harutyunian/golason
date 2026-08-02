@@ -1,9 +1,10 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
 import {
   StandardMatch,
   StandardLeague,
   StandardTeam,
 } from './interfaces/sports.types';
+import { LiveScoreGateway } from '../gateway/live-score.gateway';
 
 export interface StandardMatchWithDetails extends StandardMatch {
   league: StandardLeague;
@@ -13,15 +14,14 @@ export interface StandardMatchWithDetails extends StandardMatch {
 
 @Controller('football')
 export class FootballController {
-  @Get('fixtures')
-  getFixtures(@Query('date') date?: string): StandardMatchWithDetails[] {
-    // If no date is provided, default to '2026-08-02'
-    const targetDate = date || '2026-08-02';
+  private fixtures: StandardMatchWithDetails[] = [];
 
-    return [
+  constructor(private readonly liveScoreGateway: LiveScoreGateway) {
+    // Initialize the list of default fixtures
+    this.fixtures = [
       {
         id: 101,
-        date: `${targetDate}T15:00:00`,
+        date: `2026-08-02T15:00:00`,
         status: 'LIVE',
         elapsedTime: 64,
         sport: 'FOOTBALL',
@@ -42,7 +42,7 @@ export class FootballController {
       },
       {
         id: 102,
-        date: `${targetDate}T16:15:00`,
+        date: `2026-08-02T16:15:00`,
         status: 'HALFTIME',
         elapsedTime: null,
         sport: 'FOOTBALL',
@@ -63,7 +63,7 @@ export class FootballController {
       },
       {
         id: 103,
-        date: `${targetDate}T20:45:00`,
+        date: `2026-08-02T20:45:00`,
         status: 'SCHEDULED',
         elapsedTime: null,
         sport: 'FOOTBALL',
@@ -84,7 +84,7 @@ export class FootballController {
       },
       {
         id: 104,
-        date: `${targetDate}T12:30:00`,
+        date: `2026-08-02T12:30:00`,
         status: 'FINISHED',
         elapsedTime: null,
         sport: 'FOOTBALL',
@@ -105,7 +105,7 @@ export class FootballController {
       },
       {
         id: 105,
-        date: `${targetDate}T18:00:00`,
+        date: `2026-08-02T18:00:00`,
         status: 'SCHEDULED',
         elapsedTime: null,
         sport: 'FOOTBALL',
@@ -127,17 +127,27 @@ export class FootballController {
     ];
   }
 
+  @Get('fixtures')
+  getFixtures(@Query('date') date?: string): StandardMatchWithDetails[] {
+    const targetDate = date || '2026-08-02';
+    return this.fixtures.map((fixture) => {
+      const timePart = String(fixture.date).split('T')[1] || '12:00:00';
+      return {
+        ...fixture,
+        date: `${targetDate}T${timePart}`,
+      };
+    });
+  }
+
   @Get('fixtures/:id')
   getFixtureById(@Param('id') id: string): StandardMatchWithDetails {
     const matchId = parseInt(id, 10);
-    const fixtures = this.getFixtures();
-    const found = fixtures.find((f) => f.id === matchId);
+    const found = this.fixtures.find((f) => f.id === matchId);
     if (found) {
       return found;
     }
 
-    // Return a dynamically generated mock if not found in the static list
-    return {
+    const generated: StandardMatchWithDetails = {
       id: matchId,
       date: '2026-08-02T15:00:00',
       status: 'LIVE',
@@ -158,5 +168,57 @@ export class FootballController {
       homeTeam: { id: 11, name: 'Home Team', sport: 'FOOTBALL' },
       awayTeam: { id: 12, name: 'Away Team', sport: 'FOOTBALL' },
     };
+    this.fixtures.push(generated);
+    return generated;
+  }
+
+  @Post('fixtures/:id/mock-goal')
+  mockGoal(
+    @Param('id') id: string,
+    @Body() body: { team?: 'home' | 'away' },
+  ): StandardMatchWithDetails {
+    const matchId = parseInt(id, 10);
+    let found = this.fixtures.find((f) => f.id === matchId);
+    if (!found) {
+      found = {
+        id: matchId,
+        date: '2026-08-02T15:00:00',
+        status: 'LIVE',
+        elapsedTime: 45,
+        sport: 'FOOTBALL',
+        leagueId: 1,
+        homeTeamId: 11,
+        awayTeamId: 12,
+        homeScore: 0,
+        awayScore: 0,
+        league: {
+          id: 1,
+          name: 'Premier League',
+          country: 'England',
+          logo: '🇬🇧',
+          sport: 'FOOTBALL',
+        },
+        homeTeam: { id: 11, name: 'Home Team', sport: 'FOOTBALL' },
+        awayTeam: { id: 12, name: 'Away Team', sport: 'FOOTBALL' },
+      };
+      this.fixtures.push(found);
+    }
+
+    const team = body?.team || 'home';
+    if (team === 'away') {
+      found.awayScore = (found.awayScore || 0) + 1;
+    } else {
+      found.homeScore = (found.homeScore || 0) + 1;
+    }
+
+    if (found.status === 'SCHEDULED') {
+      found.status = 'LIVE';
+      found.elapsedTime = 1;
+    }
+
+    // Broadcast update via WS
+    this.liveScoreGateway.broadcastMatchUpdate(found);
+
+    return found;
   }
 }

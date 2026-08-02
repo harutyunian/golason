@@ -182,7 +182,7 @@ Our subagents will strictly utilize the following skills during execution:
 - **Acceptance Criteria:**
   - [x] SEO: Implement `SportsEvent` JSON-LD schema dynamically.
 
-#### Task 9.2: WebSocket Client Integration
+#### Task 9.2: WebSocket Client Integration (DONE)
 - **Action:** Connect scoreboard to socket.io. Flash scores when `match:update` event is received.
 
 #### Task 9.3: Live Match Stats Component

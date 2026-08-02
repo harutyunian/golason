@@ -1,12 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FootballController } from './football.controller';
+import { LiveScoreGateway } from '../gateway/live-score.gateway';
 
 describe('FootballController', () => {
   let controller: FootballController;
+  let mockLiveScoreGateway: Partial<LiveScoreGateway>;
 
   beforeEach(async () => {
+    mockLiveScoreGateway = {
+      broadcastMatchUpdate: jest.fn(),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [FootballController],
+      providers: [
+        {
+          provide: LiveScoreGateway,
+          useValue: mockLiveScoreGateway,
+        },
+      ],
     }).compile();
 
     controller = module.get<FootballController>(FootballController);
@@ -45,6 +57,26 @@ describe('FootballController', () => {
       expect(fixture).toBeDefined();
       expect(fixture.id).toBe(999);
       expect(fixture.homeTeam.name).toBe('Home Team');
+    });
+  });
+
+  describe('mockGoal', () => {
+    it('should increment home score by default and broadcast update', () => {
+      const fixtureBefore = controller.getFixtureById('101');
+      const initialHomeScore = fixtureBefore.homeScore || 0;
+
+      const updated = controller.mockGoal('101', { team: 'home' });
+      expect(updated.homeScore).toBe(initialHomeScore + 1);
+      expect(mockLiveScoreGateway.broadcastMatchUpdate).toHaveBeenCalledWith(updated);
+    });
+
+    it('should increment away score if specified and broadcast update', () => {
+      const fixtureBefore = controller.getFixtureById('101');
+      const initialAwayScore = fixtureBefore.awayScore || 0;
+
+      const updated = controller.mockGoal('101', { team: 'away' });
+      expect(updated.awayScore).toBe(initialAwayScore + 1);
+      expect(mockLiveScoreGateway.broadcastMatchUpdate).toHaveBeenCalledWith(updated);
     });
   });
 });

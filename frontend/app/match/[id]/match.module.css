@@ -279,3 +279,29 @@
     font-size: 2.75rem;
   }
 }
+
+/* Real-time goal alert banner overlay */
+.goalBannerContainer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+  animation: bounce 0.6s infinite alternate ease-in-out;
+}
+
+.goalBannerIcon {
+  color: #ffffff;
+}
+
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-4px); }
+}
