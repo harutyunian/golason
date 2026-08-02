@@ -70,7 +70,7 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 3: Backend Normalizers (API-Football)
 
-#### Task 3.1: Define Standard Interfaces
+#### Task 3.1: Define Standard Interfaces (DONE)
 - **Action:** Create standard TypeScript interfaces (`StandardMatch`, `StandardTeam`, etc.).
 
 #### Task 3.2: Build API-Football Client

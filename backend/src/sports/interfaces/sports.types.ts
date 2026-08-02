@@ -6,19 +6,14 @@ export type SportType = 'FOOTBALL' | 'TENNIS' | 'HOCKEY' | 'UFC';
 /**
  * Match statuses representing the standard lifecycle of a sporting event
  */
-export type MatchStatus = 
-  | 'SCHEDULED'
-  | 'LIVE'
-  | 'HALFTIME'
-  | 'FINISHED'
-  | 'POSTPONED'
-  | 'CANCELLED';
+export type MatchStatus =
+  'SCHEDULED' | 'LIVE' | 'HALFTIME' | 'FINISHED' | 'POSTPONED' | 'CANCELLED';
 
 /**
  * Standard representation of a Sport Team
  */
 export interface StandardTeam {
-  id: number;               // Matches external API ID (e.g. API-Football ID)
+  id: number; // Matches external API ID (e.g. API-Football ID)
   name: string;
   code?: string | null;
   logo?: string | null;
@@ -34,7 +29,7 @@ export interface StandardTeam {
  * Standard representation of a Player
  */
 export interface StandardPlayer {
-  id: number;               // Matches external API ID
+  id: number; // Matches external API ID
   name: string;
   firstname?: string | null;
   lastname?: string | null;
@@ -122,7 +117,7 @@ export interface StandardMatchLineups {
  */
 export interface StandardMatchEvent {
   time: {
-    elapsed: number;     // Minute of the match
+    elapsed: number; // Minute of the match
     extra?: number | null; // e.g., +2 in stoppage time
   };
   team: {
@@ -138,7 +133,7 @@ export interface StandardMatchEvent {
     name: string | null;
   } | null;
   type: 'Goal' | 'Card' | 'subst' | 'Var';
-  detail: string;       // e.g., "Yellow Card", "Normal Goal", "Substitution"
+  detail: string; // e.g., "Yellow Card", "Normal Goal", "Substitution"
   comments?: string | null;
 }
 
@@ -179,8 +174,8 @@ export interface StandardMomentumData {
  * Standard representation of a Match
  */
 export interface StandardMatch {
-  id: number;                 // Matches external API ID
-  date: Date | string;        // Kickoff timestamp
+  id: number; // Matches external API ID
+  date: Date | string; // Kickoff timestamp
   status: MatchStatus;
   elapsedTime?: number | null;
   sport: SportType;
