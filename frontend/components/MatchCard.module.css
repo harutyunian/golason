@@ -1,0 +1,163 @@
+/* ==========================================================================
+   MatchCard CSS Module - SofaScore / FlashScore Style layout
+   ========================================================================== */
+
+.card {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  min-height: 72px;
+  outline: none;
+  cursor: pointer;
+}
+
+.card:hover,
+.card:focus-visible {
+  background-color: var(--bg-hover);
+  border-color: var(--text-muted);
+}
+
+.card:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+/* Left Section: Match Status / Time */
+.statusSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--card-border);
+  margin-right: 16px;
+  padding-right: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.liveContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--color-live);
+}
+
+.liveMinute {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.scheduled {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.statusText {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+/* Match Details Column Block (Teams + Scores) */
+.matchDetails {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+/* Middle Section: Teams */
+.teamsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+  min-width: 0; /* Prevents overflow */
+}
+
+.teamRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.logoContainer {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logoImage {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.logoFallback {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  user-select: none;
+}
+
+.teamName {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+}
+
+.winning {
+  font-weight: 700;
+}
+
+.winning .teamName {
+  color: var(--text-primary);
+}
+
+/* Right Section: Scores */
+.scoresSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  font-variant-numeric: tabular-nums;
+  margin-left: 16px;
+  flex-shrink: 0;
+}
+
+.scoreRow {
+  height: 22px; /* Matches the teamRow logo/text height precisely */
+  display: flex;
+  align-items: center;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.scoreWinning {
+  font-weight: 700;
+  color: var(--text-primary);
+}
