@@ -7,7 +7,7 @@
 
 ## 📈 Epics Overview
 - [x] **Epic 1: Workspace Scaffolding**
-- [ ] **Epic 2: Backend Base & Database**
+- [x] **Epic 2: Backend Base & Database**
 - [ ] **Epic 3: Backend Normalizers (API-Football)**
 - [ ] **Epic 4: Backend Schedulers & Real-Time**
 - [ ] **Epic 5: Backend Auth & Users**
@@ -54,16 +54,16 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 2.1: Scaffold NestJS App (DONE)
 - **Action:** Generate base NestJS app in `backend/`.
 
-#### Task 2.2: Setup Prisma & PostgreSQL
+#### Task 2.2: Setup Prisma & PostgreSQL (DONE)
 - **Action:** Install Prisma, initialize schema, connect to local Postgres (`postgress:1234`).
 
-#### Task 2.3: Create Database Models (Leagues & Teams)
+#### Task 2.3: Create Database Models (Leagues & Teams) (DONE)
 - **Action:** Write Prisma models for `League`, `Season`, and `Team`. Apply migrations.
 
-#### Task 2.4: Create Database Models (Players & Matches)
+#### Task 2.4: Create Database Models (Players & Matches) (DONE)
 - **Action:** Write Prisma models for `Player`, `Match`, `Standing`. Apply migrations.
 
-#### Task 2.5: Create Database Models (Users & Votes)
+#### Task 2.5: Create Database Models (Users & Votes) (DONE)
 - **Action:** Write Prisma models for `User`, `Bookmark`, `Vote`. Apply migrations.
 
 ---
