@@ -151,6 +151,15 @@
 .leagueFlag {
   font-size: 1.1rem;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+}
+
+.leagueLogoImage {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  border-radius: 2px;
 }
 
 .leagueName {

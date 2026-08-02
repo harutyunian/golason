@@ -9,7 +9,7 @@ interface SearchParams {
 }
 
 interface PageProps {
-  searchParams: SearchParams;
+  searchParams: Promise<SearchParams> | SearchParams; // Compatible with both Next.js 14 and 15
 }
 
 const getTodayDateString = (): string => {
@@ -81,7 +81,9 @@ const getFallbackMatches = (dateStr: string) => [
 
 export default async function Home({ searchParams }: PageProps) {
   // 1. Resolve date parameter cleanly from the URL search query (?date=YYYY-MM-DD)
-  const resolvedDate = searchParams?.date || getTodayDateString();
+  // Await searchParams to fully support Next.js 15 dynamic APIs
+  const params = await searchParams;
+  const resolvedDate = params?.date || getTodayDateString();
 
   let matches = [];
 

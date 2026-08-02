@@ -42,12 +42,18 @@ interface MatchDetailsProps {
   initialMatch: StandardMatchWithDetails;
 }
 
+// Helper to verify if a string is a standard external URL logo
+const isUrl = (str: string) => str && (str.startsWith("http://") || str.startsWith("https://"));
+
 const TeamLogo = ({ logo, name }: { logo?: string | null; name: string }) => {
-  if (!logo) {
-    const initials = name ? name.substring(0, 2).toUpperCase() : "?";
+  const [error, setError] = React.useState(false);
+
+  if (!logo || error) {
+    const safeName = name || "?";
+    const initials = safeName.substring(0, 2).toUpperCase();
     let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    for (let i = 0; i < safeName.length; i++) {
+      hash = safeName.charCodeAt(i) + ((hash << 5) - hash);
     }
     const colors = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899", "#06b6d4", "#14b8a6"];
     const backgroundColor = colors[Math.abs(hash) % colors.length];
@@ -61,7 +67,13 @@ const TeamLogo = ({ logo, name }: { logo?: string | null; name: string }) => {
 
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img src={logo} alt={`${name} Logo`} className={styles.logoImage} loading="lazy" />
+    <img 
+      src={logo} 
+      alt={`${name} Logo`} 
+      className={styles.logoImage} 
+      onError={() => setError(true)}
+      loading="lazy" 
+    />
   );
 };
 
@@ -138,7 +150,12 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
         {/* League Details Section */}
         <div className={styles.leagueHeader}>
           <span className={styles.leagueFlag} aria-hidden="true">
-            {match.league.logo}
+            {isUrl(match.league.logo) ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={match.league.logo} alt={`${match.league.name} Logo`} className={styles.leagueLogoImage} />
+            ) : (
+              match.league.logo
+            )}
           </span>
           <span className={styles.leagueName}>{match.league.name}</span>
           <span className={styles.leagueCountry}>({match.league.country})</span>

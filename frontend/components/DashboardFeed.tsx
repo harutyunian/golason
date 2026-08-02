@@ -38,6 +38,9 @@ interface DashboardFeedProps {
   selectedDate: string;
 }
 
+// Helper to verify if a string is a standard external URL logo
+const isUrl = (str: string) => str && (str.startsWith("http://") || str.startsWith("https://"));
+
 export default function DashboardFeed({ initialMatches, selectedDate }: DashboardFeedProps) {
   const router = useRouter();
   const [filter, setFilter] = useState<"ALL" | "LIVE">("ALL");
@@ -139,7 +142,12 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
                   {/* League Sub-Header */}
                   <div className={styles.leagueHeader}>
                     <span className={styles.leagueFlag} aria-hidden="true">
-                      {league.logo}
+                      {isUrl(league.logo) ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={league.logo} alt={`${league.name} Logo`} className={styles.leagueLogoImage} />
+                      ) : (
+                        league.logo
+                      )}
                     </span>
                     <h3 className={styles.leagueName}>{league.name}</h3>
                     <span className={styles.leagueCountry}>{league.country}</span>
