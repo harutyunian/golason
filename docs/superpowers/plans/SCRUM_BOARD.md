@@ -133,11 +133,11 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 7: Frontend Micro-Components
 
-#### Task 7.1: Build Header/Navbar Component
+#### Task 7.1: Build Header/Navbar Component (DONE)
 - **Action:** Create responsive Header with Logo, Navigation links, and Auth buttons.
 - **Acceptance Criteria:**
-  - [ ] SEO: Uses `<header>` and `<nav>` semantic HTML.
-  - [ ] A11y: Fully tab-navigable.
+  - [x] SEO: Uses `<header>` and `<nav>` semantic HTML.
+  - [x] A11y: Fully tab-navigable.
 
 #### Task 7.2: Build Footer Component
 - **Action:** Create standard footer with copyright and links.
