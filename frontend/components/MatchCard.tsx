@@ -56,12 +56,13 @@ const TeamLogo = ({ logo, name }: { logo?: string | null; name: string }) => {
   const [error, setError] = useState(false);
 
   if (!logo || error) {
-    const initials = name ? name.substring(0, 2).toUpperCase() : '?';
+    const safeName = name || '?';
+    const initials = safeName.substring(0, 2).toUpperCase();
     
     // Generate a deterministic background color based on team name
     let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    for (let i = 0; i < safeName.length; i++) {
+      hash = safeName.charCodeAt(i) + ((hash << 5) - hash);
     }
     const colors = [
       '#3b82f6', // blue

@@ -12,7 +12,7 @@
 - [ ] **Epic 4: Backend Schedulers & Real-Time**
 - [ ] **Epic 5: Backend Auth & Users**
 - [ ] **Epic 6: Frontend Base & Layout (SEO Core)**
-- [ ] **Epic 7: Frontend Micro-Components**
+- [x] **Epic 7: Frontend Micro-Components**
 - [ ] **Epic 8: Frontend Dashboard (Main Page)**
 - [ ] **Epic 9: Frontend Match Profile**
 - [ ] **Epic 10: Frontend Team & Player Profiles**
@@ -152,7 +152,7 @@ Our subagents will strictly utilize the following skills during execution:
 - **Acceptance Criteria:**
   - [x] A11y: Date slider is keyboard navigable and has ARIA labels.
 
-#### Task 7.5: Build Match Card Component
+#### Task 7.5: Build Match Card Component (DONE)
 - **Action:** Create a reusable component displaying home/away teams, scores, and match minute.
 
 ---
