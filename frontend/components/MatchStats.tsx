@@ -57,6 +57,10 @@ export interface TeamStats {
   highClaims?: number | null;
 }
 
+import MatchShotmap from "./MatchShotmap";
+import { StandardMatchEvent } from "./MatchTimeline";
+import { StandardMatchLineups } from "./LineupPitch";
+
 export interface StandardMatchStats {
   home: TeamStats;
   away: TeamStats;
@@ -64,6 +68,10 @@ export interface StandardMatchStats {
 
 interface MatchStatsProps {
   stats?: StandardMatchStats | null;
+  events?: StandardMatchEvent[] | null;
+  lineups?: StandardMatchLineups | null;
+  homeTeam: { id: number; name: string };
+  awayTeam: { id: number; name: string };
 }
 
 // --------------------------------------------------------------------------
@@ -210,7 +218,7 @@ function ComparisonBarRow({ label, homeValue, awayValue, homeRaw, awayRaw, isLow
   );
 }
 
-export default function MatchStats({ stats }: MatchStatsProps) {
+export default function MatchStats({ stats, events, lineups, homeTeam, awayTeam }: MatchStatsProps) {
   if (!stats || !stats.home || !stats.away) {
     return (
       <div className={styles.emptyState} aria-label="Stats Unavailable">
@@ -230,6 +238,15 @@ export default function MatchStats({ stats }: MatchStatsProps) {
 
   return (
     <div className={styles.container}>
+      {/* Visual Shotmap Position Plot (SofaScore styled!) */}
+      <MatchShotmap 
+        stats={stats} 
+        events={events} 
+        lineups={lineups} 
+        homeTeam={homeTeam} 
+        awayTeam={awayTeam} 
+      />
+
       {/* 1. MATCH OVERVIEW SECTION (SofaScore styled!) */}
       <section className={styles.accordionSection} aria-label="Match Overview Section">
         <h3 className={styles.sectionHeader}>

@@ -617,7 +617,13 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
             )}
 
             {activeTab === 'stats' && (
-              <MatchStats stats={match.stats} />
+              <MatchStats 
+                stats={match.stats} 
+                events={match.events} 
+                lineups={match.lineups} 
+                homeTeam={match.homeTeam} 
+                awayTeam={match.awayTeam} 
+              />
             )}
 
             {activeTab === 'standings' && (
