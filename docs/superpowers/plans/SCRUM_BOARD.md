@@ -159,7 +159,7 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 8: Frontend Dashboard (Main Page)
 
-#### Task 8.1: Dashboard Layout Structure
+#### Task 8.1: Dashboard Layout Structure (DONE)
 - **Action:** Combine Header, Ad Banner, Date Carousel, and main content area in `page.tsx`.
 
 #### Task 8.2: Fetch & Display Matches
