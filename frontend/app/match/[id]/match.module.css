@@ -224,69 +224,259 @@
   color: var(--color-primary);
 }
 
-/* Placeholder for remaining tabs and content widgets */
-.tabsPlaceholder {
+/* Columns Layout (Dual Column) */
+.columnsLayout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Sidebar Cards */
+.sidebarCard {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebarCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.sidebarCardIcon {
+  color: var(--color-primary);
+}
+
+.sidebarCardTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Match Momentum Visuals */
+.momentumPlaceholder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: linear-gradient(180deg, var(--bg-hover) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid var(--card-border);
+}
+
+.momentumLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  gap: 0.5rem;
+}
+
+.momentumTeamName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.momentumBars {
+  display: grid;
+  grid-template-columns: repeat(20, 1fr);
+  gap: 4px;
+  height: 80px;
+  align-items: center;
+  position: relative;
+}
+
+/* Horizontal baseline indicator */
+.momentumBars::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background-color: var(--card-border);
+  z-index: 1;
+}
+
+.momentumBarWrapper {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.momentumBar {
+  width: 100%;
+  border-radius: 2px;
+  transition: height 0.3s ease;
+}
+
+.momentumHome {
+  background-color: var(--color-primary, #3b82f6);
+}
+
+.momentumAway {
+  background-color: var(--color-live, #ef4444);
+}
+
+.momentumTimeline {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Content Cards (Right Column) */
+.contentCard {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contentCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.contentCardIcon {
+  color: var(--color-primary);
+}
+
+.cardHeaderTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.placeholderRow {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 2rem;
-  background-color: var(--card-bg);
-  border: 1px dashed var(--card-border);
-  border-radius: 8px;
+  gap: 0.5rem;
+  padding: 2.5rem 1.5rem;
   text-align: center;
+}
+
+.placeholderText {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Overview Tab Styling */
+.tabGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.aboutText {
+  font-size: 0.95rem;
+  line-height: 1.6;
   color: var(--text-secondary);
 }
 
-.placeholderIcon {
-  color: var(--color-primary);
-  margin-bottom: 1rem;
+.aboutStatsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  background-color: var(--bg-hover);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
 }
 
-/* Responsive Overrides */
-@media (max-width: 768px) {
-  .scoreboard {
-    padding: 1.5rem 1rem;
-  }
+.aboutStatItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
 
-  .scoreboardGrid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
+.aboutStatLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
 
-  .teamSide {
-    flex-direction: row;
-    justify-content: flex-start;
-    width: 100%;
-    gap: 1rem;
-    text-align: left;
-  }
+.aboutStatValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
 
-  .logoWrapper {
-    width: 48px;
-    height: 48px;
-    padding: 0.25rem;
-  }
+/* Where to Watch */
+.watchOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
 
-  .logoFallback {
-    font-size: 1.125rem;
-  }
+.watchChannel {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--bg-hover);
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+}
 
-  .teamName {
-    font-size: 1.125rem;
-    max-width: 100%;
-  }
+.watchChannelIcon {
+  font-size: 1.5rem;
+}
 
-  /* Force score/status block to be the central top section */
-  .centerScore {
-    order: -1;
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
+.watchChannelDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
 
-  .scoreDigit {
-    font-size: 2.75rem;
-  }
+.watchChannelName {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.watchChannelType {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 /* Real-time goal alert banner overlay */
@@ -323,6 +513,12 @@
   border-bottom: 1px solid var(--card-border);
   margin-bottom: 1.5rem;
   padding: 0 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none; /* Hide scrollbar for clean premium UI */
+}
+
+.tabsContainer::-webkit-scrollbar {
+  display: none;
 }
 
 .tabBtn {
@@ -335,6 +531,7 @@
   cursor: pointer;
   position: relative;
   transition: color 0.2s ease;
+  white-space: nowrap;
 }
 
 .tabBtn:hover {
@@ -367,7 +564,7 @@
 
 /* ==========================================================================
    Dynamic Scoreboard Goalscorers & Meta Kickoff Info (SofaScore styled)
-   ========================================================================== */
+   ========================================================================= */
 .scorersSection {
   display: grid;
   grid-template-columns: 1fr 160px 1fr;
@@ -425,6 +622,58 @@
 
 .metaSeparator {
   opacity: 0.5;
+}
+
+/* Responsive Overrides */
+@media (max-width: 1024px) {
+  .columnsLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .scoreboard {
+    padding: 1.5rem 1rem;
+  }
+
+  .scoreboardGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .teamSide {
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 1rem;
+    text-align: left;
+  }
+
+  .logoWrapper {
+    width: 48px;
+    height: 48px;
+    padding: 0.25rem;
+  }
+
+  .logoFallback {
+    font-size: 1.125rem;
+  }
+
+  .teamName {
+    font-size: 1.125rem;
+    max-width: 100%;
+  }
+
+  /* Force score/status block to be the central top section */
+  .centerScore {
+    order: -1;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .scoreDigit {
+    font-size: 2.75rem;
+  }
 }
 
 /* Mobile override for scorers */

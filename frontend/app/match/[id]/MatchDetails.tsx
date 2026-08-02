@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, BarChart2, Flame } from "lucide-react";
+import { ArrowLeft, Flame, Tv, Info, Sparkles, TrendingUp, Clock } from "lucide-react";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { MatchStatus } from "@/components/MatchCard";
 import MatchStats, { StandardMatchStats } from "@/components/MatchStats";
@@ -88,11 +88,15 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
   const [match, setMatch] = useState<StandardMatchWithDetails>(initialMatch);
   const [isGoalFlashing, setIsGoalFlashing] = useState(false);
   const [isMounting, setIsMounting] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'lineups' | 'h2h'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'lineups' | 'stats' | 'standings' | 'h2h' | 'ai-insights'>('overview');
 
   // Timezone safe on-mount formatting
   useEffect(() => {
-    setIsMounting(false);
+    // Asynchronously update to avoid synchronous set state in effect warning
+    const timer = setTimeout(() => {
+      setIsMounting(false);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   // Listen to WebSocket score flashes in real-time!
@@ -113,7 +117,9 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
         if (typeof window !== "undefined" && "vibrate" in navigator) {
           window.navigator.vibrate([200, 100, 200]);
         }
-      } catch (err) {}
+      } catch {
+        // Ignored gracefully
+      }
 
       // Reset flash animation classes after 4 seconds
       const timer = setTimeout(() => {
@@ -305,65 +311,232 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
         </div>
       </section>
 
-      {/* Tabs Navigation Header */}
-      <div className={styles.tabsContainer} role="tablist" aria-label="Match information tabs">
-        <button
-          className={`${styles.tabBtn} ${activeTab === 'overview' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('overview')}
-          role="tab"
-          aria-selected={activeTab === 'overview'}
-        >
-          Overview
-        </button>
-        <button
-          className={`${styles.tabBtn} ${activeTab === 'lineups' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('lineups')}
-          role="tab"
-          aria-selected={activeTab === 'lineups'}
-        >
-          Lineups
-        </button>
-        <button
-          className={`${styles.tabBtn} ${activeTab === 'h2h' ? styles.activeTab : ''}`}
-          onClick={() => setActiveTab('h2h')}
-          role="tab"
-          aria-selected={activeTab === 'h2h'}
-        >
-          H2H
-        </button>
-      </div>
-
-      {/* Tab Panels */}
-      <div className={styles.tabContentPanel}>
-        {activeTab === 'overview' && (
-          <>
-            <PredictionPoll 
-              matchId={match.id} 
-              homeTeamName={match.homeTeam.name} 
-              awayTeamName={match.awayTeam.name} 
-            />
-            <MatchStats stats={match.stats} />
-            <MatchTimeline events={match.events} homeTeamId={match.homeTeam.id} />
-          </>
-        )}
-
-        {activeTab === 'lineups' && (
-          <LineupPitch
-            lineups={match.lineups}
-            homeTeamName={match.homeTeam.name}
-            awayTeamName={match.awayTeam.name}
+      {/* Columns Layout */}
+      <div className={styles.columnsLayout}>
+        {/* Left Column (340px Sidebar) */}
+        <aside className={styles.leftColumn}>
+          {/* Prediction Poll Widget */}
+          <PredictionPoll 
+            matchId={match.id} 
+            homeTeamName={match.homeTeam.name} 
+            awayTeamName={match.awayTeam.name} 
           />
-        )}
 
-        {activeTab === 'h2h' && (
-          <section className={styles.tabsPlaceholder} aria-label="Head to Head history">
-            <Flame size={36} className={styles.placeholderIcon} />
-            <h3>Head-to-Head History</h3>
-            <p>
-              Previous match cards, historic goals ratios, and win-probability graphs will render here in the upcoming sprints!
-            </p>
+          {/* Match Momentum Placeholder */}
+          <section className={styles.sidebarCard} aria-label="Match Momentum">
+            <div className={styles.sidebarCardHeader}>
+              <TrendingUp size={16} className={styles.sidebarCardIcon} />
+              <h3 className={styles.sidebarCardTitle}>Match Momentum</h3>
+            </div>
+            <div className={styles.momentumPlaceholder}>
+              <div className={styles.momentumLabel}>
+                <span className={styles.momentumTeamName}>{match.homeTeam.name}</span>
+                <span className={styles.momentumTeamName}>{match.awayTeam.name}</span>
+              </div>
+              <div className={styles.momentumBars}>
+                {[12, -8, 20, -15, 10, -5, 30, 25, -18, -10, 5, -12, 18, -25, 15, -5, 8, -12, 22, -18].map((val, i) => {
+                  const isHome = val > 0;
+                  const heightPercentage = Math.min(Math.abs(val) * 3, 100);
+                  return (
+                    <div key={i} className={styles.momentumBarWrapper}>
+                      <div 
+                        className={`${styles.momentumBar} ${isHome ? styles.momentumHome : styles.momentumAway}`}
+                        style={{ 
+                          height: `${heightPercentage}%`,
+                          transform: isHome ? 'scaleY(1)' : 'scaleY(-1)',
+                          transformOrigin: isHome ? 'bottom' : 'top'
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <div className={styles.momentumTimeline}>
+                <span>0&apos;</span>
+                <span>45&apos;</span>
+                <span>90&apos;</span>
+              </div>
+            </div>
           </section>
-        )}
+
+          {/* Timeline Card */}
+          <section className={styles.sidebarCard} aria-label="Timeline">
+            <div className={styles.sidebarCardHeader}>
+              <Clock size={16} className={styles.sidebarCardIcon} />
+              <h3 className={styles.sidebarCardTitle}>Match Timeline</h3>
+            </div>
+            <MatchTimeline events={match.events} homeTeamId={match.homeTeam.id} />
+          </section>
+        </aside>
+
+        {/* Right Column (1fr Content Column) */}
+        <main className={styles.rightColumn}>
+          {/* Tab Navigation Bar */}
+          <div className={styles.tabsContainer} role="tablist" aria-label="Match details tabs">
+            <button
+              className={`${styles.tabBtn} ${activeTab === 'overview' ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab('overview')}
+              role="tab"
+              aria-selected={activeTab === 'overview'}
+            >
+              Overview
+            </button>
+            <button
+              className={`${styles.tabBtn} ${activeTab === 'lineups' ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab('lineups')}
+              role="tab"
+              aria-selected={activeTab === 'lineups'}
+            >
+              Lineups
+            </button>
+            <button
+              className={`${styles.tabBtn} ${activeTab === 'stats' ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab('stats')}
+              role="tab"
+              aria-selected={activeTab === 'stats'}
+            >
+              Statistics
+            </button>
+            <button
+              className={`${styles.tabBtn} ${activeTab === 'standings' ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab('standings')}
+              role="tab"
+              aria-selected={activeTab === 'standings'}
+            >
+              Standings
+            </button>
+            <button
+              className={`${styles.tabBtn} ${activeTab === 'h2h' ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab('h2h')}
+              role="tab"
+              aria-selected={activeTab === 'h2h'}
+            >
+              H2H
+            </button>
+            <button
+              className={`${styles.tabBtn} ${activeTab === 'ai-insights' ? styles.activeTab : ''}`}
+              onClick={() => setActiveTab('ai-insights')}
+              role="tab"
+              aria-selected={activeTab === 'ai-insights'}
+            >
+              AI Insights
+            </button>
+          </div>
+
+          {/* Tab Panels */}
+          <div className={styles.tabContentPanel}>
+            {activeTab === 'overview' && (
+              <div className={styles.tabGrid}>
+                {/* About the match */}
+                <section className={styles.contentCard} aria-label="About the match">
+                  <div className={styles.contentCardHeader}>
+                    <Info size={18} className={styles.contentCardIcon} />
+                    <h3 className={styles.cardHeaderTitle}>About the Match</h3>
+                  </div>
+                  <p className={styles.aboutText}>
+                    This match between <strong>{match.homeTeam.name}</strong> and <strong>{match.awayTeam.name}</strong> takes place as part of the <strong>{match.league.name}</strong> in {match.league.country}. 
+                    The kickoff is scheduled for {isMounting ? "..." : kickoffDate.toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at {isMounting ? "--:--" : formattedTime} local time.
+                  </p>
+                  <div className={styles.aboutStatsGrid}>
+                    <div className={styles.aboutStatItem}>
+                      <span className={styles.aboutStatLabel}>Venue</span>
+                      <span className={styles.aboutStatValue}>Main Stadium</span>
+                    </div>
+                    <div className={styles.aboutStatItem}>
+                      <span className={styles.aboutStatLabel}>Referee</span>
+                      <span className={styles.aboutStatValue}>To Be Announced</span>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Where to watch */}
+                <section className={styles.contentCard} aria-label="Where to watch">
+                  <div className={styles.contentCardHeader}>
+                    <Tv size={18} className={styles.contentCardIcon} />
+                    <h3 className={styles.cardHeaderTitle}>Where to Watch</h3>
+                  </div>
+                  <div className={styles.watchOptions}>
+                    <div className={styles.watchChannel}>
+                      <div className={styles.watchChannelIcon}>📺</div>
+                      <div className={styles.watchChannelDetails}>
+                        <span className={styles.watchChannelName}>ESPN+</span>
+                        <span className={styles.watchChannelType}>Live Stream (Subscription)</span>
+                      </div>
+                    </div>
+                    <div className={styles.watchChannel}>
+                      <div className={styles.watchChannelIcon}>📺</div>
+                      <div className={styles.watchChannelDetails}>
+                        <span className={styles.watchChannelName}>Sky Sports Premier League</span>
+                        <span className={styles.watchChannelType}>TV Broadcast (UK)</span>
+                      </div>
+                    </div>
+                    <div className={styles.watchChannel}>
+                      <div className={styles.watchChannelIcon}>📱</div>
+                      <div className={styles.watchChannelDetails}>
+                        <span className={styles.watchChannelName}>Golason App</span>
+                        <span className={styles.watchChannelType}>Real-Time Updates & Premium Cast</span>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            )}
+
+            {activeTab === 'lineups' && (
+              <LineupPitch
+                lineups={match.lineups}
+                homeTeamName={match.homeTeam.name}
+                awayTeamName={match.awayTeam.name}
+              />
+            )}
+
+            {activeTab === 'stats' && (
+              <MatchStats stats={match.stats} />
+            )}
+
+            {activeTab === 'standings' && (
+              <section className={styles.contentCard} aria-label="Standings Table">
+                <div className={styles.contentCardHeader}>
+                  <Info size={18} className={styles.contentCardIcon} />
+                  <h3 className={styles.cardHeaderTitle}>Standings</h3>
+                </div>
+                <div className={styles.placeholderRow}>
+                  <p className={styles.placeholderText}>
+                    Standing table rows will render dynamically here in Task 9.11
+                  </p>
+                </div>
+              </section>
+            )}
+
+            {activeTab === 'h2h' && (
+              <section className={styles.contentCard} aria-label="Head to Head history">
+                <div className={styles.contentCardHeader}>
+                  <Flame size={18} className={styles.contentCardIcon} />
+                  <h3 className={styles.cardHeaderTitle}>Head-to-Head History</h3>
+                </div>
+                <div className={styles.placeholderRow}>
+                  <p className={styles.placeholderText}>
+                    Historic H2H records will load here dynamically in Task 9.13
+                  </p>
+                </div>
+              </section>
+            )}
+
+            {activeTab === 'ai-insights' && (
+              <section className={styles.contentCard} aria-label="AI Insights">
+                <div className={styles.contentCardHeader}>
+                  <Sparkles size={18} className={styles.contentCardIcon} />
+                  <h3 className={styles.cardHeaderTitle}>AI Insights</h3>
+                </div>
+                <div className={styles.placeholderRow}>
+                  <p className={styles.placeholderText}>
+                    AI Highlights, probability scores, and pre-match analytics will load here in future updates
+                  </p>
+                </div>
+              </section>
+            )}
+          </div>
+        </main>
       </div>
     </div>
   );
