@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Trophy, Star, Flame, Award } from "lucide-react";
 import AdBanner from "@/components/AdBanner";
 import DateSelector from "@/components/DateSelector";
-import MatchCard from "@/components/MatchCard";
+import MatchCard, { MatchStatus } from "@/components/MatchCard";
 import styles from "../app/page.module.css";
 
 interface League {
@@ -24,7 +24,7 @@ interface TeamDetails {
 interface MockMatch {
   id: number;
   league: League;
-  status: any;
+  status: MatchStatus;
   elapsedTime?: number | null;
   homeTeam: TeamDetails;
   awayTeam: TeamDetails;
