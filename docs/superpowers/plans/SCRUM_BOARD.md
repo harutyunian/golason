@@ -208,7 +208,7 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 9.9: Play-by-Play Live Commentary Feed (DONE)
 - **Action:** Build scrollable vertical play-by-play commentary timber in the left column with custom action headers (GOAL, Card, Save, Corner) and player headshots.
 
-#### Task 9.10: Player of the Match Race Card & Voting Widgets
+#### Task 9.10: Player of the Match Race Card & Voting Widgets (DONE)
 - **Action:** Parse active ratings on the server to display a high-visibility "Player of the Match" race card next to the scoreboard.
 
 #### Task 9.11: Standings Tab Integration
