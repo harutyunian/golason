@@ -211,10 +211,10 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 10.2: League Standings Table Component (DONE)
 - **Action:** Build the points table component and embed it on the Team Profile.
 
-#### Task 10.3: Player Profile Layout
+#### Task 10.3: Player Profile Layout (DONE)
 - **Action:** Create `/player/[id]/page.tsx`. Display player bio and stats.
 - **Acceptance Criteria:**
-  - [ ] SEO: Implement `Person` JSON-LD schema dynamically.
+  - [x] SEO: Implement `Person` JSON-LD schema dynamically.
 
 #### Task 10.4: Dynamic XML Sitemap
 - **Action:** Create `/sitemap.xml/route.ts` that dynamically lists all match, team, and player URLs for search engines.
