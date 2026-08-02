@@ -101,39 +101,40 @@ describe('FootballNormalizerService', () => {
       const raw = createRawFixture('FT', 90);
       const result = service.normalizeFixture(raw);
 
-      expect(result).toEqual({
-        id: 123456,
-        date: '2026-08-02T15:00:00Z',
-        status: 'FINISHED',
-        elapsedTime: 90,
+      expect(result.id).toBe(123456);
+      expect(result.date).toBe('2026-08-02T15:00:00Z');
+      expect(result.status).toBe('FINISHED');
+      expect(result.elapsedTime).toBe(90);
+      expect(result.sport).toBe('FOOTBALL');
+      expect(result.leagueId).toBe(39);
+      expect(result.homeTeamId).toBe(42);
+      expect(result.awayTeamId).toBe(49);
+      expect(result.homeScore).toBe(2);
+      expect(result.awayScore).toBe(1);
+      expect(result.homeScoreHT).toBe(1);
+      expect(result.awayScoreHT).toBe(0);
+      expect(result.league).toEqual({
+        id: 39,
+        name: 'Premier League',
+        country: 'England',
+        logo: 'https://media.api-sports.io/football/leagues/39.png',
         sport: 'FOOTBALL',
-        leagueId: 39,
-        homeTeamId: 42,
-        awayTeamId: 49,
-        homeScore: 2,
-        awayScore: 1,
-        homeScoreHT: 1,
-        awayScoreHT: 0,
-        league: {
-          id: 39,
-          name: 'Premier League',
-          country: 'England',
-          logo: 'https://media.api-sports.io/football/leagues/39.png',
-          sport: 'FOOTBALL',
-        },
-        homeTeam: {
-          id: 42,
-          name: 'Arsenal',
-          logo: 'https://media.api-sports.io/football/teams/42.png',
-          sport: 'FOOTBALL',
-        },
-        awayTeam: {
-          id: 49,
-          name: 'Chelsea',
-          logo: 'https://media.api-sports.io/football/teams/49.png',
-          sport: 'FOOTBALL',
-        },
       });
+      expect(result.homeTeam).toEqual({
+        id: 42,
+        name: 'Arsenal',
+        logo: 'https://media.api-sports.io/football/teams/42.png',
+        sport: 'FOOTBALL',
+      });
+      expect(result.awayTeam).toEqual({
+        id: 49,
+        name: 'Chelsea',
+        logo: 'https://media.api-sports.io/football/teams/49.png',
+        sport: 'FOOTBALL',
+      });
+      expect(result.stats).toBeDefined();
+      expect(result.lineups).toBeDefined();
+      expect(result.events).toBeDefined();
     });
 
     it('should handle null halftime scores gracefully', () => {
