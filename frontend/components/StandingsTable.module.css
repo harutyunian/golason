@@ -1,0 +1,122 @@
+.tableContainer {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 8px;
+  background-color: var(--card-bg);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  text-align: left;
+  color: var(--text-primary);
+}
+
+.table th {
+  padding: 8px 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--card-border);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--card-border);
+  vertical-align: middle;
+}
+
+.row {
+  transition: background-color 0.15s ease;
+}
+
+.row:hover {
+  background-color: var(--bg-hover);
+}
+
+.activeRow {
+  background-color: var(--bg-hover);
+  font-weight: 600;
+  border-left: 3px solid var(--color-primary);
+}
+
+.activeRow td {
+  border-bottom: 1px solid var(--card-border);
+}
+
+.rankCol, .rankCell {
+  width: 32px;
+  text-align: center;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.teamCol {
+  text-align: left;
+}
+
+.teamCell {
+  padding: 8px 10px !important;
+}
+
+.teamLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
+}
+
+.teamLink:hover .teamName {
+  color: var(--color-primary);
+}
+
+.teamLogo {
+  flex-shrink: 0;
+}
+
+.teamName {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+  color: var(--text-primary);
+  transition: color 0.15s ease;
+}
+
+.numCol, .numCell {
+  width: 32px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.ptsCol, .ptsCell {
+  width: 40px;
+  text-align: right;
+  font-weight: 700;
+}
+
+.ptsCell {
+  color: var(--color-primary);
+}
+
+.positiveGd {
+  color: var(--color-primary) !important;
+}
+
+.negativeGd {
+  color: var(--color-red-card) !important;
+}
+
+.emptyState {
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 14px;
+}

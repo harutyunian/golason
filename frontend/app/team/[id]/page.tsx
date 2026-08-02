@@ -4,6 +4,7 @@ import { ArrowLeft, MapPin, Calendar, Building2, BarChart2 } from "lucide-react"
 import TeamLogo from "@/components/TeamLogo";
 import MatchCard from "@/components/MatchCard";
 import AdBanner from "@/components/AdBanner";
+import StandingsTable from "@/components/StandingsTable";
 import styles from "./team.module.css";
 
 // Forces server-side dynamic rendering on runtime (vital for live scores and SEO!)
@@ -90,7 +91,25 @@ export default async function TeamProfilePage({ params }: TeamPageProps) {
     team = getFallbackTeamProfile(teamId);
   }
 
-  // 3. Structure dynamic JSON-LD metadata schema for SportsTeam crawlers (SEO target)
+  // 3. Server-side fetch the standings data from NestJS (using the league ID of the team's fixtures, defaulting to 39)
+  const leagueId = team.recentMatches?.[0]?.league?.id || team.upcomingMatches?.[0]?.league?.id || 39;
+  let standings = [];
+
+  try {
+    const standingsRes = await fetch(`http://localhost:3001/football/standings?league=${leagueId}&season=2026`, {
+      cache: "no-store",
+    });
+
+    if (standingsRes.ok) {
+      standings = await standingsRes.json();
+    } else {
+      console.warn(`Failed to fetch standings from NestJS backend: status ${standingsRes.status}`);
+    }
+  } catch (err) {
+    console.warn(`NestJS API offline for standings. Using local fallback.`, err);
+  }
+
+  // 4. Structure dynamic JSON-LD metadata schema for SportsTeam crawlers (SEO target)
   const jsonLdSchema = {
     "@context": "https://schema.org",
     "@type": "SportsTeam",
@@ -202,19 +221,13 @@ export default async function TeamProfilePage({ params }: TeamPageProps) {
             <AdBanner size="rectangle" />
           </div>
 
-          {/* Standings Placeholder panel card */}
-          <section className={styles.sidebarCard} aria-label="Standings status">
+          {/* Standings Table sidebar card */}
+          <section className={styles.sidebarCard} aria-label="League Table Standings">
             <h2 className={styles.sidebarTitle}>
               <Trophy size={16} className={styles.titleIcon} />
               League Table
             </h2>
-            <div className={styles.placeholderSection}>
-              <BarChart2 size={36} className={styles.placeholderIcon} />
-              <h3>League Standings</h3>
-              <p>
-                Dynamic, real-time league standing table rows and overall team rankings will load dynamically here in Task 10.2!
-              </p>
-            </div>
+            <StandingsTable standings={standings} activeTeamId={team.id} />
           </section>
         </aside>
       </div>

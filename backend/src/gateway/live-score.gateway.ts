@@ -29,7 +29,9 @@ export class LiveScoreGateway
   }
 
   broadcastMatchUpdate(updatedMatch: any) {
-    this.logger.log(`Broadcasting match update for match ID: ${updatedMatch.id}`);
+    this.logger.log(
+      `Broadcasting match update for match ID: ${updatedMatch.id}`,
+    );
     this.server.emit('match:update', updatedMatch);
   }
 }

@@ -67,7 +67,9 @@ describe('FootballController', () => {
 
       const updated = controller.mockGoal('101', { team: 'home' });
       expect(updated.homeScore).toBe(initialHomeScore + 1);
-      expect(mockLiveScoreGateway.broadcastMatchUpdate).toHaveBeenCalledWith(updated);
+      expect(mockLiveScoreGateway.broadcastMatchUpdate).toHaveBeenCalledWith(
+        updated,
+      );
     });
 
     it('should increment away score if specified and broadcast update', () => {
@@ -76,7 +78,9 @@ describe('FootballController', () => {
 
       const updated = controller.mockGoal('101', { team: 'away' });
       expect(updated.awayScore).toBe(initialAwayScore + 1);
-      expect(mockLiveScoreGateway.broadcastMatchUpdate).toHaveBeenCalledWith(updated);
+      expect(mockLiveScoreGateway.broadcastMatchUpdate).toHaveBeenCalledWith(
+        updated,
+      );
     });
   });
 });

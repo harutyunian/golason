@@ -208,7 +208,7 @@ Our subagents will strictly utilize the following skills during execution:
 - **Acceptance Criteria:**
   - [x] SEO: Implement `SportsTeam` JSON-LD schema dynamically.
 
-#### Task 10.2: League Standings Table Component
+#### Task 10.2: League Standings Table Component (DONE)
 - **Action:** Build the points table component and embed it on the Team Profile.
 
 #### Task 10.3: Player Profile Layout
