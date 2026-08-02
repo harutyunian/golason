@@ -73,7 +73,7 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 3.1: Define Standard Interfaces (DONE)
 - **Action:** Create standard TypeScript interfaces (`StandardMatch`, `StandardTeam`, etc.).
 
-#### Task 3.2: Build API-Football Client
+#### Task 3.2: Build API-Football Client (DONE)
 - **Action:** Create Axios/Fetch client service in NestJS to hit API-Football using the secret key.
 
 #### Task 3.3: Implement Match Normalizer
