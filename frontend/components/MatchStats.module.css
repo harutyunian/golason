@@ -1,128 +1,248 @@
 .container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  background-color: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-  transition: background-color 0.3s, border-color 0.3s;
+  gap: 2rem;
+  width: 100%;
 }
 
 .emptyState {
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 3rem 1.5rem;
-  background-color: var(--card-bg);
-  border: 1px dashed var(--card-border);
-  border-radius: 12px;
+  align-items: center;
+  padding: 3rem 1rem;
   text-align: center;
   color: var(--text-muted);
+  border: 1px dashed var(--card-border);
+  border-radius: 8px;
 }
 
-.emptyState p {
+/* Accordion Group Section */
+.accordionSection {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 0.5rem;
 }
 
+.headerIcon {
+  color: var(--color-primary);
+}
+
+.statsRowsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+/* ==========================================================================
+   Horizontal Comparison Row Styles
+   ========================================================================== */
 .row {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.4rem;
 }
 
 .rowHeader {
-  display: flex;
+  display: grid;
+  grid-template-columns: 80px 1fr 80px;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
+  text-align: center;
+}
+
+.value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.leader {
+  font-weight: 750;
+  color: var(--color-primary); /* Leader is highlighted in SofaScore Green! */
 }
 
 .label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--text-secondary);
-  text-align: center;
-  flex-grow: 1;
+  color: var(--text-primary);
 }
 
-.value {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  width: 50px;
-  font-variant-numeric: tabular-nums;
-}
-
-.value:first-child {
-  text-align: left;
-}
-
-.value:last-child {
-  text-align: right;
-}
-
-.leader {
-  color: var(--color-primary);
-  font-weight: 700;
-}
-
-/* Dual Progress Bar system */
-.barContainer {
+.labelWithIcon {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 0.5rem; /* Space between home and away bars in the center */
-  height: 8px;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.infoTrigger {
+  color: var(--text-muted);
+  cursor: help;
+  opacity: 0.7;
+}
+
+.infoTrigger:hover {
+  opacity: 1;
+  color: var(--color-primary);
+}
+
+/* Progress bar container and halfs */
+.barContainer {
+  display: flex;
   width: 100%;
+  height: 6px;
+  background-color: var(--bg-hover);
+  border-radius: 3px;
+  overflow: hidden;
 }
 
 .barHalf {
-  flex: 1;
+  width: 50%;
   height: 100%;
-  background-color: var(--bg-hover);
-  border-radius: 4px;
-  overflow: hidden;
-  display: flex;
-}
-
-/* Align home bar elements to the right, so they fill from right to left (towards center to outer) */
-.barHalf:first-child {
-  justify-content: flex-end;
-}
-
-/* Align away bar elements to the left, so they fill from left to right */
-.barHalf:last-child {
-  justify-content: flex-start;
+  position: relative;
 }
 
 .progressBar {
   height: 100%;
-  background-color: var(--bg-active);
-  border-radius: 4px;
-  transition: width 0.4s cubic-bezier(0.1, 0.8, 0.25, 1);
+  background-color: var(--text-muted); /* Gray fallback for trailing team */
+  border-radius: 3px;
+  transition: width 0.8s cubic-bezier(0.1, 0.76, 0.55, 0.94);
 }
 
-/* High-contrast brand primary highlight for the leader */
+/* Facing progress bars rules */
+.homeBar {
+  position: absolute;
+  right: 0; /* Home fills right-to-left */
+}
+
+.awayBar {
+  position: absolute;
+  left: 0; /* Away fills left-to-right */
+}
+
 .leaderBar {
-  background-color: var(--color-primary);
+  background-color: var(--color-primary); /* Symmetrical Green for the leader */
 }
 
-/* Responsive adjustments */
+/* ==========================================================================
+   Symmetrical Circular SVG Progress Gauges (SofaScore styled!)
+   ========================================================================== */
+.gaugesRowContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--card-border);
+  padding-bottom: 1.75rem;
+}
+
+.symmetricalGaugesRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 320px;
+  background-color: var(--background);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+}
+
+.gaugeContainer {
+  position: relative;
+  width: 68px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radialSvg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.radialBg {
+  stroke: var(--bg-hover);
+}
+
+.radialFill {
+  transition: stroke-dashoffset 1s ease-in-out;
+}
+
+.radialFillHome {
+  stroke: var(--color-primary); /* Home circle is SofaScore Green */
+}
+
+.radialFillAway {
+  stroke: #3b82f6; /* Away circle is Blue */
+}
+
+.gaugeText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.gaugePercent {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.gaugeRatio {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.gaugeTitle {
+  font-size: 0.825rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  flex: 1;
+  padding: 0 0.5rem;
+}
+
+/* Symmetrical mobile adjustments */
 @media (max-width: 640px) {
-  .container {
-    padding: 1rem;
-    gap: 1.25rem;
+  .gaugesRowContainer {
+    gap: 1rem;
   }
 
-  .label {
-    font-size: 0.8125rem;
+  .symmetricalGaugesRow {
+    max-width: 100%;
   }
 
-  .value {
-    font-size: 0.875rem;
-    width: 40px;
+  .rowHeader {
+    grid-template-columns: 60px 1fr 60px;
   }
 }
