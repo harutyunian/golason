@@ -9,6 +9,7 @@ import MatchStats, { StandardMatchStats } from "@/components/MatchStats";
 import LineupPitch, { StandardMatchLineups } from "@/components/LineupPitch";
 import MatchTimeline, { StandardMatchEvent } from "@/components/MatchTimeline";
 import MatchCommentary from "@/components/MatchCommentary";
+import MatchH2H from "@/components/MatchH2H";
 import PlayerOfTheMatch from "@/components/PlayerOfTheMatch";
 import PredictionPoll from "@/components/PredictionPoll";
 import StandingsTable from "@/components/StandingsTable";
@@ -643,17 +644,11 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
             )}
 
             {activeTab === 'h2h' && (
-              <section className={styles.contentCard} aria-label="Head to Head history">
-                <div className={styles.contentCardHeader}>
-                  <Flame size={18} className={styles.contentCardIcon} />
-                  <h3 className={styles.cardHeaderTitle}>Head-to-Head History</h3>
-                </div>
-                <div className={styles.placeholderRow}>
-                  <p className={styles.placeholderText}>
-                    Historic H2H records will load here dynamically in Task 9.13
-                  </p>
-                </div>
-              </section>
+              <MatchH2H 
+                homeTeam={match.homeTeam} 
+                awayTeam={match.awayTeam} 
+                matchId={match.id}
+              />
             )}
 
             {activeTab === 'ai-insights' && (
