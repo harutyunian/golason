@@ -364,3 +364,88 @@
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ==========================================================================
+   Dynamic Scoreboard Goalscorers & Meta Kickoff Info (SofaScore styled)
+   ========================================================================== */
+.scorersSection {
+  display: grid;
+  grid-template-columns: 1fr 160px 1fr;
+  width: 100%;
+  margin: 1.5rem auto 0 auto;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-top: 1px dashed var(--card-border);
+  padding-top: 1.25rem;
+}
+
+.homeScorers {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.35rem;
+  text-align: right;
+}
+
+.awayScorers {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  text-align: left;
+}
+
+.scorerItem {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+}
+
+.soccerBallSmall {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.scorersSpacer {
+  width: 100%;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.metaSeparator {
+  opacity: 0.5;
+}
+
+/* Mobile override for scorers */
+@media (max-width: 640px) {
+  .scorersSection {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding-top: 1rem;
+  }
+
+  .homeScorers {
+    align-items: center;
+    text-align: center;
+  }
+
+  .awayScorers {
+    align-items: center;
+    text-align: center;
+  }
+
+  .scorersSpacer {
+    display: none;
+  }
+}

@@ -142,6 +142,11 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
   const formattedTime = kickoffDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
   const formattedDate = kickoffDate.toLocaleDateString([], { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
+  // Filter and extract goalscorers dynamically from match events (SofaScore styled!)
+  const homeGoals = match.events?.filter((e) => e.type === "Goal" && e.team.id === match.homeTeamId) || [];
+  const awayGoals = match.events?.filter((e) => e.type === "Goal" && e.team.id === match.awayTeamId) || [];
+  const hasGoals = homeGoals.length > 0 || awayGoals.length > 0;
+
   return (
     <div className={styles.page}>
       {/* Header back button */}
@@ -209,10 +214,12 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
 
             {/* Match Statuses & Elapsed Minute Badge */}
             {isLive && (
-              <div className={`${styles.statusContainer} ${styles.liveBadge}`} aria-label={`Live in minute ${match.elapsedTime}`}>
+              <div className={`${styles.statusContainer} ${styles.liveBadge}`} aria-label={`Live in minute ${match.elapsedTime || "LIVE"}`}>
                 <span className={styles.liveText}>
                   <span className="live-pulse" />
-                  <span className={styles.liveMinute}>{match.elapsedTime}&apos;</span>
+                  <span className={styles.liveMinute}>
+                    {match.elapsedTime && String(match.elapsedTime) !== "null" ? `${match.elapsedTime}'` : "LIVE"}
+                  </span>
                 </span>
               </div>
             )}
@@ -246,6 +253,55 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
               {match.awayTeam.name}
             </h2>
           </div>
+        </div>
+
+        {/* Dynamic Goalscorers Block (SofaScore styled!) */}
+        {hasGoals && (
+          <div className={styles.scorersSection} aria-label="Goal scorers details">
+            {/* Home Scorers (aligned right) */}
+            <div className={styles.homeScorers}>
+              {homeGoals.map((event, idx) => (
+                <div key={`home-scorer-${idx}`} className={styles.scorerItem}>
+                  <span>
+                    {event.player.name}{" "}
+                    <strong>
+                      {event.time.extra ? `${event.time.elapsed}+${event.time.extra}'` : `${event.time.elapsed}'`}
+                    </strong>
+                    {event.detail.toLowerCase().includes("penalty") ? " (Pen)" : ""}
+                    {event.detail.toLowerCase().includes("own") ? " (OG)" : ""}
+                  </span>
+                  <span className={styles.soccerBallSmall} aria-hidden="true">⚽</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Empty Center Column Alignment Spacer */}
+            <div className={styles.scorersSpacer} />
+
+            {/* Away Scorers (aligned left) */}
+            <div className={styles.awayScorers}>
+              {awayGoals.map((event, idx) => (
+                <div key={`away-scorer-${idx}`} className={styles.scorerItem}>
+                  <span className={styles.soccerBallSmall} aria-hidden="true">⚽</span>
+                  <span>
+                    {event.player.name}{" "}
+                    <strong>
+                      {event.time.extra ? `${event.time.elapsed}+${event.time.extra}'` : `${event.time.elapsed}'`}
+                    </strong>
+                    {event.detail.toLowerCase().includes("penalty") ? " (Pen)" : ""}
+                    {event.detail.toLowerCase().includes("own") ? " (OG)" : ""}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Kickoff Date/Time & League Meta Row (SofaScore styled!) */}
+        <div className={styles.metaRow}>
+          <span>{isMounting ? "..." : `${kickoffDate.toLocaleDateString([], { day: "2-digit", month: "2-digit", year: "numeric" })} • ${formattedTime}`}</span>
+          <span className={styles.metaSeparator}>•</span>
+          <span>{match.league.name}</span>
         </div>
       </section>
 
