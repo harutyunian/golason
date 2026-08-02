@@ -14,6 +14,7 @@ import {
   StandardTeam,
   StandardStanding,
 } from './interfaces/sports.types';
+import { ApiFootballClientService } from './api-football-client.service';
 
 export interface StandardMatchWithDetails extends StandardMatch {
   league: StandardLeague;
@@ -129,6 +130,8 @@ const mapApiFootballToStandardPlayer = (raw: any) => {
 
 @Controller('football')
 export class FootballController {
+  constructor(private readonly apiFootballClient: ApiFootballClientService) {}
+
   private getHeaders() {
     const key =
       process.env.SPORTS_API_KEY || '1623448fdc7994a7c7ce329610618cf4';
@@ -146,42 +149,13 @@ export class FootballController {
     @Query('date') date?: string,
   ): Promise<StandardMatchWithDetails[]> {
     const targetDate = date || '2026-08-02';
-    const url = `https://v3.football.api-sports.io/fixtures?date=${targetDate}`;
-
-    console.log(
-      `[API-Football] Requesting fixtures for date: ${targetDate} from ${url}`,
-    );
 
     try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: this.getHeaders(),
-      });
-
-      if (!response.ok) {
-        throw new HttpException(
-          `External sports API returned error: status ${response.status}`,
-          HttpStatus.BAD_GATEWAY,
-        );
-      }
-
-      const data = await response.json();
-
-      // Log errors or usage info from the API-Football gateway response
-      if (data.errors && Object.keys(data.errors).length > 0) {
-        console.error('[API-Football] Gateway Error payload:', data.errors);
-        throw new HttpException(
-          `API-Football gateway error: ${JSON.stringify(data.errors)}`,
-          HttpStatus.BAD_GATEWAY,
-        );
-      }
-
+      const data = await this.apiFootballClient.getFixturesByDate(targetDate);
       const results = data.response || [];
       console.log(
         `[API-Football] Successfully fetched and normalized ${results.length} fixtures for date: ${targetDate}`,
       );
-
-      // Map raw response payloads into our standard schema types
       return results.map(mapApiFootballToStandardMatch);
     } catch (err) {
       console.error(
@@ -200,38 +174,8 @@ export class FootballController {
   async getFixtureById(
     @Param('id') id: string,
   ): Promise<StandardMatchWithDetails> {
-    const url = `https://v3.football.api-sports.io/fixtures?id=${id}`;
-
-    console.log(
-      `[API-Football] Requesting single fixture details for ID: ${id} from ${url}`,
-    );
-
     try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: this.getHeaders(),
-      });
-
-      if (!response.ok) {
-        throw new HttpException(
-          `External sports API returned error: status ${response.status}`,
-          HttpStatus.BAD_GATEWAY,
-        );
-      }
-
-      const data = await response.json();
-
-      if (data.errors && Object.keys(data.errors).length > 0) {
-        console.error(
-          '[API-Football] Single Fixture Lookup Error payload:',
-          data.errors,
-        );
-        throw new HttpException(
-          `API-Football error: ${JSON.stringify(data.errors)}`,
-          HttpStatus.BAD_GATEWAY,
-        );
-      }
-
+      const data = await this.apiFootballClient.getFixtureById(Number(id));
       const results = data.response || [];
       if (results.length === 0) {
         throw new HttpException(
