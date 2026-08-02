@@ -1,0 +1,361 @@
+.potmCard {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.headerIcon {
+  color: #fbbf24; /* Amber Gold star/award colors */
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex-grow: 1;
+}
+
+.verifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.podiumContainer {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .podiumContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Winner (1st place) styles */
+.winnerSection {
+  background-color: var(--bg-hover);
+  border-radius: 8px;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.homeWinnerBorder {
+  border-left: 4px solid #10e090; /* Green team indicators */
+}
+
+.awayWinnerBorder {
+  border-left: 4px solid #f97316; /* Gold/Orange team indicators */
+}
+
+.avatarWrapper {
+  position: relative;
+}
+
+.avatarLarge {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #ffffff;
+}
+
+.starCrown {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #fbbf24;
+  color: #0b111e;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
+}
+
+.winnerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex-grow: 1;
+}
+
+.winnerName {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.winnerTeam {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.statsOverview {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.statsLabel {
+  color: var(--text-muted);
+}
+
+.statsVal {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Rating Badges colors (SofaScore standard) */
+.ratingPillLarge {
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  color: #ffffff;
+  min-width: 44px;
+  text-align: center;
+}
+
+.ratingExcellent {
+  background-color: #10b981; /* Dark Green - 8.0+ */
+}
+
+.ratingGood {
+  background-color: #10e090; /* Light Green - 7.0-7.9 */
+  color: #000000;
+}
+
+.ratingAverage {
+  background-color: #facc15; /* Yellow - 6.0-6.9 */
+  color: #000000;
+}
+
+.ratingPoor {
+  background-color: #ef4444; /* Red - < 6.0 */
+}
+
+/* Runners Up (2nd/3rd place) styles */
+.runnersUpSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.runnersTitle {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.runnersList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.runnerRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+}
+
+.runnerRank {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 12px;
+}
+
+.avatarSmall {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #ffffff;
+}
+
+.runnerInfo {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.runnerName {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.runnerTeam {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.ratingPillSmall {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  color: #ffffff;
+  min-width: 32px;
+  text-align: center;
+}
+
+/* Core Team Avatar Backings */
+.homeAvatar {
+  background-color: #0f172a;
+  border: 1px solid #10e090;
+}
+
+.awayAvatar {
+  background-color: #1e293b;
+  border: 1px solid #f97316;
+}
+
+/* Voting Card Mode */
+.votePrompt {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.candidatesGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .candidatesGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.candidateBtn {
+  background-color: var(--bg-hover);
+  border: 1px solid var(--card-border);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.candidateBtn:not(.votedMode):hover {
+  border-color: #fbbf24;
+  background-color: rgba(251, 191, 36, 0.05);
+}
+
+.candidateBtnContent {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  z-index: 1;
+}
+
+.candidateAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #ffffff;
+}
+
+.candidateDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex-grow: 1;
+}
+
+.candidateName {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.candidateSub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.percentageLabel {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Dynamic Animated Progress Bar for votes */
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  opacity: 0.12;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.homeProgress {
+  background-color: #10e090;
+}
+
+.awayProgress {
+  background-color: #f97316;
+}
+
+.userSelected {
+  border-color: #fbbf24;
+}
+
+.votedMode {
+  cursor: default;
+}

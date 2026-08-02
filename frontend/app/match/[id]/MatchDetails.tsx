@@ -9,6 +9,7 @@ import MatchStats, { StandardMatchStats } from "@/components/MatchStats";
 import LineupPitch, { StandardMatchLineups } from "@/components/LineupPitch";
 import MatchTimeline, { StandardMatchEvent } from "@/components/MatchTimeline";
 import MatchCommentary from "@/components/MatchCommentary";
+import PlayerOfTheMatch from "@/components/PlayerOfTheMatch";
 import PredictionPoll from "@/components/PredictionPoll";
 import styles from "./match.module.css";
 
@@ -458,6 +459,14 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
           <div className={styles.tabContentPanel}>
             {activeTab === 'overview' && (
               <div className={styles.tabGrid}>
+                {/* Player of the Match Widget Suite */}
+                <PlayerOfTheMatch 
+                  lineups={match.lineups} 
+                  homeTeam={match.homeTeam} 
+                  awayTeam={match.awayTeam} 
+                  matchId={match.id}
+                />
+
                 {/* About the match */}
                 <section className={styles.contentCard} aria-label="About the match">
                   <div className={styles.contentCardHeader}>
