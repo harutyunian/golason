@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import TeamLogo from "./TeamLogo";
 import styles from "./LineupPitch.module.css";
 
 export interface LineupPlayer {
@@ -10,13 +11,14 @@ export interface LineupPlayer {
   position: string; // 'G', 'D', 'M', 'F'
   grid?: string | null; // e.g. "2:1" where row:col coordinates define position
   rating?: number | null; // e.g. 7.4
+  photo?: string | null; // Player face photo URL (for dynamic headshots!)
 }
 
 export interface TeamLineup {
   formation: string;
   startXI: LineupPlayer[];
   substitutes: LineupPlayer[];
-  coach: { id: number; name: string };
+  coach: { id: number; name: string; photo?: string | null };
 }
 
 export interface StandardMatchLineups {
@@ -35,7 +37,7 @@ interface ParsedPlayer extends LineupPlayer {
   col: number;
 }
 
-// Map player list using coordinate systems
+// Map player lists using horizontal coordinate mappings
 function processTeamPlayers(players: LineupPlayer[]): ParsedPlayer[] {
   const parsed: ParsedPlayer[] = [];
   const missingCoords: LineupPlayer[] = [];
@@ -57,7 +59,7 @@ function processTeamPlayers(players: LineupPlayer[]): ParsedPlayer[] {
 
   if (missingCoords.length === 0) return parsed;
 
-  // Group and distribute missing players by position
+  // Symmetrically distribute players with missing coordinates
   const byPos: { [key: string]: LineupPlayer[] } = { G: [], D: [], M: [], F: [] };
   missingCoords.forEach((p) => {
     const pos = p.position || "M";
@@ -65,20 +67,16 @@ function processTeamPlayers(players: LineupPlayer[]): ParsedPlayer[] {
     else byPos["M"].push(p);
   });
 
-  // Assign fallbacks:
-  // Goalkeepers
   byPos.G.forEach((p, idx) => {
     parsed.push({ ...p, row: 1, col: byPos.G.length === 1 ? 3 : idx + 2 });
   });
 
-  // Defenders
   const dCount = byPos.D.length;
   byPos.D.forEach((p, idx) => {
     const col = dCount === 1 ? 3 : dCount === 2 ? idx * 2 + 2 : Math.round(1 + (idx * 4) / (dCount - 1));
     parsed.push({ ...p, row: 2, col });
   });
 
-  // Midfielders
   const mCount = byPos.M.length;
   byPos.M.forEach((p, idx) => {
     const col = mCount === 1 ? 3 : mCount === 2 ? idx * 2 + 2 : Math.round(1 + (idx * 4) / (mCount - 1));
@@ -86,7 +84,6 @@ function processTeamPlayers(players: LineupPlayer[]): ParsedPlayer[] {
     parsed.push({ ...p, row, col });
   });
 
-  // Forwards
   const fCount = byPos.F.length;
   byPos.F.forEach((p, idx) => {
     const col = fCount === 1 ? 3 : fCount === 2 ? idx * 2 + 2 : Math.round(1 + (idx * 4) / (fCount - 1));
@@ -109,7 +106,7 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
     );
   }
 
-  // Map starting XI to pitch coordinates
+  // Parse Starting XI coordinates
   const homeStartingParsed = processTeamPlayers(lineups.home.startXI);
   const awayStartingParsed = processTeamPlayers(lineups.away.startXI);
 
@@ -136,80 +133,45 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
         </div>
       </div>
 
-      {/* Visual Soccer Pitch Container */}
+      {/* Visual Soccer Pitch Container (Horizontal layout) */}
       <div className={styles.pitchWrapper}>
         <div className={styles.pitch}>
-          {/* Markings */}
+          {/* Pitch markings */}
           <div className={styles.centerLine} />
           <div className={styles.centerCircle}>
             <div className={styles.centerSpot} />
           </div>
           
-          {/* Penalty Areas */}
-          <div className={styles.penaltyBoxTop}>
-            <div className={styles.goalAreaTop} />
-            <div className={styles.penaltySpotTop} />
+          {/* Symmetrical Left and Right Penalty Boxes */}
+          <div className={styles.penaltyBoxLeft}>
+            <div className={styles.goalAreaLeft} />
+            <div className={styles.penaltySpotLeft} />
           </div>
-          <div className={styles.penaltyBoxBottom}>
-            <div className={styles.goalAreaBottom} />
-            <div className={styles.penaltySpotBottom} />
+          <div className={styles.penaltyBoxRight}>
+            <div className={styles.goalAreaRight} />
+            <div className={styles.penaltySpotRight} />
           </div>
 
-          {/* Corner Arcs */}
+          {/* Symmetrical Corner Arcs */}
           <div className={styles.cornerArcTopLeft} />
           <div className={styles.cornerArcTopRight} />
           <div className={styles.cornerArcBottomLeft} />
           <div className={styles.cornerArcBottomRight} />
 
-          {/* Goal Frames */}
-          <div className={styles.goalFrameTop} />
-          <div className={styles.goalFrameBottom} />
+          {/* Symmetrical Goal Frames */}
+          <div className={styles.goalFrameLeft} />
+          <div className={styles.goalFrameRight} />
 
-          {/* AWAY TEAM (Rendered on top half: row 1 to 5 mapping) */}
-          {awayStartingParsed.map((player) => {
-            // Away goalkeeper is at the top (row 1 is topmost, row 5 is near center)
-            const topPercent = 4.5 + (player.row - 1) * 8.5;
-            // Symmetric left position
-            const leftPercent = (player.col / 6) * 100;
-
-            const isGK = player.position === "G";
-
-            return (
-              <div
-                key={`away-player-${player.id}`}
-                className={styles.playerNode}
-                style={{
-                  top: `${topPercent}%`,
-                  left: `${leftPercent}%`,
-                }}
-              >
-                <div className={styles.playerWrapper}>
-                  {/* Rating Badge */}
-                  {player.rating && (
-                    <span className={`${styles.ratingBadge} ${getRatingStyle(player.rating)}`}>
-                      {player.rating.toFixed(1)}
-                    </span>
-                  )}
-                  {/* Jersey Shirt (red color for away) */}
-                  <div className={`${styles.shirtCircle} ${isGK ? styles.shirtGK : styles.shirtAway}`}>
-                    <span className={styles.playerNumber}>{player.number}</span>
-                  </div>
-                  {/* Player details */}
-                  <div className={styles.playerInfo}>
-                    <span className={styles.playerName}>{player.name}</span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-
-          {/* HOME TEAM (Rendered on bottom half: row 1 is bottommost, row 5 is near center) */}
+          {/* HOME TEAM (Left half: row 1 to 5 maps left-to-right from 5% to 46% horizontally) */}
           {homeStartingParsed.map((player) => {
-            // Home goalkeeper is at the bottom (row 1 is bottommost, row 5 is near center)
-            const topPercent = 95.5 - (player.row - 1) * 8.5;
-            const leftPercent = (player.col / 6) * 100;
-
             const isGK = player.position === "G";
+            
+            // Map row 1-5 to 5%-46% left positions
+            const leftPercent = 5 + (player.row - 1) * 9.5;
+            // Symmetrically map col 1-5 vertically from 5% to 95% top
+            const topPercent = (player.col / 6) * 100;
+
+            const initials = player.name.substring(0, 2).toUpperCase();
 
             return (
               <div
@@ -221,19 +183,77 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                 }}
               >
                 <div className={styles.playerWrapper}>
-                  {/* Rating Badge */}
-                  {player.rating && (
-                    <span className={`${styles.ratingBadge} ${getRatingStyle(player.rating)}`}>
-                      {player.rating.toFixed(1)}
-                    </span>
-                  )}
-                  {/* Jersey Shirt (blue color for home) */}
-                  <div className={`${styles.shirtCircle} ${isGK ? styles.shirtGK : styles.shirtHome}`}>
-                    <span className={styles.playerNumber}>{player.number}</span>
+                  {/* Round Photo circle frame with border colors */}
+                  <div className={`${styles.avatarCircle} ${isGK ? styles.borderGK : styles.borderHome}`}>
+                    {player.photo ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={player.photo} alt={player.name} className={styles.playerImg} />
+                    ) : (
+                      <div className={styles.imgPlaceholder}>{initials}</div>
+                    )}
+                    
+                    {/* Performance rating badge overlapping the bottom center */}
+                    {player.rating && (
+                      <span className={`${styles.ratingBadge} ${getRatingStyle(player.rating)}`}>
+                        {player.rating.toFixed(1)}
+                      </span>
+                    )}
                   </div>
-                  {/* Player details */}
+                  
+                  {/* Number & Name labels below avatar */}
                   <div className={styles.playerInfo}>
-                    <span className={styles.playerName}>{player.name}</span>
+                    <span className={styles.playerName}>
+                      <span className={styles.playerNo}>{player.number}</span> {player.name}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {/* AWAY TEAM (Right half: row 1 to 5 maps right-to-left from 95% to 54% horizontally) */}
+          {awayStartingParsed.map((player) => {
+            const isGK = player.position === "G";
+            
+            // Symmetrical horizontal positioning (100% - Home left percent)
+            const leftPercent = 100 - (5 + (player.row - 1) * 9.5);
+            // Symmetrical vertical positioning
+            const topPercent = (player.col / 6) * 100;
+
+            const initials = player.name.substring(0, 2).toUpperCase();
+
+            return (
+              <div
+                key={`away-player-${player.id}`}
+                className={styles.playerNode}
+                style={{
+                  top: `${topPercent}%`,
+                  left: `${leftPercent}%`,
+                }}
+              >
+                <div className={styles.playerWrapper}>
+                  {/* Round Photo circle frame with border colors */}
+                  <div className={`${styles.avatarCircle} ${isGK ? styles.borderGK : styles.borderAway}`}>
+                    {player.photo ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={player.photo} alt={player.name} className={styles.playerImg} />
+                    ) : (
+                      <div className={styles.imgPlaceholder}>{initials}</div>
+                    )}
+                    
+                    {/* Performance rating badge overlapping the bottom center */}
+                    {player.rating && (
+                      <span className={`${styles.ratingBadge} ${getRatingStyle(player.rating)}`}>
+                        {player.rating.toFixed(1)}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {/* Number & Name labels below avatar */}
+                  <div className={styles.playerInfo}>
+                    <span className={styles.playerName}>
+                      <span className={styles.playerNo}>{player.number}</span> {player.name}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -242,18 +262,71 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
         </div>
       </div>
 
-      {/* Bench Substitutes & Staff Section */}
+      {/* Managers Side-by-Side Section */}
+      <div className={styles.managersSection}>
+        <h4 className={styles.sectionTitle}>Managers</h4>
+        <div className={styles.managersGrid}>
+          {/* Home Coach */}
+          {lineups.home.coach && (
+            <div className={styles.managerCard}>
+              <div className={styles.managerPhotoWrapper}>
+                {lineups.home.coach.photo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={lineups.home.coach.photo} alt={lineups.home.coach.name} className={styles.managerImg} />
+                ) : (
+                  <div className={styles.managerImgPlaceholder}>
+                    {lineups.home.coach.name.substring(0, 2).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <div className={styles.managerMeta}>
+                <span className={styles.managerName}>{lineups.home.coach.name}</span>
+                <span className={styles.managerRole}>Coach ({homeTeamName})</span>
+              </div>
+            </div>
+          )}
+
+          {/* Away Coach */}
+          {lineups.away.coach && (
+            <div className={styles.managerCard}>
+              <div className={styles.managerPhotoWrapper}>
+                {lineups.away.coach.photo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={lineups.away.coach.photo} alt={lineups.away.coach.name} className={styles.managerImg} />
+                ) : (
+                  <div className={styles.managerImgPlaceholder}>
+                    {lineups.away.coach.name.substring(0, 2).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <div className={styles.managerMeta}>
+                <span className={styles.managerName}>{lineups.away.coach.name}</span>
+                <span className={styles.managerRole}>Coach ({awayTeamName})</span>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Bench Substitutes Section (SofaScore styled!) */}
       <div className={styles.benchSection}>
-        <h4 className={styles.benchTitle}>Substitutes &amp; Staff</h4>
+        <h4 className={styles.sectionTitle}>Substitutions</h4>
         
         <div className={styles.benchGrid}>
           {/* Home Bench */}
           <div className={styles.benchColumn}>
-            <div className={styles.benchColumnHeader}>{homeTeamName} Bench</div>
             <ul className={styles.benchList}>
               {lineups.home.substitutes.map((player) => (
                 <li key={`home-sub-${player.id}`} className={styles.benchItem}>
                   <div className={styles.benchPlayerInfo}>
+                    <div className={styles.benchAvatarWrap}>
+                      {player.photo ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={player.photo} alt={player.name} className={styles.benchImg} />
+                      ) : (
+                        <div className={styles.benchImgPlaceholder}>{player.name.substring(0, 2).toUpperCase()}</div>
+                      )}
+                    </div>
                     <span className={styles.benchNumber}>{player.number}</span>
                     <span className={styles.benchName}>{player.name}</span>
                     <span className={styles.benchPositionBadge}>{player.position}</span>
@@ -265,23 +338,23 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                   )}
                 </li>
               ))}
-              {/* Coach */}
-              {lineups.home.coach && (
-                <li className={styles.coachItem}>
-                  <span className={styles.coachRole}>Coach</span>
-                  <span className={styles.coachName}>{lineups.home.coach.name}</span>
-                </li>
-              )}
             </ul>
           </div>
 
           {/* Away Bench */}
           <div className={styles.benchColumn}>
-            <div className={styles.benchColumnHeader}>{awayTeamName} Bench</div>
             <ul className={styles.benchList}>
               {lineups.away.substitutes.map((player) => (
                 <li key={`away-sub-${player.id}`} className={styles.benchItem}>
                   <div className={styles.benchPlayerInfo}>
+                    <div className={styles.benchAvatarWrap}>
+                      {player.photo ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={player.photo} alt={player.name} className={styles.benchImg} />
+                      ) : (
+                        <div className={styles.benchImgPlaceholder}>{player.name.substring(0, 2).toUpperCase()}</div>
+                      )}
+                    </div>
                     <span className={styles.benchNumber}>{player.number}</span>
                     <span className={styles.benchName}>{player.name}</span>
                     <span className={styles.benchPositionBadge}>{player.position}</span>
@@ -293,13 +366,6 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                   )}
                 </li>
               ))}
-              {/* Coach */}
-              {lineups.away.coach && (
-                <li className={styles.coachItem}>
-                  <span className={styles.coachRole}>Coach</span>
-                  <span className={styles.coachName}>{lineups.away.coach.name}</span>
-                </li>
-              )}
             </ul>
           </div>
         </div>

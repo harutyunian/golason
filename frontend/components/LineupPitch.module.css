@@ -1,20 +1,31 @@
-/* Container & Header */
 .container {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  width: 100%;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  color: var(--text-secondary);
 }
 
 .formationsHeader {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background-color: var(--card-bg, #1a1e2c);
-  border: 1px solid var(--border-color, #2a2f42);
-  border-radius: 12px;
-  padding: 0.75rem 1.25rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  justify-content: space-between;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 0.85rem 1.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.01);
 }
 
 .teamFormation {
@@ -24,179 +35,184 @@
 }
 
 .teamNameLabel {
-  font-weight: 700;
   font-size: 0.95rem;
-  color: var(--text-primary, #ffffff);
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .formationBadge {
-  background-color: #2b56f5;
-  color: #ffffff;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  padding: 0.2rem 0.6rem;
-  border-radius: 20px;
-  box-shadow: 0 2px 4px rgba(43, 86, 245, 0.2);
+  background-color: var(--bg-hover);
+  color: var(--color-primary);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--card-border);
 }
 
 .dividerLabel {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 800;
-  color: var(--text-secondary, #94a3b8);
-  background: var(--bg-secondary, #252a3d);
-  padding: 0.25rem 0.5rem;
-  border-radius: 6px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
 }
 
-/* Visual Football Pitch */
+/* ==========================================================================
+   Horizontal Visual Soccer Pitch
+   ========================================================================== */
 .pitchWrapper {
-  display: flex;
-  justify-content: center;
   width: 100%;
+  aspect-ratio: 100 / 64; /* Standard soccer pitch proportion */
+  background: repeating-linear-gradient(
+    90deg,
+    #1b683b,
+    #1b683b 6.25%,
+    #1a5c34 6.25%,
+    #1a5c34 12.5%
+  );
+  border: 4px solid rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.2), 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
 }
 
 .pitch {
-  position: relative;
   width: 100%;
-  max-width: 520px;
-  aspect-ratio: 3.2 / 4.5;
-  background: repeating-linear-gradient(
-    to bottom,
-    #1b431c,
-    #1b431c 5%,
-    #153616 5%,
-    #153616 10%
-  );
-  border: 3px solid rgba(255, 255, 255, 0.65);
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
+  height: 100%;
+  position: relative;
 }
 
-/* Markings */
+/* Central horizontal alignments */
 .centerLine {
   position: absolute;
-  top: 50%;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: rgba(255, 255, 255, 0.45);
-  transform: translateY(-50%);
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: translateX(-50%);
 }
 
 .centerCircle {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 24%;
+  width: 18%;
   aspect-ratio: 1 / 1;
-  border: 2px solid rgba(255, 255, 255, 0.45);
+  border: 2px solid rgba(255, 255, 255, 0.4);
   border-radius: 50%;
   transform: translate(-50%, -50%);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 .centerSpot {
+  width: 8px;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+}
+
+/* Left end markings (Home side) */
+.penaltyBoxLeft {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 16%;
+  height: 56%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-left: none;
+  transform: translateY(-50%);
+}
+
+.goalAreaLeft {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 32%;
+  height: 48%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-left: none;
+  transform: translateY(-50%);
+}
+
+.penaltySpotLeft {
+  position: absolute;
+  top: 50%;
+  right: 22%;
   width: 6px;
   height: 6px;
-  background-color: rgba(255, 255, 255, 0.65);
+  background-color: rgba(255, 255, 255, 0.4);
   border-radius: 50%;
+  transform: translateY(-50%);
 }
 
-/* Penalty Boxes */
-.penaltyBoxTop {
+/* Right end markings (Away side) */
+.penaltyBoxRight {
   position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 52%;
-  height: 15%;
-  border-left: 2px solid rgba(255, 255, 255, 0.45);
-  border-right: 2px solid rgba(255, 255, 255, 0.45);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.45);
+  top: 50%;
+  right: 0;
+  width: 16%;
+  height: 56%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-right: none;
+  transform: translateY(-50%);
 }
 
-.goalAreaTop {
+.goalAreaRight {
   position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 45%;
-  height: 38%;
-  border-left: 2px solid rgba(255, 255, 255, 0.45);
-  border-right: 2px solid rgba(255, 255, 255, 0.45);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.45);
+  top: 50%;
+  right: 0;
+  width: 32%;
+  height: 48%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-right: none;
+  transform: translateY(-50%);
 }
 
-.penaltySpotTop {
+.penaltySpotRight {
   position: absolute;
-  bottom: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  background-color: rgba(255, 255, 255, 0.55);
+  top: 50%;
+  left: 22%;
+  width: 6px;
+  height: 6px;
+  background-color: rgba(255, 255, 255, 0.4);
   border-radius: 50%;
+  transform: translateY(-50%);
 }
 
-.penaltyBoxBottom {
+/* Goal nets/frames outer representations */
+.goalFrameLeft {
   position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 52%;
-  height: 15%;
-  border-left: 2px solid rgba(255, 255, 255, 0.45);
-  border-right: 2px solid rgba(255, 255, 255, 0.45);
-  border-top: 2px solid rgba(255, 255, 255, 0.45);
+  top: 50%;
+  left: -6px;
+  width: 6px;
+  height: 18%;
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-50%);
 }
 
-.goalAreaBottom {
+.goalFrameRight {
   position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 45%;
-  height: 38%;
-  border-left: 2px solid rgba(255, 255, 255, 0.45);
-  border-right: 2px solid rgba(255, 255, 255, 0.45);
-  border-top: 2px solid rgba(255, 255, 255, 0.45);
+  top: 50%;
+  right: -6px;
+  width: 6px;
+  height: 18%;
+  background-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-50%);
 }
 
-.penaltySpotBottom {
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  background-color: rgba(255, 255, 255, 0.55);
-  border-radius: 50%;
-}
-
-/* Corner Arcs */
+/* Corner arcs */
 .cornerArcTopLeft {
   position: absolute;
   top: 0;
   left: 0;
   width: 12px;
   height: 12px;
-  border-right: 2px solid rgba(255, 255, 255, 0.45);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.45);
-  border-bottom-right-radius: 100%;
-}
-
-.cornerArcTopRight {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 12px;
-  height: 12px;
-  border-left: 2px solid rgba(255, 255, 255, 0.45);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.45);
-  border-bottom-left-radius: 100%;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+  border-right: 2px solid rgba(255, 255, 255, 0.4);
 }
 
 .cornerArcBottomLeft {
@@ -205,9 +221,18 @@
   left: 0;
   width: 12px;
   height: 12px;
-  border-right: 2px solid rgba(255, 255, 255, 0.45);
-  border-top: 2px solid rgba(255, 255, 255, 0.45);
-  border-top-right-radius: 100%;
+  border-top: 2px solid rgba(255, 255, 255, 0.4);
+  border-right: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.cornerArcTopRight {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+  border-left: 2px solid rgba(255, 255, 255, 0.4);
 }
 
 .cornerArcBottomRight {
@@ -216,292 +241,308 @@
   right: 0;
   width: 12px;
   height: 12px;
-  border-left: 2px solid rgba(255, 255, 255, 0.45);
-  border-top: 2px solid rgba(255, 255, 255, 0.45);
-  border-top-left-radius: 100%;
+  border-top: 2px solid rgba(255, 255, 255, 0.4);
+  border-left: 2px solid rgba(255, 255, 255, 0.4);
 }
 
-/* Goal Frames */
-.goalFrameTop {
-  position: absolute;
-  top: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 16%;
-  height: 4px;
-  border: 2px solid rgba(255, 255, 255, 0.7);
-  border-bottom: none;
-}
-
-.goalFrameBottom {
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 16%;
-  height: 4px;
-  border: 2px solid rgba(255, 255, 255, 0.7);
-  border-top: none;
-}
-
-/* Players on Field */
+/* ==========================================================================
+   Symmetrical Player Nodes (SofaScore styled!)
+   ========================================================================== */
 .playerNode {
   position: absolute;
   transform: translate(-50%, -50%);
   z-index: 10;
-  user-select: none;
 }
 
 .playerWrapper {
-  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 0.35rem;
 }
 
-/* Shirt Circle Styles */
-.shirtCircle {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 32px;
-  height: 32px;
+.avatarCircle {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
+  background-color: var(--card-bg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2.5px solid transparent;
+  transition: transform 0.2s ease;
+}
+
+.avatarCircle:hover {
+  transform: scale(1.08);
+}
+
+.playerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.imgPlaceholder {
+  font-size: 0.85rem;
   font-weight: 800;
-  font-size: 0.75rem;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-  border: 2px solid #ffffff;
+  color: var(--text-secondary);
 }
 
-/* Team Shirt Color variations */
-.shirtHome {
-  background-color: #2b56f5;
+/* Shirt ring color coordinates */
+.borderHome {
+  border-color: #3b82f6; /* Blue ring for Home Team */
+}
+
+.borderAway {
+  border-color: #f59e0b; /* Yellow ring for Away Team */
+}
+
+.borderGK {
+  border-color: #10b981; /* Green ring for Goalkeepers */
+}
+
+/* Overlapping Performance Rating badges */
+.ratingBadge {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 1px 4px;
+  border-radius: 4px;
   color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  font-variant-numeric: tabular-nums;
+  z-index: 15;
 }
 
-.shirtAway {
-  background-color: #ef4444;
-  color: #ffffff;
-}
+/* SofaScore Rating Colors Tiers */
+.ratingExcellent { background-color: #02b875; } /* Dark emerald green */
+.ratingGood { background-color: #10e090; }      /* Neon/light green */
+.ratingAverage { background-color: #f59e0b; }   /* Yellow / amber */
+.ratingPoor { background-color: #ef4444; }      /* Red */
 
-.shirtGK {
-  background-color: #f59e0b;
-  color: #111827;
-  border-color: #111827;
-}
-
-.playerNumber {
-  pointer-events: none;
-}
-
-/* Player Info text */
+/* Player text labels */
 .playerInfo {
-  margin-top: 0.25rem;
-  text-align: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 1px 5px;
+  border-radius: 4px;
+  max-width: 110px;
 }
 
 .playerName {
-  display: block;
-  font-size: 0.65rem;
+  font-size: 0.725rem;
   font-weight: 700;
   color: #ffffff;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.95), -1px -1px 2px rgba(0, 0, 0, 0.95);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   white-space: nowrap;
-  max-width: 68px;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: block;
 }
 
-/* SofaScore-themed Ratings Badges */
-.ratingBadge {
-  position: absolute;
-  top: -4px;
-  right: -6px;
-  font-size: 0.55rem;
+.playerNo {
+  opacity: 0.8;
   font-weight: 800;
-  color: #ffffff;
-  padding: 0.05rem 0.25rem;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  z-index: 12;
+  margin-right: 1px;
 }
 
-/* Color coding for performance standards */
-.ratingExcellent {
-  background-color: #10b981; /* Darker green */
-}
-
-.ratingGood {
-  background-color: #22c55e; /* Vibrant green */
-}
-
-.ratingAverage {
-  background-color: #f59e0b; /* Amber orange */
-}
-
-.ratingPoor {
-  background-color: #ef4444; /* Standard SofaScore red */
-}
-
-/* Bench Section (Substitutes & Coaches) */
-.benchSection {
-  background-color: var(--card-bg, #1a1e2c);
-  border: 1px solid var(--border-color, #2a2f42);
+/* ==========================================================================
+   Coaches & Managers Layout (Side-by-Side card)
+   ========================================================================== */
+.managersSection {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 12px;
-  padding: 1.25rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
-.benchTitle {
+.sectionTitle {
   font-size: 0.95rem;
-  font-weight: 800;
+  font-weight: 700;
+  color: var(--text-primary);
   margin-bottom: 1rem;
-  color: var(--text-primary, #ffffff);
-  border-bottom: 1px solid var(--border-color, #2a2f42);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--card-border);
   padding-bottom: 0.5rem;
+}
+
+.managersGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.managerCard {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.managerPhotoWrapper {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--bg-hover);
+  border: 1px solid var(--card-border);
+  overflow: hidden;
+}
+
+.managerImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.managerImgPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.managerMeta {
+  display: flex;
+  flex-direction: column;
+}
+
+.managerName {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.managerRole {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Benches & Substitutes Layout (Symmetrical columns)
+   ========================================================================== */
+.benchSection {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 .benchGrid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
-@media (min-width: 640px) {
-  .benchGrid {
-    grid-template-columns: 1fr 1fr;
-  }
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
 }
 
 .benchColumn {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-}
-
-.benchColumnHeader {
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--text-secondary, #94a3b8);
-  letter-spacing: 0.05em;
-  border-bottom: 1px dashed var(--border-color, #2a2f42);
-  padding-bottom: 0.25rem;
 }
 
 .benchList {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  list-style-type: none;
+  list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .benchItem {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 0.35rem 0.5rem;
+  justify-content: space-between;
+  padding: 0.45rem 0.5rem;
+  border-bottom: 1px solid var(--card-border);
+  transition: background-color 0.2s;
   border-radius: 6px;
-  background-color: var(--bg-secondary, #252a3d);
+}
+
+.benchItem:hover {
+  background-color: var(--bg-hover);
 }
 
 .benchPlayerInfo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+}
+
+.benchAvatarWrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--bg-hover);
+  border: 1px solid var(--card-border);
+}
+
+.benchImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.benchImgPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-secondary);
 }
 
 .benchNumber {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 800;
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-muted);
   width: 18px;
 }
 
 .benchName {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--text-primary, #ffffff);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .benchPositionBadge {
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  background-color: var(--border-color, #2a2f42);
-  color: var(--text-secondary, #94a3b8);
-  padding: 0.1rem 0.3rem;
+  background-color: var(--bg-hover);
+  color: var(--text-secondary);
+  padding: 1px 4px;
   border-radius: 3px;
   text-transform: uppercase;
 }
 
 .benchRating {
   font-size: 0.7rem;
-  font-weight: 700;
-  color: #ffffff;
-  padding: 0.1rem 0.3rem;
-  border-radius: 4px;
-}
-
-.coachItem {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem;
-  border-radius: 6px;
-  background-color: var(--bg-secondary, #252a3d);
-  border-left: 3px solid #2b56f5;
-  margin-top: 0.5rem;
-}
-
-.coachRole {
-  font-size: 0.65rem;
   font-weight: 800;
-  text-transform: uppercase;
-  background-color: rgba(43, 86, 245, 0.15);
-  color: #2b56f5;
-  padding: 0.15rem 0.4rem;
+  color: #ffffff;
+  padding: 1px 5px;
   border-radius: 4px;
+  font-variant-numeric: tabular-nums;
 }
 
-.coachName {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--text-primary, #ffffff);
-}
-
-/* Empty State Placeholder */
-.emptyState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 3rem 1.5rem;
-  background-color: var(--card-bg, #1a1e2c);
-  border: 1px dashed var(--border-color, #2a2f42);
-  border-radius: 12px;
-}
-
-.pitchGraphicEmpty {
-  position: relative;
-  width: 90px;
-  height: 120px;
-  background-color: #1e4d1f;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-radius: 8px;
-  margin-bottom: 1.25rem;
-}
-
-.centerCircleEmpty {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 32px;
-  height: 32px;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  border-radius: 50%;
+/* Symmetrical mobile alignments */
+@media (max-width: 768px) {
+  .managersGrid,
+  .benchGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
