@@ -86,7 +86,7 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 4: Backend Schedulers & Real-Time
 
-#### Task 4.1: Scaffold WebSocket Gateway
+#### Task 4.1: Scaffold WebSocket Gateway (DONE)
 - **Action:** Install `socket.io` and create `LiveScoreGateway` in NestJS.
 
 #### Task 4.2: Build Daily Fixture Cron
@@ -162,10 +162,10 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 8.1: Dashboard Layout Structure (DONE)
 - **Action:** Combine Header, Ad Banner, Date Carousel, and main content area in `page.tsx`.
 
-#### Task 8.2: Fetch & Display Matches
+#### Task 8.2: Fetch & Display Matches (DONE)
 - **Action:** Server-Side fetch matches for the selected date and render a list of Match Cards.
 - **Acceptance Criteria:**
-  - [ ] SEO: Server components are used. Data is rendered in raw HTML.
+  - [x] SEO: Server components are used. Data is rendered in raw HTML.
 
 #### Task 8.3: Implement Live Toggle (DONE)
 - **Action:** Add client-side toggle to filter the rendered list to only show "Live" matches.
