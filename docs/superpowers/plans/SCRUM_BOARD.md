@@ -214,7 +214,7 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 9.11: Standings Tab Integration (DONE)
 - **Action:** Embed our fully functional StandingTable points table directly inside the dedicated "Standings" tab panel.
 
-#### Task 9.12: Shotmap & Graphical Penalty Box coordinates
+#### Task 9.12: Shotmap & Graphical Penalty Box coordinates (DONE)
 - **Action:** Build the horizontal visual pitch shotmap coordinate plot showing where goals/saves occurred inside the Statistics tab.
 
 #### Task 9.13: H2H Comparison & Team Streaks Card
