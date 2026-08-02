@@ -119,8 +119,16 @@ export class FootballController {
   async getFixtureById(
     @Param('id') id: string,
   ): Promise<StandardMatchWithDetails> {
+    const numericId = Number(id);
+
+    // Intercept mock demo match IDs to return premium pre-populated mock details immediately!
+    if (numericId >= 101 && numericId <= 105) {
+      console.log(`[Mock Override] Returning premium demo match data for ID: ${id}`);
+      return this.footballNormalizer.getDemoMatchById(numericId);
+    }
+
     try {
-      const data = await this.apiFootballClient.getFixtureById(Number(id));
+      const data = await this.apiFootballClient.getFixtureById(numericId);
       const results = data.response || [];
       if (results.length === 0) {
         throw new HttpException(

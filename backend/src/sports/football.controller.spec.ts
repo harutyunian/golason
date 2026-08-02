@@ -41,6 +41,7 @@ describe('FootballController', () => {
       normalizeFixture: jest.fn().mockReturnValue({ id: 101, status: 'FINISHED' }),
       normalizeFixtures: jest.fn().mockReturnValue([{ id: 101, status: 'FINISHED' }]),
       normalizeStandings: jest.fn().mockReturnValue([]),
+      getDemoMatchById: jest.fn().mockReturnValue({ id: 101, status: 'LIVE' }),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -81,11 +82,11 @@ describe('FootballController', () => {
     });
 
     it('should return normalized fixture if found', async () => {
-      mockApiFootballClient.getFixtureById.mockResolvedValueOnce({ response: [{ fixture: { id: 101 } }] });
-      const result = await controller.getFixtureById('101');
-      expect(mockApiFootballClient.getFixtureById).toHaveBeenCalledWith(101);
+      mockApiFootballClient.getFixtureById.mockResolvedValueOnce({ response: [{ fixture: { id: 123456 } }] });
+      const result = await controller.getFixtureById('123456');
+      expect(mockApiFootballClient.getFixtureById).toHaveBeenCalledWith(123456);
       expect(mockFootballNormalizer.normalizeFixture).toHaveBeenCalled();
-      expect(result.id).toBe(101);
+      expect(result.id).toBe(101); // mockFootballNormalizer returns { id: 101 } in mock configuration
     });
   });
 
