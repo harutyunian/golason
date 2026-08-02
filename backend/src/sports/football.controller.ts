@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import {
   StandardMatch,
   StandardLeague,
@@ -125,5 +125,38 @@ export class FootballController {
         awayTeam: { id: 24, name: 'Sevilla', sport: 'FOOTBALL' },
       },
     ];
+  }
+
+  @Get('fixtures/:id')
+  getFixtureById(@Param('id') id: string): StandardMatchWithDetails {
+    const matchId = parseInt(id, 10);
+    const fixtures = this.getFixtures();
+    const found = fixtures.find((f) => f.id === matchId);
+    if (found) {
+      return found;
+    }
+
+    // Return a dynamically generated mock if not found in the static list
+    return {
+      id: matchId,
+      date: '2026-08-02T15:00:00',
+      status: 'LIVE',
+      elapsedTime: 45,
+      sport: 'FOOTBALL',
+      leagueId: 1,
+      homeTeamId: 11,
+      awayTeamId: 12,
+      homeScore: 1,
+      awayScore: 0,
+      league: {
+        id: 1,
+        name: 'Premier League',
+        country: 'England',
+        logo: '🇬🇧',
+        sport: 'FOOTBALL',
+      },
+      homeTeam: { id: 11, name: 'Home Team', sport: 'FOOTBALL' },
+      awayTeam: { id: 12, name: 'Away Team', sport: 'FOOTBALL' },
+    };
   }
 }

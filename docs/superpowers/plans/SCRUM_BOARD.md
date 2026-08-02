@@ -177,10 +177,10 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 9: Frontend Match Profile
 
-#### Task 9.1: Match Header & Scoreboard
+#### Task 9.1: Match Header & Scoreboard (DONE)
 - **Action:** Create `/match/[id]/page.tsx`. Build the large scoreboard header.
 - **Acceptance Criteria:**
-  - [ ] SEO: Implement `SportsEvent` JSON-LD schema dynamically.
+  - [x] SEO: Implement `SportsEvent` JSON-LD schema dynamically.
 
 #### Task 9.2: WebSocket Client Integration
 - **Action:** Connect scoreboard to socket.io. Flash scores when `match:update` event is received.

@@ -31,4 +31,20 @@ describe('FootballController', () => {
       expect(fixtures[0].date).toContain('2026-08-02');
     });
   });
+
+  describe('getFixtureById', () => {
+    it('should return a fixture matching static list id', () => {
+      const fixture = controller.getFixtureById('101');
+      expect(fixture).toBeDefined();
+      expect(fixture.id).toBe(101);
+      expect(fixture.homeTeam.name).toBe('Arsenal');
+    });
+
+    it('should return dynamic mock fixture if id not in static list', () => {
+      const fixture = controller.getFixtureById('999');
+      expect(fixture).toBeDefined();
+      expect(fixture.id).toBe(999);
+      expect(fixture.homeTeam.name).toBe('Home Team');
+    });
+  });
 });

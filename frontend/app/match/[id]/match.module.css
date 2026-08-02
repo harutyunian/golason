@@ -1,0 +1,281 @@
+.page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.scoreboard {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Decorative backdrop scanlines */
+.scoreboard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: 20px 20px;
+  background-image: linear-gradient(to right, rgba(0,0,0,0.01) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0,0,0,0.01) 1px, transparent 1px);
+  pointer-events: none;
+}
+
+.leagueHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.leagueFlag {
+  font-size: 1.25rem;
+}
+
+.leagueName {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.leagueCountry {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.scoreboardGrid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.teamSide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 1rem;
+}
+
+.logoWrapper {
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: var(--bg-hover);
+  border-radius: 50%;
+  padding: 0.5rem;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.logoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.logoFallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.teamName {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  max-width: 280px;
+}
+
+.winningTeam {
+  color: var(--color-primary);
+}
+
+/* Center Section: Score & Game Clock */
+.centerScore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 160px;
+}
+
+.scoresWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.scoreDigit {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.scoreWinning {
+  color: var(--color-primary);
+}
+
+.scoreDivider {
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.statusContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background-color: var(--bg-hover);
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.liveBadge {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--color-live);
+}
+
+.liveText {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.liveMinute {
+  font-variant-numeric: tabular-nums;
+}
+
+.scheduledKickoff {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background-color: var(--bg-hover);
+  padding: 0.4rem 0.9rem;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+}
+
+.kickoffDate {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Back Link Navigation Button */
+.backNav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.backNav:hover {
+  background-color: var(--bg-hover);
+  color: var(--color-primary);
+}
+
+/* Placeholder for remaining tabs and content widgets */
+.tabsPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background-color: var(--card-bg);
+  border: 1px dashed var(--card-border);
+  border-radius: 8px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.placeholderIcon {
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+/* Responsive Overrides */
+@media (max-width: 768px) {
+  .scoreboard {
+    padding: 1.5rem 1rem;
+  }
+
+  .scoreboardGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .teamSide {
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 1rem;
+    text-align: left;
+  }
+
+  .logoWrapper {
+    width: 48px;
+    height: 48px;
+    padding: 0.25rem;
+  }
+
+  .logoFallback {
+    font-size: 1.125rem;
+  }
+
+  .teamName {
+    font-size: 1.125rem;
+    max-width: 100%;
+  }
+
+  /* Force score/status block to be the central top section */
+  .centerScore {
+    order: -1;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .scoreDigit {
+    font-size: 2.75rem;
+  }
+}
