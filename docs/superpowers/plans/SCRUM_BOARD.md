@@ -202,7 +202,7 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 9.7: Symmetrical Duels & Defending SVG Gauges (DONE)
 - **Action:** Create circular radial progress loops for duels, tackles won, and pass accuracy segments matching the premium comparison dashboards.
 
-#### Task 9.8: Dual-Column Desktop Layout & 5-Tab Navigation Panel
+#### Task 9.8: Dual-Column Desktop Layout & 5-Tab Navigation Panel (DONE)
 - **Action:** Overhaul MatchDetails.tsx to split the desktop screen into a Left Column (340px) for real-time scrolling logs and a Right Column (1fr) for dynamic tab panels. Add tabs for "Lineups", "Statistics", "Standings", "H2H", and "AI Insights".
 
 #### Task 9.9: Play-by-Play Live Commentary Feed
