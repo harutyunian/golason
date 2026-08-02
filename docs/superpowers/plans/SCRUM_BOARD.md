@@ -202,14 +202,26 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 9.7: Symmetrical Duels & Defending SVG Gauges (DONE)
 - **Action:** Create circular radial progress loops for duels, tackles won, and pass accuracy segments matching the premium comparison dashboards.
 
-#### Task 9.8: Play-by-Play Live Commentary Feed
-- **Action:** Build scrollable vertical play-by-play commentary timber with custom action headers (GOAL, Card, Save, Corner) and player headshots.
+#### Task 9.8: Dual-Column Desktop Layout & 5-Tab Navigation Panel
+- **Action:** Overhaul MatchDetails.tsx to split the desktop screen into a Left Column (340px) for real-time scrolling logs and a Right Column (1fr) for dynamic tab panels. Add tabs for "Lineups", "Statistics", "Standings", "H2H", and "AI Insights".
 
-#### Task 9.9: Shotmap & Match Momentum Dominance Widgets
-- **Action:** Implement the horizontal penalty-box shotmap coordinates visualizer and the bar- dominance Match Momentum dominance graph.
+#### Task 9.9: Play-by-Play Live Commentary Feed
+- **Action:** Build scrollable vertical play-by-play commentary timber in the left column with custom action headers (GOAL, Card, Save, Corner) and player headshots.
 
-#### Task 9.10: Player of the Match Race Card
-- **Action:** Extract and display live player rating leaders in a high-visibility race box under the scoreboard.
+#### Task 9.10: Player of the Match Race Card & Voting Widgets
+- **Action:** Parse active ratings on the server to display a high-visibility "Player of the Match" race card next to the scoreboard.
+
+#### Task 9.11: Standings Tab Integration
+- **Action:** Embed our fully functional StandingTable points table directly inside the dedicated "Standings" tab panel.
+
+#### Task 9.12: Shotmap & Graphical Penalty Box coordinates
+- **Action:** Build the horizontal visual pitch shotmap coordinate plot showing where goals/saves occurred inside the Statistics tab.
+
+#### Task 9.13: H2H Comparison & Team Streaks Card
+- **Action:** Render Head-to-Head overall historic win ratios, comparison bars (e.g. 3 wins vs 3 wins), and team streak details.
+
+#### Task 9.14: Injuries & Suspensions Roster Lists
+- **Action:** Render a comparative lists of injured and suspended players under the lineups tab panel.
 
 ---
 
