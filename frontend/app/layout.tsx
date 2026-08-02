@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -89,6 +90,7 @@ export default function RootLayout({
       <body>
         <Header />
         {children}
+        <Footer />
 
         {/* Yandex.Metrika Counter */}
         <Script id="yandex-metrika" strategy="afterInteractive">
