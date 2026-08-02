@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { ArrowLeft, Flame, Tv, Info, Sparkles, TrendingUp, Clock } from "lucide-react";
+import { ArrowLeft, Flame, Tv, Info, Sparkles, TrendingUp, Clock, MessageSquare } from "lucide-react";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { MatchStatus } from "@/components/MatchCard";
 import MatchStats, { StandardMatchStats } from "@/components/MatchStats";
 import LineupPitch, { StandardMatchLineups } from "@/components/LineupPitch";
 import MatchTimeline, { StandardMatchEvent } from "@/components/MatchTimeline";
+import MatchCommentary from "@/components/MatchCommentary";
 import PredictionPoll from "@/components/PredictionPoll";
 import styles from "./match.module.css";
 
@@ -89,6 +90,7 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
   const [isGoalFlashing, setIsGoalFlashing] = useState(false);
   const [isMounting, setIsMounting] = useState(true);
   const [activeTab, setActiveTab] = useState<'overview' | 'lineups' | 'stats' | 'standings' | 'h2h' | 'ai-insights'>('overview');
+  const [sidebarTab, setSidebarTab] = useState<'commentary' | 'timeline'>('commentary');
 
   // Timezone safe on-mount formatting
   useEffect(() => {
@@ -359,13 +361,42 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
             </div>
           </section>
 
-          {/* Timeline Card */}
-          <section className={styles.sidebarCard} aria-label="Timeline">
-            <div className={styles.sidebarCardHeader}>
-              <Clock size={16} className={styles.sidebarCardIcon} />
-              <h3 className={styles.sidebarCardTitle}>Match Timeline</h3>
+          {/* Timeline & Commentary Toggle Card */}
+          <section className={styles.sidebarCard} aria-label="Timeline and Commentary">
+            <div className={styles.sidebarTabsHeader} role="tablist">
+              <button
+                className={`${styles.sidebarTabBtn} ${sidebarTab === 'commentary' ? styles.activeSidebarTab : ''}`}
+                onClick={() => setSidebarTab('commentary')}
+                role="tab"
+                aria-selected={sidebarTab === 'commentary'}
+              >
+                <MessageSquare size={14} style={{ marginRight: '6px' }} />
+                Commentary
+              </button>
+              <button
+                className={`${styles.sidebarTabBtn} ${sidebarTab === 'timeline' ? styles.activeSidebarTab : ''}`}
+                onClick={() => setSidebarTab('timeline')}
+                role="tab"
+                aria-selected={sidebarTab === 'timeline'}
+              >
+                <Clock size={14} style={{ marginRight: '6px' }} />
+                Timeline
+              </button>
             </div>
-            <MatchTimeline events={match.events} homeTeamId={match.homeTeam.id} />
+            <div className={styles.sidebarCardContent}>
+              {sidebarTab === 'commentary' ? (
+                <MatchCommentary 
+                  events={match.events} 
+                  homeTeam={match.homeTeam} 
+                  awayTeam={match.awayTeam} 
+                  lineups={match.lineups}
+                  status={match.status}
+                  elapsedTime={match.elapsedTime}
+                />
+              ) : (
+                <MatchTimeline events={match.events} homeTeamId={match.homeTeam.id} />
+              )}
+            </div>
           </section>
         </aside>
 
