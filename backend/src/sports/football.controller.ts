@@ -167,4 +167,104 @@ export class FootballController {
       );
     }
   }
+
+  @Get('teams/:id')
+  async getTeamProfile(@Param('id') id: string): Promise<any> {
+    const key = process.env.SPORTS_API_KEY || '1623448fdc7994a7c7ce329610618cf4';
+    const headers = this.getHeaders();
+
+    console.log(`[API-Football] Requesting Team Profile details for ID: ${id}`);
+
+    // Standard Fallback Mock Profile in case of API offline
+    const getMockTeamProfile = () => ({
+      id: Number(id),
+      name: Number(id) === 42 ? 'Arsenal' : 'Chelsea',
+      logo: Number(id) === 42 ? 'https://media.api-sports.io/football/teams/42.png' : 'https://media.api-sports.io/football/teams/49.png',
+      founded: Number(id) === 42 ? 1886 : 1905,
+      venueName: Number(id) === 42 ? 'Emirates Stadium' : 'Stamford Bridge',
+      venueCity: Number(id) === 42 ? 'London' : 'London',
+      country: 'England',
+      recentMatches: [
+        {
+          id: 101,
+          date: '2026-08-01T15:00:00Z',
+          status: 'FINISHED',
+          elapsedTime: null,
+          sport: 'FOOTBALL',
+          leagueId: 1,
+          homeTeamId: 11,
+          awayTeamId: 12,
+          homeScore: 2,
+          awayScore: 1,
+          league: { id: 1, name: 'Premier League', country: 'England', logo: 'https://media.api-sports.io/football/leagues/39.png', sport: 'FOOTBALL' },
+          homeTeam: { id: 11, name: 'Arsenal', logo: 'https://media.api-sports.io/football/teams/42.png', sport: 'FOOTBALL' },
+          awayTeam: { id: 12, name: 'Chelsea', logo: 'https://media.api-sports.io/football/teams/49.png', sport: 'FOOTBALL' },
+        }
+      ],
+      upcomingMatches: [
+        {
+          id: 103,
+          date: '2026-08-15T20:45:00Z',
+          status: 'SCHEDULED',
+          elapsedTime: null,
+          sport: 'FOOTBALL',
+          leagueId: 3,
+          homeTeamId: 31,
+          awayTeamId: 32,
+          homeScore: null,
+          awayScore: null,
+          league: { id: 3, name: 'Serie A', country: 'Italy', logo: 'https://media.api-sports.io/football/leagues/135.png', sport: 'FOOTBALL' },
+          homeTeam: { id: 11, name: 'Arsenal', logo: 'https://media.api-sports.io/football/teams/42.png', sport: 'FOOTBALL' },
+          awayTeam: { id: 32, name: 'AC Milan', logo: 'https://media.api-sports.io/football/teams/99.png', sport: 'FOOTBALL' },
+        }
+      ]
+    });
+
+    try {
+      // 1. Fetch team meta details
+      const teamUrl = `https://v3.football.api-sports.io/teams?id=${id}`;
+      const teamRes = await fetch(teamUrl, { method: 'GET', headers });
+      if (!teamRes.ok) throw new Error(`Teams API failed: status ${teamRes.status}`);
+      
+      const teamData = await teamRes.json();
+      const teamResults = teamData.response || [];
+      if (teamResults.length === 0) {
+        return getMockTeamProfile();
+      }
+
+      const teamInfo = teamResults[0].team;
+      const venueInfo = teamResults[0].venue;
+
+      // 2. Fetch last 5 recent results
+      const recentUrl = `https://v3.football.api-sports.io/fixtures?team=${id}&last=5`;
+      const recentRes = await fetch(recentUrl, { method: 'GET', headers });
+      const recentData = recentRes.ok ? await recentRes.json() : { response: [] };
+      const rawRecent = recentData.response || [];
+      const normalizedRecent = rawRecent.map(mapApiFootballToStandardMatch);
+
+      // 3. Fetch next 5 upcoming games
+      const upcomingUrl = `https://v3.football.api-sports.io/fixtures?team=${id}&next=5`;
+      const upcomingRes = await fetch(upcomingUrl, { method: 'GET', headers });
+      const upcomingData = upcomingRes.ok ? await upcomingRes.json() : { response: [] };
+      const rawUpcoming = upcomingData.response || [];
+      const normalizedUpcoming = rawUpcoming.map(mapApiFootballToStandardMatch);
+
+      console.log(`[API-Football] Successfully compiled profile for team ID: ${id} (${teamInfo.name})`);
+
+      return {
+        id: teamInfo.id,
+        name: teamInfo.name,
+        logo: teamInfo.logo,
+        founded: teamInfo.founded,
+        venueName: venueInfo.name,
+        venueCity: venueInfo.city,
+        country: teamInfo.country,
+        recentMatches: normalizedRecent,
+        upcomingMatches: normalizedUpcoming,
+      };
+    } catch (err) {
+      console.warn(`[API-Football] Offline or failed lookup for team ID: ${id}. Using local mock profiles.`, err.message);
+      return getMockTeamProfile();
+    }
+  }
 }

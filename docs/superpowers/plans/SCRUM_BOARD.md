@@ -203,10 +203,10 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 10: Frontend Team & Player Profiles
 
-#### Task 10.1: Team Profile Layout
+#### Task 10.1: Team Profile Layout (DONE)
 - **Action:** Create `/team/[id]/page.tsx`. Display team logo, info, and upcoming fixtures.
 - **Acceptance Criteria:**
-  - [ ] SEO: Implement `SportsTeam` JSON-LD schema dynamically.
+  - [x] SEO: Implement `SportsTeam` JSON-LD schema dynamically.
 
 #### Task 10.2: League Standings Table Component
 - **Action:** Build the points table component and embed it on the Team Profile.
