@@ -190,7 +190,7 @@ Our subagents will strictly utilize the following skills during execution:
 - **Acceptance Criteria:**
   - [x] Responsive CSS styling following SofaScore look and feel.
 
-#### Task 9.4: Lineups Pitch Component
+#### Task 9.4: Lineups Pitch Component (DONE)
 - **Action:** Build CSS grid visual football pitch displaying player formations.
 
 #### Task 9.5: Match Timeline Component

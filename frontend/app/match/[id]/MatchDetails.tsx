@@ -6,6 +6,7 @@ import { ArrowLeft, BarChart2, Flame } from "lucide-react";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { MatchStatus } from "@/components/MatchCard";
 import MatchStats, { StandardMatchStats } from "@/components/MatchStats";
+import LineupPitch, { StandardMatchLineups } from "@/components/LineupPitch";
 import styles from "./match.module.css";
 
 export type SportType = 'FOOTBALL' | 'TENNIS' | 'HOCKEY' | 'UFC';
@@ -38,6 +39,7 @@ interface StandardMatchWithDetails {
   homeTeam: TeamDetails;
   awayTeam: TeamDetails;
   stats?: StandardMatchStats | null;
+  lineups?: StandardMatchLineups | null;
 }
 
 interface MatchDetailsProps {
@@ -279,13 +281,11 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
         )}
 
         {activeTab === 'lineups' && (
-          <section className={styles.tabsPlaceholder} aria-label="Lineups Pitch Area">
-            <BarChart2 size={36} className={styles.placeholderIcon} />
-            <h3>Lineups Formations</h3>
-            <p>
-              Interactive visual football pitch formations, starting XI coordinates, and live player ratings will load dynamically in the next tasks!
-            </p>
-          </section>
+          <LineupPitch
+            lineups={match.lineups}
+            homeTeamName={match.homeTeam.name}
+            awayTeamName={match.awayTeam.name}
+          />
         )}
 
         {activeTab === 'h2h' && (
