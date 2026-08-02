@@ -76,7 +76,7 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 3.2: Build API-Football Client (DONE)
 - **Action:** Create Axios/Fetch client service in NestJS to hit API-Football using the secret key.
 
-#### Task 3.3: Implement Match Normalizer
+#### Task 3.3: Implement Match Normalizer (DONE)
 - **Action:** Create mapping logic converting API-Football fixtures to `StandardMatch`. Add unit tests.
 
 #### Task 3.4: Implement Standings Normalizer

@@ -4,10 +4,17 @@ import { AppService } from './app.service';
 import { FootballController } from './sports/football.controller';
 import { LiveScoreGateway } from './gateway/live-score.gateway';
 import { ApiFootballClientService } from './sports/api-football-client.service';
+import { FootballNormalizerService } from './sports/football-normalizer.service';
 
 @Module({
   imports: [],
   controllers: [AppController, FootballController],
-  providers: [AppService, LiveScoreGateway, ApiFootballClientService],
+  providers: [
+    AppService,
+    LiveScoreGateway,
+    ApiFootballClientService,
+    FootballNormalizerService,
+  ],
+  exports: [FootballNormalizerService],
 })
 export class AppModule {}

@@ -15,6 +15,7 @@ import {
   StandardStanding,
 } from './interfaces/sports.types';
 import { ApiFootballClientService } from './api-football-client.service';
+import { FootballNormalizerService } from './football-normalizer.service';
 
 export interface StandardMatchWithDetails extends StandardMatch {
   league: StandardLeague;
@@ -29,59 +30,6 @@ export interface StandardStandingWithTeam extends StandardStanding {
     logo?: string | null;
   };
 }
-
-// Normalizer Mapper: Translates raw API-Football v3 JSON payloads into our standard types
-const mapApiFootballToStandardMatch = (raw: any): StandardMatchWithDetails => {
-  // Translate external status codes to our unified standard MatchStatus enum
-  let status: MatchStatus = 'SCHEDULED';
-  const shortStatus = raw.fixture?.status?.short;
-
-  if (['1H', '2H', 'ET', 'BT', 'LIVE', 'INT'].includes(shortStatus)) {
-    status = 'LIVE';
-  } else if (shortStatus === 'HT') {
-    status = 'HALFTIME';
-  } else if (['FT', 'AET', 'PEN'].includes(shortStatus)) {
-    status = 'FINISHED';
-  } else if (['PST', 'SUSP', 'INT'].includes(shortStatus)) {
-    status = 'POSTPONED';
-  } else if (['CAN', 'ABD'].includes(shortStatus)) {
-    status = 'CANCELLED';
-  }
-
-  return {
-    id: raw.fixture.id,
-    date: raw.fixture.date,
-    status,
-    elapsedTime: raw.fixture.status.elapsed,
-    sport: 'FOOTBALL',
-    leagueId: raw.league.id,
-    homeTeamId: raw.teams.home.id,
-    awayTeamId: raw.teams.away.id,
-    homeScore: raw.goals.home,
-    awayScore: raw.goals.away,
-    homeScoreHT: raw.score?.halftime?.home ?? null,
-    awayScoreHT: raw.score?.halftime?.away ?? null,
-    league: {
-      id: raw.league.id,
-      name: raw.league.name,
-      country: raw.league.country,
-      logo: raw.league.logo,
-      sport: 'FOOTBALL',
-    },
-    homeTeam: {
-      id: raw.teams.home.id,
-      name: raw.teams.home.name,
-      logo: raw.teams.home.logo,
-      sport: 'FOOTBALL',
-    },
-    awayTeam: {
-      id: raw.teams.away.id,
-      name: raw.teams.away.name,
-      logo: raw.teams.away.logo,
-      sport: 'FOOTBALL',
-    },
-  };
-};
 
 const mapApiFootballToStandardPlayer = (raw: any) => {
   const player = raw.player;
@@ -130,7 +78,10 @@ const mapApiFootballToStandardPlayer = (raw: any) => {
 
 @Controller('football')
 export class FootballController {
-  constructor(private readonly apiFootballClient: ApiFootballClientService) {}
+  constructor(
+    private readonly apiFootballClient: ApiFootballClientService,
+    private readonly footballNormalizer: FootballNormalizerService,
+  ) {}
 
   private getHeaders() {
     const key =
@@ -156,7 +107,8 @@ export class FootballController {
       console.log(
         `[API-Football] Successfully fetched and normalized ${results.length} fixtures for date: ${targetDate}`,
       );
-      return results.map(mapApiFootballToStandardMatch);
+      // Delegate fixture normalization cleanly to FootballNormalizerService!
+      return this.footballNormalizer.normalizeFixtures(results);
     } catch (err) {
       console.error(
         `[API-Football] Failed to fetch fixtures for date ${targetDate}:`,
@@ -187,7 +139,8 @@ export class FootballController {
       console.log(
         `[API-Football] Successfully found and normalized Match ID: ${id}`,
       );
-      return mapApiFootballToStandardMatch(results[0]);
+      // Delegate dynamic fixture mapping to FootballNormalizerService
+      return this.footballNormalizer.normalizeFixture(results[0]);
     } catch (err) {
       console.error(
         `[API-Football] Failed to fetch single match details for ID ${id}:`,
@@ -312,7 +265,8 @@ export class FootballController {
         ? await recentRes.json()
         : { response: [] };
       const rawRecent = recentData.response || [];
-      const normalizedRecent = rawRecent.map(mapApiFootballToStandardMatch);
+      // Delegate map normalization to FootballNormalizerService
+      const normalizedRecent = this.footballNormalizer.normalizeFixtures(rawRecent);
 
       // 3. Fetch next 5 upcoming games
       const upcomingUrl = `https://v3.football.api-sports.io/fixtures?team=${id}&next=5`;
@@ -321,7 +275,8 @@ export class FootballController {
         ? await upcomingRes.json()
         : { response: [] };
       const rawUpcoming = upcomingData.response || [];
-      const normalizedUpcoming = rawUpcoming.map(mapApiFootballToStandardMatch);
+      // Delegate map normalization to FootballNormalizerService
+      const normalizedUpcoming = this.footballNormalizer.normalizeFixtures(rawUpcoming);
 
       console.log(
         `[API-Football] Successfully compiled profile for team ID: ${id} (${teamInfo.name})`,
@@ -360,7 +315,7 @@ export class FootballController {
     );
 
     const getMockStandings = (): StandardStandingWithTeam[] => {
-      // Return a robust 20-team mock standings for Premier League (league 39 or 1 or any other)
+      // Return a robust 20-team mock standings for Premier League
       const mockTeams = [
         {
           id: 50,
