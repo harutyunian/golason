@@ -15,7 +15,7 @@
 - [x] **Epic 7: Frontend Micro-Components**
 - [x] **Epic 8: Frontend Dashboard (Main Page)**
 - [x] **Epic 9: Frontend Match Profile**
-- [ ] **Epic 10: Frontend Team & Player Profiles**
+- [x] **Epic 10: Frontend Team & Player Profiles**
 - [ ] **Epic 11: Deployment (Ubuntu VPS)**
 
 ---
@@ -216,7 +216,7 @@ Our subagents will strictly utilize the following skills during execution:
 - **Acceptance Criteria:**
   - [x] SEO: Implement `Person` JSON-LD schema dynamically.
 
-#### Task 10.4: Dynamic XML Sitemap
+#### Task 10.4: Dynamic XML Sitemap (DONE)
 - **Action:** Create `/sitemap.xml/route.ts` that dynamically lists all match, team, and player URLs for search engines.
 
 ---
