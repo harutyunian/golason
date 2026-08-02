@@ -139,7 +139,7 @@ Our subagents will strictly utilize the following skills during execution:
   - [x] SEO: Uses `<header>` and `<nav>` semantic HTML.
   - [x] A11y: Fully tab-navigable.
 
-#### Task 7.2: Build Footer Component
+#### Task 7.2: Build Footer Component (DONE)
 - **Action:** Create standard footer with copyright and links.
 
 #### Task 7.3: Build Advertisement Banner Component
