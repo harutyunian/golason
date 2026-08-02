@@ -1,6 +1,7 @@
 import React from "react";
 import MatchDetails from "./MatchDetails";
 import { MatchStatus } from "@/components/MatchCard";
+import { StandardMatchStats } from "@/components/MatchStats";
 
 // Dynamic support types
 export type SportType = 'FOOTBALL' | 'TENNIS' | 'HOCKEY' | 'UFC';
@@ -35,6 +36,7 @@ interface StandardMatchWithDetails {
   league: LeagueDetails;
   homeTeam: TeamDetails;
   awayTeam: TeamDetails;
+  stats?: StandardMatchStats | null;
 }
 
 interface MatchPageProps {

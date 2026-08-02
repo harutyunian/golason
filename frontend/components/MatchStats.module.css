@@ -1,0 +1,128 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  background-color: var(--card-bg);
+  border: 1px dashed var(--card-border);
+  border-radius: 12px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.emptyState p {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.rowHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+  flex-grow: 1;
+}
+
+.value {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  width: 50px;
+  font-variant-numeric: tabular-nums;
+}
+
+.value:first-child {
+  text-align: left;
+}
+
+.value:last-child {
+  text-align: right;
+}
+
+.leader {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* Dual Progress Bar system */
+.barContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Space between home and away bars in the center */
+  height: 8px;
+  width: 100%;
+}
+
+.barHalf {
+  flex: 1;
+  height: 100%;
+  background-color: var(--bg-hover);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+}
+
+/* Align home bar elements to the right, so they fill from right to left (towards center to outer) */
+.barHalf:first-child {
+  justify-content: flex-end;
+}
+
+/* Align away bar elements to the left, so they fill from left to right */
+.barHalf:last-child {
+  justify-content: flex-start;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: var(--bg-active);
+  border-radius: 4px;
+  transition: width 0.4s cubic-bezier(0.1, 0.8, 0.25, 1);
+}
+
+/* High-contrast brand primary highlight for the leader */
+.leaderBar {
+  background-color: var(--color-primary);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+    gap: 1.25rem;
+  }
+
+  .label {
+    font-size: 0.8125rem;
+  }
+
+  .value {
+    font-size: 0.875rem;
+    width: 40px;
+  }
+}

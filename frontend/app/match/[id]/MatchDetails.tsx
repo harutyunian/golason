@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, BarChart2, Flame } from "lucide-react";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { MatchStatus } from "@/components/MatchCard";
+import MatchStats, { StandardMatchStats } from "@/components/MatchStats";
 import styles from "./match.module.css";
 
 export type SportType = 'FOOTBALL' | 'TENNIS' | 'HOCKEY' | 'UFC';
@@ -36,6 +37,7 @@ interface StandardMatchWithDetails {
   league: LeagueDetails;
   homeTeam: TeamDetails;
   awayTeam: TeamDetails;
+  stats?: StandardMatchStats | null;
 }
 
 interface MatchDetailsProps {
@@ -81,6 +83,7 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
   const [match, setMatch] = useState<StandardMatchWithDetails>(initialMatch);
   const [isGoalFlashing, setIsGoalFlashing] = useState(false);
   const [isMounting, setIsMounting] = useState(true);
+  const [activeTab, setActiveTab] = useState<'overview' | 'lineups' | 'h2h'>('overview');
 
   // Timezone safe on-mount formatting
   useEffect(() => {
@@ -241,14 +244,60 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
         </div>
       </section>
 
-      {/* Micro-sprint widget tabs placeholder */}
-      <section className={styles.tabsPlaceholder} aria-label="Interactive Match Panels">
-        <BarChart2 size={36} className={styles.placeholderIcon} />
-        <h3>Match Insights Panels</h3>
-        <p>
-          Interactive visual football pitch formations, player performance ratings, vertical timeline event logs, and dynamic Attack Momentum graphs will render here in the upcoming tasks.
-        </p>
-      </section>
+      {/* Tabs Navigation Header */}
+      <div className={styles.tabsContainer} role="tablist" aria-label="Match information tabs">
+        <button
+          className={`${styles.tabBtn} ${activeTab === 'overview' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('overview')}
+          role="tab"
+          aria-selected={activeTab === 'overview'}
+        >
+          Overview
+        </button>
+        <button
+          className={`${styles.tabBtn} ${activeTab === 'lineups' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('lineups')}
+          role="tab"
+          aria-selected={activeTab === 'lineups'}
+        >
+          Lineups
+        </button>
+        <button
+          className={`${styles.tabBtn} ${activeTab === 'h2h' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('h2h')}
+          role="tab"
+          aria-selected={activeTab === 'h2h'}
+        >
+          H2H
+        </button>
+      </div>
+
+      {/* Tab Panels */}
+      <div className={styles.tabContentPanel}>
+        {activeTab === 'overview' && (
+          <MatchStats stats={match.stats} />
+        )}
+
+        {activeTab === 'lineups' && (
+          <section className={styles.tabsPlaceholder} aria-label="Lineups Pitch Area">
+            <BarChart2 size={36} className={styles.placeholderIcon} />
+            <h3>Lineups Formations</h3>
+            <p>
+              Interactive visual football pitch formations, starting XI coordinates, and live player ratings will load dynamically in the next tasks!
+            </p>
+          </section>
+        )}
+
+        {activeTab === 'h2h' && (
+          <section className={styles.tabsPlaceholder} aria-label="Head to Head history">
+            <Flame size={36} className={styles.placeholderIcon} />
+            <h3>Head-to-Head History</h3>
+            <p>
+              Previous match cards, historic goals ratios, and win-probability graphs will render here in the upcoming sprints!
+            </p>
+          </section>
+        )}
+      </div>
     </div>
   );
 }

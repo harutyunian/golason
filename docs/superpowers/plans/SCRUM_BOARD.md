@@ -13,7 +13,7 @@
 - [ ] **Epic 5: Backend Auth & Users**
 - [ ] **Epic 6: Frontend Base & Layout (SEO Core)**
 - [x] **Epic 7: Frontend Micro-Components**
-- [ ] **Epic 8: Frontend Dashboard (Main Page)**
+- [x] **Epic 8: Frontend Dashboard (Main Page)**
 - [ ] **Epic 9: Frontend Match Profile**
 - [ ] **Epic 10: Frontend Team & Player Profiles**
 - [ ] **Epic 11: Deployment (Ubuntu VPS)**
@@ -167,10 +167,10 @@ Our subagents will strictly utilize the following skills during execution:
 - **Acceptance Criteria:**
   - [ ] SEO: Server components are used. Data is rendered in raw HTML.
 
-#### Task 8.3: Implement Live Toggle
+#### Task 8.3: Implement Live Toggle (DONE)
 - **Action:** Add client-side toggle to filter the rendered list to only show "Live" matches.
 
-#### Task 8.4: Group Matches by League
+#### Task 8.4: Group Matches by League (DONE)
 - **Action:** Refactor the match list to render League headers above their respective matches.
 
 ---
@@ -185,8 +185,10 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 9.2: WebSocket Client Integration (DONE)
 - **Action:** Connect scoreboard to socket.io. Flash scores when `match:update` event is received.
 
-#### Task 9.3: Live Match Stats Component
+#### Task 9.3: Live Match Stats Component (DONE)
 - **Action:** Build progress bars for possession, shots, and cards.
+- **Acceptance Criteria:**
+  - [x] Responsive CSS styling following SofaScore look and feel.
 
 #### Task 9.4: Lineups Pitch Component
 - **Action:** Build CSS grid visual football pitch displaying player formations.
