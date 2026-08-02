@@ -205,7 +205,7 @@ Our subagents will strictly utilize the following skills during execution:
 #### Task 9.8: Dual-Column Desktop Layout & 5-Tab Navigation Panel (DONE)
 - **Action:** Overhaul MatchDetails.tsx to split the desktop screen into a Left Column (340px) for real-time scrolling logs and a Right Column (1fr) for dynamic tab panels. Add tabs for "Lineups", "Statistics", "Standings", "H2H", and "AI Insights".
 
-#### Task 9.9: Play-by-Play Live Commentary Feed
+#### Task 9.9: Play-by-Play Live Commentary Feed (DONE)
 - **Action:** Build scrollable vertical play-by-play commentary timber in the left column with custom action headers (GOAL, Card, Save, Corner) and player headshots.
 
 #### Task 9.10: Player of the Match Race Card & Voting Widgets
