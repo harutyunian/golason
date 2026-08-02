@@ -147,8 +147,10 @@ Our subagents will strictly utilize the following skills during execution:
 - **Acceptance Criteria:**
   - [x] SEO/Perf: CLS is 0.
 
-#### Task 7.4: Build Date Selector Carousel
+#### Task 7.4: Build Date Selector Carousel (DONE)
 - **Action:** Create horizontal scrollable date picker for the dashboard.
+- **Acceptance Criteria:**
+  - [x] A11y: Date slider is keyboard navigable and has ARIA labels.
 
 #### Task 7.5: Build Match Card Component
 - **Action:** Create a reusable component displaying home/away teams, scores, and match minute.
