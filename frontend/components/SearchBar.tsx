@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Loader2, X } from "lucide-react";
-import Image from "next/image";
+import { Search, Loader2, X, Trophy } from "lucide-react";
+import SearchResultItem from "./SearchResultItem";
 import styles from "./SearchBar.module.css";
 
 interface SearchItem {
@@ -222,7 +222,9 @@ export default function SearchBar() {
 
             {query.trim() === "" ? (
               <div className={styles.instructionState}>
-                <div className={styles.instructionIcon}>🔍</div>
+                <div className={styles.instructionIcon}>
+                  <Trophy size={48} className={styles.instructionTrophy} />
+                </div>
                 <p className={styles.instructionTitle}>Expansive Search</p>
                 <p className={styles.instructionText}>
                   Find matches, teams, players, and leagues easily from anywhere on the platform.
@@ -242,27 +244,12 @@ export default function SearchBar() {
                       const globalIndex = flattenedResults.indexOf(team);
                       const isSelected = globalIndex === selectedIndex;
                       return (
-                        <div
+                        <SearchResultItem
                           key={`team-${team.id}`}
+                          item={team}
+                          isSelected={isSelected}
                           onClick={() => handleItemClick(team)}
-                          className={`${styles.item} ${isSelected ? styles.selectedItem : ""}`}
-                        >
-                          <div className={styles.logoWrapper}>
-                            {team.logo ? (
-                              <Image
-                                src={team.logo}
-                                alt={team.name || "Team"}
-                                width={24}
-                                height={24}
-                                className={styles.logo}
-                                unoptimized
-                              />
-                            ) : (
-                              <div className={styles.logoPlaceholder}>🛡️</div>
-                            )}
-                          </div>
-                          <span className={styles.itemName}>{team.name}</span>
-                        </div>
+                        />
                       );
                     })}
                   </div>
@@ -276,32 +263,12 @@ export default function SearchBar() {
                       const globalIndex = flattenedResults.indexOf(player);
                       const isSelected = globalIndex === selectedIndex;
                       return (
-                        <div
+                        <SearchResultItem
                           key={`player-${player.id}`}
+                          item={player}
+                          isSelected={isSelected}
                           onClick={() => handleItemClick(player)}
-                          className={`${styles.item} ${isSelected ? styles.selectedItem : ""}`}
-                        >
-                          <div className={styles.logoWrapper}>
-                            {player.photo ? (
-                              <Image
-                                src={player.photo}
-                                alt={player.name || "Player"}
-                                width={24}
-                                height={24}
-                                className={styles.avatar}
-                                unoptimized
-                              />
-                            ) : (
-                              <div className={styles.logoPlaceholder}>🏃</div>
-                            )}
-                          </div>
-                          <div className={styles.playerInfo}>
-                            <span className={styles.itemName}>{player.name}</span>
-                            {player.position && (
-                              <span className={styles.itemMeta}>{player.position}</span>
-                            )}
-                          </div>
-                        </div>
+                        />
                       );
                     })}
                   </div>
@@ -315,29 +282,12 @@ export default function SearchBar() {
                       const globalIndex = flattenedResults.indexOf(match);
                       const isSelected = globalIndex === selectedIndex;
                       return (
-                        <div
+                        <SearchResultItem
                           key={`match-${match.id}`}
+                          item={match}
+                          isSelected={isSelected}
                           onClick={() => handleItemClick(match)}
-                          className={`${styles.item} ${isSelected ? styles.selectedItem : ""}`}
-                        >
-                          <div className={styles.logoWrapper}>
-                            <div className={styles.logoPlaceholder}>⚽</div>
-                          </div>
-                          <div className={styles.matchInfo}>
-                            <span className={styles.itemName}>
-                              {match.homeTeam} vs {match.awayTeam}
-                            </span>
-                            {match.date && (
-                              <span className={styles.itemMeta}>
-                                {new Date(match.date).toLocaleDateString(undefined, {
-                                  month: "short",
-                                  day: "numeric",
-                                  year: "numeric",
-                                })}
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                        />
                       );
                     })}
                   </div>
@@ -351,34 +301,12 @@ export default function SearchBar() {
                       const globalIndex = flattenedResults.indexOf(comp);
                       const isSelected = globalIndex === selectedIndex;
                       return (
-                        <div
+                        <SearchResultItem
                           key={`competition-${comp.id}`}
+                          item={comp}
+                          isSelected={isSelected}
                           onClick={() => handleItemClick(comp)}
-                          className={`${styles.item} ${isSelected ? styles.selectedItem : ""}`}
-                        >
-                          <div className={styles.logoWrapper}>
-                            {comp.logo && comp.logo.startsWith("http") ? (
-                              <Image
-                                src={comp.logo}
-                                alt={comp.name || "Competition"}
-                                width={24}
-                                height={24}
-                                className={styles.logo}
-                                unoptimized
-                              />
-                            ) : (
-                              <div className={styles.logoPlaceholder}>
-                                {comp.logo || "🏆"}
-                              </div>
-                            )}
-                          </div>
-                          <div className={styles.compInfo}>
-                            <span className={styles.itemName}>{comp.name}</span>
-                            {comp.country && (
-                              <span className={styles.itemMeta}>{comp.country}</span>
-                            )}
-                          </div>
-                        </div>
+                        />
                       );
                     })}
                   </div>
