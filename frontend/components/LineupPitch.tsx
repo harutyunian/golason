@@ -3,6 +3,7 @@
 import React from "react";
 import { AlertCircle } from "lucide-react";
 import TeamLogo from "./TeamLogo";
+import PlayerLink from "./PlayerLink";
 import styles from "./LineupPitch.module.css";
 
 export interface LineupPlayer {
@@ -266,9 +267,11 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                   
                   {/* Number & Name labels below avatar */}
                   <div className={styles.playerInfo}>
-                    <span className={styles.playerName}>
-                      <span className={styles.playerNo}>{player.number}</span> {player.name}
-                    </span>
+                    <PlayerLink playerId={player.id}>
+                      <span className={styles.playerName}>
+                        <span className={styles.playerNo}>{player.number}</span> {player.name}
+                      </span>
+                    </PlayerLink>
                   </div>
                 </div>
               </div>
@@ -315,9 +318,11 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                   
                   {/* Number & Name labels below avatar */}
                   <div className={styles.playerInfo}>
-                    <span className={styles.playerName}>
-                      <span className={styles.playerNo}>{player.number}</span> {player.name}
-                    </span>
+                    <PlayerLink playerId={player.id}>
+                      <span className={styles.playerName}>
+                        <span className={styles.playerNo}>{player.number}</span> {player.name}
+                      </span>
+                    </PlayerLink>
                   </div>
                 </div>
               </div>
@@ -392,7 +397,9 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                       )}
                     </div>
                     <span className={styles.benchNumber}>{player.number}</span>
-                    <span className={styles.benchName}>{player.name}</span>
+                    <PlayerLink playerId={player.id}>
+                      <span className={styles.benchName}>{player.name}</span>
+                    </PlayerLink>
                     <span className={styles.benchPositionBadge}>{player.position}</span>
                   </div>
                   {player.rating && (
@@ -420,7 +427,9 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                       )}
                     </div>
                     <span className={styles.benchNumber}>{player.number}</span>
-                    <span className={styles.benchName}>{player.name}</span>
+                    <PlayerLink playerId={player.id}>
+                      <span className={styles.benchName}>{player.name}</span>
+                    </PlayerLink>
                     <span className={styles.benchPositionBadge}>{player.position}</span>
                   </div>
                   {player.rating && (

@@ -4,6 +4,7 @@ import React from "react";
 import styles from "./MatchCommentary.module.css";
 import { StandardMatchEvent } from "./MatchTimeline";
 import { StandardMatchLineups } from "./LineupPitch";
+import PlayerLink from "./PlayerLink";
 
 interface TeamProps {
   id: number;
@@ -27,6 +28,7 @@ interface CommentaryItem {
   type: "Goal" | "Card" | "subst" | "Corner" | "Save" | "Foul" | "Info";
   teamId?: number;
   teamName?: string;
+  playerId?: number | null;
   playerName?: string;
   title: string;
   text: string;
@@ -228,6 +230,7 @@ export default function MatchCommentary({
         type,
         teamId: event.team.id,
         teamName: event.team.name,
+        playerId: event.player.id,
         playerName: event.player.name,
         title,
         text,
@@ -366,13 +369,15 @@ export default function MatchCommentary({
             {/* Body segment with Player Avatar and Text */}
             <div className={styles.itemBody}>
               {item.playerName && item.playerName !== "REF" && (
-                <div 
-                  className={styles.playerAvatar} 
-                  style={{ borderColor: avatarBorderColor }}
-                  aria-hidden="true"
-                >
-                  {getInitials(item.playerName)}
-                </div>
+                <PlayerLink playerId={item.playerId}>
+                  <div 
+                    className={styles.playerAvatar} 
+                    style={{ borderColor: avatarBorderColor }}
+                    aria-hidden="true"
+                  >
+                    {getInitials(item.playerName)}
+                  </div>
+                </PlayerLink>
               )}
               <div className={styles.bodyTextWrapper}>
                 <p className={styles.commentaryText}>{item.text}</p>
