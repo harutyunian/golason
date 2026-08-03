@@ -9,6 +9,7 @@ import { StandardMatchEvent } from "@/components/MatchTimeline";
 export type SportType = 'FOOTBALL' | 'TENNIS' | 'HOCKEY' | 'UFC';
 
 // Forces server-side dynamic rendering on runtime (vital for live scores and SEO!)
+// aper jan
 export const dynamic = "force-dynamic";
 
 interface TeamDetails {
