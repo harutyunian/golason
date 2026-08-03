@@ -13,6 +13,7 @@ import MatchH2H from "@/components/MatchH2H";
 import PlayerOfTheMatch from "@/components/PlayerOfTheMatch";
 import PredictionPoll from "@/components/PredictionPoll";
 import StandingsTable from "@/components/StandingsTable";
+import TeamLink from "@/components/TeamLink";
 import styles from "./match.module.css";
 
 export type SportType = 'FOOTBALL' | 'TENNIS' | 'HOCKEY' | 'UFC';
@@ -273,14 +274,14 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
         {/* Score Grid Layout */}
         <div className={styles.scoreboardGrid}>
           {/* Home Team */}
-          <div className={styles.teamSide}>
+          <TeamLink teamId={match.homeTeam.id} className={styles.teamSide}>
             <div className={styles.logoWrapper}>
               <TeamLogo logo={match.homeTeam.logo} name={match.homeTeam.name} />
             </div>
             <h2 className={`${styles.teamName} ${isHomeWinning ? styles.winningTeam : ""}`}>
               {match.homeTeam.name}
             </h2>
-          </div>
+          </TeamLink>
 
           {/* Clock & Score Central Column */}
           <div className={styles.centerScore}>
@@ -341,14 +342,14 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
           </div>
 
           {/* Away Team */}
-          <div className={styles.teamSide}>
+          <TeamLink teamId={match.awayTeam.id} className={styles.teamSide}>
             <div className={styles.logoWrapper}>
               <TeamLogo logo={match.awayTeam.logo} name={match.awayTeam.name} />
             </div>
             <h2 className={`${styles.teamName} ${isAwayWinning ? styles.winningTeam : ""}`}>
               {match.awayTeam.name}
             </h2>
-          </div>
+          </TeamLink>
         </div>
 
         {/* Dynamic Goalscorers Block (SofaScore styled!) */}
