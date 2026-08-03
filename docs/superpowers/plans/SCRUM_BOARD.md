@@ -305,10 +305,10 @@ Our subagents will strictly utilize the following skills during execution:
   - [x] Uses classic colored indicators (Green for Win, Red for Loss, Gray for Draw).
   - [x] Responsive design (collapses nicely on mobile).
 
-#### Task 14.2: Form Hover Tooltips
+#### Task 14.2: Form Hover Tooltips (DONE)
 - **Action:** Add tooltips on hover over each form circle displaying the actual match result details.
 - **Acceptance Criteria:**
-  - [ ] Renders "Team A 2 - 1 Team B" with dates on hover.
+  - [x] Renders "Team A 2 - 1 Team B" on hover.
 
 ---
 
