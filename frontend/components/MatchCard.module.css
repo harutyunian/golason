@@ -3,6 +3,7 @@
    ========================================================================== */
 
 .card {
+  position: relative; /* for absolute overlay cardOverlay */
   display: flex;
   align-items: center;
   padding: 12px 16px;
@@ -17,13 +18,34 @@
 }
 
 .card:hover,
-.card:focus-visible {
+.card:focus-within {
   background-color: var(--bg-hover);
   border-color: var(--text-muted);
 }
 
-.card:focus-visible {
+.card:focus-within {
   box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+.cardOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.cardTeamLink {
+  position: relative;
+  z-index: 2;
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  text-decoration: none;
+  color: inherit;
+  width: 100%;
 }
 
 /* Left Section: Match Status / Time */

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import TeamLink from './TeamLink';
 import styles from './MatchCard.module.css';
 
 /**
@@ -172,12 +173,13 @@ export default function MatchCard({
   const ariaLabel = `Match: ${resolvedHomeTeam.name} versus ${resolvedAwayTeam.name}. Status: ${getStatusAriaText()}. ${getScoreAriaText()}.`;
 
   return (
-    <Link
-      href={`/match/${resolvedId}`}
-      className={styles.card}
-      role="link"
-      aria-label={ariaLabel}
-    >
+    <div className={styles.card}>
+      <Link
+        href={`/match/${resolvedId}`}
+        className={styles.cardOverlay}
+        aria-label="View match details"
+      />
+
       {/* Left Section: Time/Status */}
       <div className={styles.statusSection}>
         {isLive && (
@@ -228,17 +230,21 @@ export default function MatchCard({
         {/* Middle Section: Teams */}
         <div className={styles.teamsSection} aria-hidden="true">
           <div className={`${styles.teamRow} ${isHomeWinning ? styles.winning : ''}`}>
-            <div className={styles.logoContainer}>
-              <TeamLogo logo={resolvedHomeTeam.logo} name={resolvedHomeTeam.name} />
-            </div>
-            <span className={styles.teamName}>{resolvedHomeTeam.name}</span>
+            <TeamLink teamId={resolvedHomeTeam.id} className={styles.cardTeamLink}>
+              <div className={styles.logoContainer}>
+                <TeamLogo logo={resolvedHomeTeam.logo} name={resolvedHomeTeam.name} />
+              </div>
+              <span className={styles.teamName}>{resolvedHomeTeam.name}</span>
+            </TeamLink>
           </div>
 
           <div className={`${styles.teamRow} ${isAwayWinning ? styles.winning : ''}`}>
-            <div className={styles.logoContainer}>
-              <TeamLogo logo={resolvedAwayTeam.logo} name={resolvedAwayTeam.name} />
-            </div>
-            <span className={styles.teamName}>{resolvedAwayTeam.name}</span>
+            <TeamLink teamId={resolvedAwayTeam.id} className={styles.cardTeamLink}>
+              <div className={styles.logoContainer}>
+                <TeamLogo logo={resolvedAwayTeam.logo} name={resolvedAwayTeam.name} />
+              </div>
+              <span className={styles.teamName}>{resolvedAwayTeam.name}</span>
+            </TeamLink>
           </div>
         </div>
 
@@ -252,6 +258,6 @@ export default function MatchCard({
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
