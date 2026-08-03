@@ -428,15 +428,25 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
                   const isHome = val > 0;
                   const heightPercentage = Math.min(Math.abs(val) * 3, 100);
                   return (
-                    <div key={i} className={styles.momentumBarWrapper}>
-                      <div 
-                        className={`${styles.momentumBar} ${isHome ? styles.momentumHome : styles.momentumAway}`}
-                        style={{ 
-                          height: `${heightPercentage}%`,
-                          transform: isHome ? 'scaleY(1)' : 'scaleY(-1)',
-                          transformOrigin: isHome ? 'bottom' : 'top'
-                        }}
-                      />
+                    <div key={i} className={styles.momentumCol}>
+                      {/* Top half (Home) grows from bottom up */}
+                      <div className={styles.momentumHalfHome}>
+                        {isHome && (
+                          <div 
+                            className={`${styles.momentumBar} ${styles.momentumHome}`}
+                            style={{ height: `${heightPercentage}%` }}
+                          />
+                        )}
+                      </div>
+                      {/* Bottom half (Away) grows from top down */}
+                      <div className={styles.momentumHalfAway}>
+                        {!isHome && (
+                          <div 
+                            className={`${styles.momentumBar} ${styles.momentumAway}`}
+                            style={{ height: `${heightPercentage}%` }}
+                          />
+                        )}
+                      </div>
                     </div>
                   );
                 })}
