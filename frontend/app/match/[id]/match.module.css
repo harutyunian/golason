@@ -359,29 +359,41 @@
   z-index: 1;
 }
 
-.momentumBarWrapper {
-  height: 100%;
+.momentumCol {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  height: 100%;
   z-index: 2;
+}
+
+.momentumHalfHome {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.momentumHalfAway {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .momentumBar {
   width: 100%;
-  border-radius: 2px;
   transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .momentumHome {
-  background: linear-gradient(180deg, #2ed573 0%, #1abc9c 100%);
-  border-radius: 2px 2px 0 0;
+  background: linear-gradient(0deg, #1abc9c 0%, #2ed573 100%);
+  border-radius: 3px 3px 0 0;
   box-shadow: 0 0 6px rgba(46, 213, 115, 0.3);
 }
 
 .momentumAway {
   background: linear-gradient(180deg, #ef4444 0%, #ff4757 100%);
-  border-radius: 0 0 2px 2px;
+  border-radius: 0 0 3px 3px;
   box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);
 }
 
