@@ -261,3 +261,76 @@ Our subagents will strictly utilize the following skills during execution:
 
 #### Task 11.4: Nginx Reverse Proxy Config
 - **Action:** Document Nginx configurations for routing traffic to frontend and backend, including WebSocket upgrades, ready for Ubuntu deployment.
+
+---
+
+### Epic 12: Search & Navigation (Teams & Players)
+
+#### Task 12.1: Implement Global Search API
+- **Action:** Create `GET /sports/search?q={query}` endpoint in NestJS backend returning matching Teams and Players.
+- **Acceptance Criteria:**
+  - [ ] Query must be case-insensitive and match partial names.
+  - [ ] Returns max 5 teams and 5 players in standard format `{ id, name, type: 'team'|'player', logoOrImage }`.
+  - [ ] Passes `.pre-flight-check` validation.
+
+#### Task 12.2: Implement Frontend Search Bar UI
+- **Action:** Create a search input component in the Next.js header with a dropdown list of matching teams and players.
+- **Acceptance Criteria:**
+  - [ ] Accessible search input in the global header matching SofaScore aesthetic.
+  - [ ] Dropdown list grouped by 'Teams' and 'Players' with respective logos.
+  - [ ] Keyboard navigable (Up/Down arrows to select, Enter to navigate, Escape to close).
+
+---
+
+### Epic 13: Caching & Performance Optimization
+
+#### Task 13.1: API Request Caching Mechanism
+- **Action:** Implement in-memory caching for API-Football requests in `api-football-client.service.ts` to prevent redundant external calls for non-live data.
+- **Acceptance Criteria:**
+  - [ ] Cache duration of 24 hours for historical matches and standings.
+  - [ ] Bypass cache for live/ongoing matches (live pollers).
+
+#### Task 13.2: Cache Standings Endpoint
+- **Action:** Cache the standard standings response in NestJS controller for 1 hour to reduce DB load.
+- **Acceptance Criteria:**
+  - [ ] Fast standings retrieval.
+
+---
+
+### Epic 14: Standings UI Enhancements
+
+#### Task 14.1: Standings "Last 5 Matches" Form Row
+- **Action:** Add a "Form" column to the `StandingsTable` component showing colored circular badges (W/D/L) before the "Points" column.
+- **Acceptance Criteria:**
+  - [ ] Uses classic colored indicators (Green for Win, Red for Loss, Gray for Draw).
+  - [ ] Responsive design (collapses nicely on mobile).
+
+#### Task 14.2: Form Hover Tooltips
+- **Action:** Add tooltips on hover over each form circle displaying the actual match result details.
+- **Acceptance Criteria:**
+  - [ ] Renders "Team A 2 - 1 Team B" with dates on hover.
+
+---
+
+### Epic 15: Statistics UI Enhancements
+
+#### Task 15.1: SofaScore Aesthetics Statistics Panel
+- **Action:** Redesign the Match Details left-side commentary/statistics panel to match the premium, clean SofaScore design.
+- **Acceptance Criteria:**
+  - [ ] Perfect spacing, typography, and contrast.
+  - [ ] Modern progress bars with bold text percentages.
+
+---
+
+### Epic 16: Bug Fixes & Live Data Reliability
+
+#### Task 16.1: Fix /scores 404 Error
+- **Action:** Resolve the 404 issue when hitting `/scores` or trailing router queries on the production URL.
+- **Acceptance Criteria:**
+  - [ ] Add explicit URL rewrite, page route, or NestJS asset routing to handle the `/scores` path.
+
+#### Task 16.2: End-to-End Live Data Polish
+- **Action:** Audit all live-updating screens to guarantee Next.js does not serve stale cached pages for live matches.
+- **Acceptance Criteria:**
+  - [ ] Dashboard is 100% accurate, refreshing matches appropriately.
+
