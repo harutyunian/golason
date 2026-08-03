@@ -338,3 +338,22 @@
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
+
+/* Search Placements */
+.desktopSearch {
+  flex: 1;
+  max-width: 300px;
+  margin: 0 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .desktopSearch {
+    display: none;
+  }
+}
+
+.mobileSearch {
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
