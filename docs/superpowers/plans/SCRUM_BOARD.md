@@ -356,4 +356,12 @@ Our subagents will strictly utilize the following skills during execution:
   - [x] Centered goalkeeper.
   - [x] Centered defending, midfield, and attacking lines.
 
+#### Task 17.4: Dynamic Server Fetch API Base URL Fallback (DONE)
+- **Action:** Refactor all hardcoded 'http://golason-backend:3001' occurrences in Next.js Server Components to use 'process.env.BACKEND_INTERNAL_URL || "http://localhost:3001"' dynamically.
+- **Acceptance Criteria:**
+  - [x] No hardcoded container hosts in Server Component fetches.
+  - [x] Falls back to local ports (3001) for local running services.
+  - [x] Next.js compiles cleanly.
+
+
 
