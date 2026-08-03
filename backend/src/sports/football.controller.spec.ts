@@ -2,12 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FootballController } from './football.controller';
 import { ApiFootballClientService } from './api-football-client.service';
 import { FootballNormalizerService } from './football-normalizer.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { HttpException } from '@nestjs/common';
 
 describe('FootballController', () => {
   let controller: FootballController;
   let mockApiFootballClient: any;
   let mockFootballNormalizer: any;
+  let mockPrismaService: any;
 
   beforeEach(async () => {
     mockApiFootballClient = {
@@ -44,6 +46,15 @@ describe('FootballController', () => {
       getDemoMatchById: jest.fn().mockReturnValue({ id: 101, status: 'LIVE' }),
     };
 
+    mockPrismaService = {
+      team: {
+        findMany: jest.fn().mockResolvedValue([]),
+      },
+      player: {
+        findMany: jest.fn().mockResolvedValue([]),
+      },
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [FootballController],
       providers: [
@@ -54,6 +65,10 @@ describe('FootballController', () => {
         {
           provide: FootballNormalizerService,
           useValue: mockFootballNormalizer,
+        },
+        {
+          provide: PrismaService,
+          useValue: mockPrismaService,
         },
       ],
     }).compile();
