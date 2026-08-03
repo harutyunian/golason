@@ -1,10 +1,18 @@
 import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 
+interface CacheEntry {
+  data: any;
+  expiresAt: number;
+}
+
 @Injectable()
 export class ApiFootballClientService {
   private readonly logger = new Logger(ApiFootballClientService.name);
   private readonly baseUrl = 'https://v3.football.api-sports.io';
   private readonly defaultTimeoutMs = 15000; // 15s timeout for network reliability
+  
+  // Custom in-memory cache map
+  private readonly cache = new Map<string, CacheEntry>();
 
   /**
    * Constructs authorization and tracking headers for API-Football calls.
@@ -21,9 +29,59 @@ export class ApiFootballClientService {
   }
 
   /**
-   * Helper method to perform fetch operations with a timeout and abort boundary.
+   * Computes cache Time-To-Live (TTL) dynamically based on URL patterns and response content.
+   */
+  private getTtlForUrl(url: string, data?: any): number {
+    if (url.includes('/standings')) {
+      return 60 * 60 * 1000; // 1 hour for standings
+    }
+    if (url.includes('/teams')) {
+      return 24 * 60 * 60 * 1000; // 24 hours for team profiles
+    }
+    if (url.includes('/players')) {
+      return 24 * 60 * 60 * 1000; // 24 hours for player profiles
+    }
+    if (url.includes('/fixtures?team=')) {
+      return 10 * 60 * 1000; // 10 minutes for team fixtures lists
+    }
+    if (url.includes('/fixtures?date=')) {
+      const match = url.match(/date=(\d{4}-\d{2}-\d{2})/);
+      if (match) {
+        const dateStr = match[1];
+        const todayStr = new Date().toISOString().split('T')[0];
+        if (dateStr < todayStr) {
+          return 24 * 60 * 60 * 1000; // 24 hours for matches on past calendar days
+        }
+      }
+      return 15 * 1000; // 15 seconds for today's/ongoing matches
+    }
+    if (url.includes('/fixtures?id=')) {
+      if (data && data.response && data.response[0]) {
+        const fixture = data.response[0].fixture;
+        const status = fixture?.status?.short;
+        const finishedStatuses = ['FT', 'AET', 'PEN', 'PST', 'CANC', 'ABD'];
+        if (finishedStatuses.includes(status)) {
+          return 24 * 60 * 60 * 1000; // 24 hours for finished matches
+        }
+      }
+      return 10 * 1000; // 10 seconds for live / upcoming / ongoing matches
+    }
+    return 0; // Default: do not cache
+  }
+
+  /**
+   * Helper method to perform fetch operations with a timeout, caching, and abort boundary.
    */
   private async fetchWithTimeout(url: string, options: RequestInit = {}): Promise<any> {
+    // Check Cache first
+    const cached = this.cache.get(url);
+    if (cached && cached.expiresAt > Date.now()) {
+      this.logger.debug(`[Cache HIT] Returning cached data for: ${url}`);
+      return cached.data;
+    }
+
+    this.logger.debug(`[Cache MISS] Fetching from external API: ${url}`);
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.defaultTimeoutMs);
 
@@ -61,6 +119,16 @@ export class ApiFootballClientService {
           `API-Football gateway error: ${JSON.stringify(data.errors)}`,
           HttpStatus.BAD_GATEWAY,
         );
+      }
+
+      // Populate Cache dynamically if eligible
+      const ttl = this.getTtlForUrl(url, data);
+      if (ttl > 0) {
+        this.cache.set(url, {
+          data,
+          expiresAt: Date.now() + ttl,
+        });
+        this.logger.log(`[Cache SET] Cached response for URL: ${url} (TTL: ${ttl}ms)`);
       }
 
       return data;
