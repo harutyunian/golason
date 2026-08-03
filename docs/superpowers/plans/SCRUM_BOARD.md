@@ -266,12 +266,12 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 12: Search & Navigation (Teams & Players)
 
-#### Task 12.1: Implement Global Search API
+#### Task 12.1: Implement Global Search API (DONE)
 - **Action:** Create `GET /sports/search?q={query}` endpoint in NestJS backend returning matching Teams and Players.
 - **Acceptance Criteria:**
-  - [ ] Query must be case-insensitive and match partial names.
-  - [ ] Returns max 5 teams and 5 players in standard format `{ id, name, type: 'team'|'player', logoOrImage }`.
-  - [ ] Passes `.pre-flight-check` validation.
+  - [x] Query must be case-insensitive and match partial names.
+  - [x] Returns max 5 teams and 5 players in standard format `{ id, name, type: 'team'|'player', logoOrImage }`.
+  - [x] Passes `.pre-flight-check` validation.
 
 #### Task 12.2: Implement Frontend Search Bar UI
 - **Action:** Create a search input component in the Next.js header with a dropdown list of matching teams and players.

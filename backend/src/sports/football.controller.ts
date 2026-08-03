@@ -17,6 +17,7 @@ import {
 } from './interfaces/sports.types';
 import { ApiFootballClientService } from './api-football-client.service';
 import { FootballNormalizerService } from './football-normalizer.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 export interface StandardMatchWithDetails extends StandardMatch {
   league: StandardLeague;
@@ -77,6 +78,7 @@ export class FootballController {
   constructor(
     private readonly apiFootballClient: ApiFootballClientService,
     private readonly footballNormalizer: FootballNormalizerService,
+    private readonly prisma: PrismaService,
   ) {}
 
   private getHeaders() {
@@ -657,5 +659,97 @@ export class FootballController {
       );
       return getMockPlayerProfile(playerId);
     }
+  }
+
+  @Get('search')
+  async search(@Query('q') query: string): Promise<any> {
+    const q = query ? query.trim() : '';
+    if (!q) {
+      return { teams: [], players: [] };
+    }
+
+    const fallbackTeams = [
+      { id: 42, name: 'Arsenal', logo: 'https://media.api-sports.io/football/teams/42.png', type: 'team' },
+      { id: 49, name: 'Chelsea', logo: 'https://media.api-sports.io/football/teams/49.png', type: 'team' },
+      { id: 50, name: 'Manchester City', logo: 'https://media.api-sports.io/football/teams/50.png', type: 'team' },
+      { id: 40, name: 'Liverpool', logo: 'https://media.api-sports.io/football/teams/40.png', type: 'team' },
+      { id: 33, name: 'Manchester United', logo: 'https://media.api-sports.io/football/teams/33.png', type: 'team' },
+      { id: 47, name: 'Tottenham', logo: 'https://media.api-sports.io/football/teams/47.png', type: 'team' },
+      { id: 66, name: 'Aston Villa', logo: 'https://media.api-sports.io/football/teams/66.png', type: 'team' },
+      { id: 34, name: 'Newcastle', logo: 'https://media.api-sports.io/football/teams/34.png', type: 'team' },
+      { id: 48, name: 'West Ham', logo: 'https://media.api-sports.io/football/teams/48.png', type: 'team' },
+      { id: 51, name: 'Brighton', logo: 'https://media.api-sports.io/football/teams/51.png', type: 'team' },
+    ];
+
+    const fallbackPlayers = [
+      { id: 1468, name: 'Bukayo Saka', photo: 'https://media.api-sports.io/football/players/1468.png', teamName: 'Arsenal', type: 'player' },
+      { id: 1460, name: 'Martin Ødegaard', photo: 'https://media.api-sports.io/football/players/1460.png', teamName: 'Arsenal', type: 'player' },
+      { id: 1100, name: 'Erling Haaland', photo: 'https://media.api-sports.io/football/players/1100.png', teamName: 'Manchester City', type: 'player' },
+      { id: 647, name: 'Cole Palmer', photo: 'https://media.api-sports.io/football/players/647.png', teamName: 'Chelsea', type: 'player' },
+      { id: 280, name: 'Mohamed Salah', photo: 'https://media.api-sports.io/football/players/280.png', teamName: 'Liverpool', type: 'player' },
+      { id: 909, name: 'Bruno Fernandes', photo: 'https://media.api-sports.io/football/players/909.png', teamName: 'Manchester United', type: 'player' },
+      { id: 184, name: 'Son Heung-min', photo: 'https://media.api-sports.io/football/players/184.png', teamName: 'Tottenham', type: 'player' },
+    ];
+
+    try {
+      const dbTeams = await this.prisma.team.findMany({
+        where: {
+          name: {
+            contains: q,
+            mode: 'insensitive',
+          },
+        },
+        take: 5,
+      });
+
+      const dbPlayers = await this.prisma.player.findMany({
+        where: {
+          name: {
+            contains: q,
+            mode: 'insensitive',
+          },
+        },
+        take: 5,
+      });
+
+      const formattedTeams = dbTeams.map((t) => ({
+        id: t.id,
+        name: t.name,
+        logo: t.logo,
+        type: 'team',
+      }));
+
+      const formattedPlayers = dbPlayers.map((p) => ({
+        id: p.id,
+        name: p.name,
+        photo: p.photo,
+        position: p.position,
+        type: 'player',
+      }));
+
+      if (formattedTeams.length > 0 || formattedPlayers.length > 0) {
+        return {
+          teams: formattedTeams,
+          players: formattedPlayers,
+        };
+      }
+    } catch (dbErr) {
+      console.warn(
+        `[Search DB Fallback] Postgres query failed (likely offline/unseeded). Using local search memory. Error: ${dbErr.message}`,
+      );
+    }
+
+    const matchedMockTeams = fallbackTeams
+      .filter((t) => t.name.toLowerCase().includes(q.toLowerCase()))
+      .slice(0, 5);
+
+    const matchedMockPlayers = fallbackPlayers
+      .filter((p) => p.name.toLowerCase().includes(q.toLowerCase()))
+      .slice(0, 5);
+
+    return {
+      teams: matchedMockTeams,
+      players: matchedMockPlayers,
+    };
   }
 }

@@ -5,6 +5,7 @@ import { FootballController } from './sports/football.controller';
 import { LiveScoreGateway } from './gateway/live-score.gateway';
 import { ApiFootballClientService } from './sports/api-football-client.service';
 import { FootballNormalizerService } from './sports/football-normalizer.service';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [],
@@ -14,6 +15,7 @@ import { FootballNormalizerService } from './sports/football-normalizer.service'
     LiveScoreGateway,
     ApiFootballClientService,
     FootballNormalizerService,
+    PrismaService,
   ],
   exports: [FootballNormalizerService],
 })
