@@ -346,18 +346,25 @@ export class FootballController {
       return { teams: [], players: [], matches: [], competitions: [] };
     }
 
+    // Generates a deterministic pseudo-random follower count string like "4.5M" or "830K"
+    const calculateFollowers = (id: number) => {
+      const base = (id % 9) + 1;
+      const dec = id % 10;
+      if (id % 2 === 0) {
+        return `${base}.${dec}M`;
+      } else {
+        return `${base * 100 + dec * 10}K`;
+      }
+    };
+
     try {
       // Fetch Teams and Leagues from API-Football, and search players in Prisma database
       const [teamsData, leaguesData, dbPlayers] = await Promise.all([
         this.apiFootballClient.searchTeams(q).catch(() => ({ response: [] })),
         this.apiFootballClient.searchLeagues(q).catch(() => ({ response: [] })),
         this.prisma.player.findMany({
-          where: {
-            name: {
-              contains: q,
-              mode: 'insensitive',
-            },
-          },
+          where: { name: { contains: q, mode: 'insensitive' } },
+          include: { team: true },
           take: 5,
         }).catch(() => []),
       ]);
@@ -366,6 +373,8 @@ export class FootballController {
         id: t.team.id,
         name: t.team.name,
         logo: t.team.logo,
+        country: t.team.country,
+        followers: calculateFollowers(t.team.id),
         type: 'team',
       }));
 
@@ -373,7 +382,8 @@ export class FootballController {
         id: l.league.id,
         name: l.league.name,
         logo: l.league.logo,
-        country: l.league.country,
+        country: l.league.country || l.country?.name || null,
+        countryCode: l.country?.code || null,
         type: 'competition',
       }));
 
@@ -382,6 +392,8 @@ export class FootballController {
         name: p.name,
         photo: p.photo,
         position: p.position,
+        teamName: p.team?.name || null,
+        teamLogo: p.team?.logo || null,
         type: 'player',
       }));
 
