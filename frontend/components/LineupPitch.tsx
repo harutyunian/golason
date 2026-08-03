@@ -133,43 +133,11 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
 
   // Parse dynamic, squad-accurate absences (Injuries & Suspensions) with 0% mock names!
   const absences = React.useMemo(() => {
-    const isArsenalMatch = homeTeamName.toLowerCase().includes("arsenal") || awayTeamName.toLowerCase().includes("arsenal");
-    const isUSLMatch = homeTeamName.toLowerCase().includes("birmingham") || awayTeamName.toLowerCase().includes("birmingham");
-
     let homeAbs: { name: string; reason: string; status: "out" | "doubtful" | "suspended" }[] = [];
     let awayAbs: { name: string; reason: string; status: "out" | "doubtful" | "suspended" }[] = [];
 
-    if (isArsenalMatch) {
-      homeAbs = [
-        { name: "Gabriel Jesus", reason: "Knee Injury", status: "out" },
-        { name: "Takehiro Tomiyasu", reason: "Calf Strain", status: "out" },
-        { name: "Jurrien Timber", reason: "Fitness / Doubtful", status: "doubtful" }
-      ];
-      awayAbs = [
-        { name: "Reece James", reason: "Hamstring Injury", status: "out" },
-        { name: "Wesley Fofana", reason: "ACL Recovery", status: "out" },
-        { name: "Romeo Lavia", reason: "Muscle Strain", status: "doubtful" }
-      ];
-    } else if (isUSLMatch) {
-      homeAbs = [
-        { name: "Phanuel Kavita", reason: "Muscle Strain", status: "doubtful" },
-        { name: "Tyler Pasher", reason: "Suspended - Red Card", status: "suspended" }
-      ];
-      awayAbs = [
-        { name: "Mark Doyle", reason: "Ankle Injury", status: "out" },
-        { name: "Stephen Turnbull", reason: "5 Yellow Cards", status: "suspended" }
-      ];
-    } else {
-      homeAbs = [
-        { name: "Star Forward", reason: "Muscle Strain", status: "doubtful" }
-      ];
-      awayAbs = [
-        { name: "Midfielder Captain", reason: "Suspended - Cards", status: "suspended" }
-      ];
-    }
-
     return { home: homeAbs, away: awayAbs };
-  }, [homeTeamName, awayTeamName]);
+  }, []);
 
   // Parse Starting XI coordinates and dynamically center them vertically
   const homeStartingParsed = React.useMemo(() => calculateCenteredPositions(processTeamPlayers(lineups.home.startXI)), [lineups.home.startXI]);

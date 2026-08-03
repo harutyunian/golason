@@ -456,7 +456,7 @@ export class FootballNormalizerService {
     }
 
     // 4. DYNAMIC FAILSAFE GENERATION FOR SQUAD-ACCURATE FALLBACKS (If lineups/stats empty on non-scheduled matches!)
-    const hasStarted = status === 'LIVE' || status === 'HALFTIME' || status === 'FINISHED';
+    const hasStarted = false; // Strict API data mode: live fallbacks are completely disabled
     if (hasStarted && (!lineups || !stats)) {
       const absencesGen = this.getAbsencesByTeams(homeTeamName, awayTeamName);
       
@@ -800,39 +800,9 @@ export class FootballNormalizerService {
   }
 
   private getAbsencesByTeams(home: string, away: string) {
-    const homeName = home.toLowerCase();
-    const awayName = away.toLowerCase();
-    const isArsenalMatch = homeName.includes('arsenal') || awayName.includes('arsenal');
-    const isUSLMatch = homeName.includes('birmingham') || awayName.includes('birmingham');
-
-    if (isArsenalMatch) {
-      return {
-        home: [
-          { name: 'Gabriel Jesus', reason: 'Knee Injury', status: 'out' },
-          { name: 'Takehiro Tomiyasu', reason: 'Calf Strain', status: 'out' },
-          { name: 'Jurrien Timber', reason: 'Fitness / Doubtful', status: 'doubtful' },
-        ],
-        away: [
-          { name: 'Reece James', reason: 'Hamstring Injury', status: 'out' },
-          { name: 'Wesley Fofana', reason: 'ACL Recovery', status: 'out' },
-          { name: 'Romeo Lavia', reason: 'Muscle Strain', status: 'doubtful' },
-        ],
-      };
-    } else if (isUSLMatch) {
-      return {
-        home: [
-          { name: 'Phanuel Kavita', reason: 'Muscle Strain', status: 'doubtful' },
-          { name: 'Tyler Pasher', reason: 'Suspended - Red Card', status: 'suspended' },
-        ],
-        away: [
-          { name: 'Mark Doyle', reason: 'Ankle Injury', status: 'out' },
-          { name: 'Stephen Turnbull', reason: '5 Yellow Cards', status: 'suspended' },
-        ],
-      };
-    }
     return {
-      home: [{ name: 'Star Forward', reason: 'Muscle Strain', status: 'doubtful' }],
-      away: [{ name: 'Midfielder Captain', reason: 'Suspended - Cards', status: 'suspended' }],
+      home: [],
+      away: [],
     };
   }
 

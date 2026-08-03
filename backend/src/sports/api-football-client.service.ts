@@ -217,4 +217,22 @@ export class ApiFootballClientService {
     this.logger.log(`Requesting odds for fixture ID: ${fixtureId}`);
     return this.fetchWithTimeout(url);
   }
+
+  /**
+   * Search soccer teams matching a search query name.
+   */
+  async searchTeams(query: string): Promise<any> {
+    const url = `${this.baseUrl}/teams?search=${encodeURIComponent(query)}`;
+    this.logger.log(`Searching teams with query: ${query}`);
+    return this.fetchWithTimeout(url);
+  }
+
+  /**
+   * Search leagues/competitions matching a search query name.
+   */
+  async searchLeagues(query: string): Promise<any> {
+    const url = `${this.baseUrl}/leagues?name=${encodeURIComponent(query)}`;
+    this.logger.log(`Searching leagues with query: ${query}`);
+    return this.fetchWithTimeout(url);
+  }
 }
