@@ -130,66 +130,8 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
           setIsLoadingStandings(false);
         })
         .catch(err => {
-          console.warn("NestJS API standings fetch failed, using realistic dynamic fallback:", err);
-          // Generate realistic dynamic fallback standings if backend is offline or empty!
-          const mockStandings = [
-            {
-              rank: 1,
-              teamId: match.homeTeam.id,
-              points: 74,
-              goalsDiff: 32,
-              played: 34,
-              win: 23,
-              draw: 5,
-              lose: 6,
-              team: { id: match.homeTeam.id, name: match.homeTeam.name, logo: match.homeTeam.logo }
-            },
-            {
-              rank: 2,
-              teamId: match.awayTeam.id,
-              points: 68,
-              goalsDiff: 24,
-              played: 34,
-              win: 20,
-              draw: 8,
-              lose: 6,
-              team: { id: match.awayTeam.id, name: match.awayTeam.name, logo: match.awayTeam.logo }
-            },
-            {
-              rank: 3,
-              teamId: 9991,
-              points: 62,
-              goalsDiff: 15,
-              played: 34,
-              win: 18,
-              draw: 8,
-              lose: 8,
-              team: { id: 9991, name: match.homeTeam.name.includes("Legion") ? "Tampa Bay Rowdies" : "Arsenal Under 23", logo: null }
-            },
-            {
-              rank: 4,
-              teamId: 9992,
-              points: 58,
-              goalsDiff: 11,
-              played: 34,
-              win: 17,
-              draw: 7,
-              lose: 10,
-              team: { id: 9992, name: match.homeTeam.name.includes("Legion") ? "Louisville City FC" : "Tottenham Hotspur", logo: null }
-            },
-            {
-              rank: 5,
-              teamId: 9993,
-              points: 52,
-              goalsDiff: 5,
-              played: 34,
-              win: 15,
-              draw: 7,
-              lose: 12,
-              team: { id: 9993, name: match.homeTeam.name.includes("Legion") ? "Detroit City FC" : "Manchester United", logo: null }
-            }
-          ];
-          setStandings(mockStandings);
+          console.warn("NestJS API standings fetch failed:", err);
+          setStandings([]);
           setIsLoadingStandings(false);
         });
     }
