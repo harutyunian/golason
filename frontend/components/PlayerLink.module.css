@@ -1,0 +1,17 @@
+.playerLink {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.playerLink:hover {
+  color: var(--color-primary);
+}
+
+.playerSpan {
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+}
