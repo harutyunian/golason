@@ -208,4 +208,13 @@ export class ApiFootballClientService {
     this.logger.log(`Requesting player profile for ID: ${playerId}, season: ${season}`);
     return this.fetchWithTimeout(url);
   }
+
+  /**
+   * Fetch odds data for a specific match fixture ID.
+   */
+  async getOddsByFixtureId(fixtureId: number): Promise<any> {
+    const url = `${this.baseUrl}/odds?fixture=${fixtureId}`;
+    this.logger.log(`Requesting odds for fixture ID: ${fixtureId}`);
+    return this.fetchWithTimeout(url);
+  }
 }

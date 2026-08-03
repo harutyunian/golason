@@ -133,7 +133,12 @@ export class FootballController {
     }
 
     try {
-      const data = await this.apiFootballClient.getFixtureById(numericId);
+      // Fetch match details and odds concurrently
+      const [data, oddsData] = await Promise.all([
+        this.apiFootballClient.getFixtureById(numericId),
+        this.apiFootballClient.getOddsByFixtureId(numericId).catch(() => null)
+      ]);
+      
       const results = data.response || [];
       if (results.length === 0) {
         throw new HttpException(
@@ -145,8 +150,10 @@ export class FootballController {
       console.log(
         `[API-Football] Successfully found and normalized Match ID: ${id}`,
       );
+      
+      const rawOdds = oddsData?.response || [];
       // Delegate dynamic fixture mapping to FootballNormalizerService
-      return this.footballNormalizer.normalizeFixture(results[0]);
+      return this.footballNormalizer.normalizeFixture(results[0], rawOdds);
     } catch (err) {
       console.error(
         `[API-Football] Failed to fetch single match details for ID ${id}:`,
