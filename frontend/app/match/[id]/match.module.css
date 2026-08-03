@@ -312,18 +312,22 @@
 .momentumPlaceholder {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  background: linear-gradient(180deg, var(--bg-hover) 0%, rgba(255, 255, 255, 0) 100%);
-  border-radius: 8px;
-  padding: 1rem;
+  gap: 0.85rem;
+  background-color: var(--card-bg);
+  background-image: linear-gradient(rgba(46, 213, 115, 0.02) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(46, 213, 115, 0.02) 1px, transparent 1px);
+  background-size: 8px 8px;
+  border-radius: 12px;
+  padding: 1.15rem;
   border: 1px solid var(--card-border);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .momentumLabel {
   display: flex;
   justify-content: space-between;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-secondary);
   gap: 0.5rem;
 }
@@ -350,37 +354,54 @@
   left: 0;
   right: 0;
   top: 50%;
-  height: 1px;
+  height: 1.5px;
   background-color: var(--card-border);
   z-index: 1;
 }
 
-.momentumBarWrapper {
-  height: 100%;
+.momentumCol {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  height: 100%;
   z-index: 2;
+}
+
+.momentumHalfHome {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.momentumHalfAway {
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .momentumBar {
   width: 100%;
-  border-radius: 2px;
-  transition: height 0.3s ease;
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .momentumHome {
-  background-color: var(--color-primary, #3b82f6);
+  background: linear-gradient(0deg, #1abc9c 0%, #2ed573 100%);
+  border-radius: 3px 3px 0 0;
+  box-shadow: 0 0 6px rgba(46, 213, 115, 0.3);
 }
 
 .momentumAway {
-  background-color: var(--color-live, #ef4444);
+  background: linear-gradient(180deg, #ef4444 0%, #ff4757 100%);
+  border-radius: 0 0 3px 3px;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.3);
 }
 
 .momentumTimeline {
   display: flex;
   justify-content: space-between;
   font-size: 0.7rem;
+  font-weight: 600;
   color: var(--text-muted);
 }
 

@@ -94,6 +94,29 @@ function processTeamPlayers(players: LineupPlayer[]): ParsedPlayer[] {
   return parsed;
 }
 
+function calculateCenteredPositions(players: ParsedPlayer[]): (ParsedPlayer & { topPercent: number })[] {
+  const rowsMap = new Map<number, ParsedPlayer[]>();
+  players.forEach((p) => {
+    if (!rowsMap.has(p.row)) {
+      rowsMap.set(p.row, []);
+    }
+    rowsMap.get(p.row)!.push(p);
+  });
+
+  const enriched: (ParsedPlayer & { topPercent: number })[] = [];
+
+  rowsMap.forEach((rowPlayers) => {
+    rowPlayers.sort((a, b) => a.col - b.col);
+    const count = rowPlayers.length;
+    rowPlayers.forEach((p, index) => {
+      const topPercent = ((index + 1) / (count + 1)) * 100;
+      enriched.push({ ...p, topPercent });
+    });
+  });
+
+  return enriched;
+}
+
 export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayTeamName = "Away Team" }: LineupPitchProps) {
   if (!lineups || !lineups.home || !lineups.away) {
     return (
@@ -147,9 +170,9 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
     return { home: homeAbs, away: awayAbs };
   }, [homeTeamName, awayTeamName]);
 
-  // Parse Starting XI coordinates
-  const homeStartingParsed = processTeamPlayers(lineups.home.startXI);
-  const awayStartingParsed = processTeamPlayers(lineups.away.startXI);
+  // Parse Starting XI coordinates and dynamically center them vertically
+  const homeStartingParsed = React.useMemo(() => calculateCenteredPositions(processTeamPlayers(lineups.home.startXI)), [lineups.home.startXI]);
+  const awayStartingParsed = React.useMemo(() => calculateCenteredPositions(processTeamPlayers(lineups.away.startXI)), [lineups.away.startXI]);
 
   const getRatingStyle = (rating: number | null | undefined): string => {
     if (!rating) return "";
@@ -209,8 +232,8 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
             
             // Map row 1-5 to 5%-46% left positions
             const leftPercent = 5 + (player.row - 1) * 9.5;
-            // Symmetrically map col 1-5 vertically from 5% to 95% top
-            const topPercent = (player.col / 6) * 100;
+            // Symmetrical, perfectly centered vertical positioning based on line player count
+            const topPercent = player.topPercent;
 
             const initials = player.name.substring(0, 2).toUpperCase();
 
@@ -258,8 +281,8 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
             
             // Symmetrical horizontal positioning (100% - Home left percent)
             const leftPercent = 100 - (5 + (player.row - 1) * 9.5);
-            // Symmetrical vertical positioning
-            const topPercent = (player.col / 6) * 100;
+            // Symmetrical, perfectly centered vertical positioning based on line player count
+            const topPercent = player.topPercent;
 
             const initials = player.name.substring(0, 2).toUpperCase();
 

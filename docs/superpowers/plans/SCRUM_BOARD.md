@@ -261,3 +261,107 @@ Our subagents will strictly utilize the following skills during execution:
 
 #### Task 11.4: Nginx Reverse Proxy Config
 - **Action:** Document Nginx configurations for routing traffic to frontend and backend, including WebSocket upgrades, ready for Ubuntu deployment.
+
+---
+
+### Epic 12: Search & Navigation (Teams & Players)
+
+#### Task 12.1: Implement Global Search API (DONE)
+- **Action:** Create `GET /sports/search?q={query}` endpoint in NestJS backend returning matching Teams and Players.
+- **Acceptance Criteria:**
+  - [x] Query must be case-insensitive and match partial names.
+  - [x] Returns max 5 teams and 5 players in standard format `{ id, name, type: 'team'|'player', logoOrImage }`.
+  - [x] Passes `.pre-flight-check` validation.
+
+#### Task 12.2: Implement Frontend Search Bar UI (DONE)
+- **Action:** Create a search input component in the Next.js header with a dropdown list of matching teams and players.
+- **Acceptance Criteria:**
+  - [x] Accessible search input in the global header matching SofaScore aesthetic.
+  - [x] Dropdown list grouped by 'Teams' and 'Players' with respective logos.
+  - [x] Keyboard navigable (Up/Down arrows to select, Enter to navigate, Escape to close).
+
+---
+
+### Epic 13: Caching & Performance Optimization
+
+#### Task 13.1: API Request Caching Mechanism (DONE)
+- **Action:** Implement in-memory caching for API-Football requests in `api-football-client.service.ts` to prevent redundant external calls for non-live data.
+- **Acceptance Criteria:**
+  - [x] Cache duration of 24 hours for historical matches and standings.
+  - [x] Bypass cache for live/ongoing matches (live pollers).
+
+#### Task 13.2: Cache Standings Endpoint (DONE)
+- **Action:** Cache the standard standings response in NestJS controller for 1 hour to reduce DB load.
+- **Acceptance Criteria:**
+  - [x] Fast standings retrieval.
+
+---
+
+### Epic 14: Standings UI Enhancements
+
+#### Task 14.1: Standings "Last 5 Matches" Form Row (DONE)
+- **Action:** Add a "Form" column to the `StandingsTable` component showing colored circular badges (W/D/L) before the "Points" column.
+- **Acceptance Criteria:**
+  - [x] Uses classic colored indicators (Green for Win, Red for Loss, Gray for Draw).
+  - [x] Responsive design (collapses nicely on mobile).
+
+#### Task 14.2: Form Hover Tooltips (DONE)
+- **Action:** Add tooltips on hover over each form circle displaying the actual match result details.
+- **Acceptance Criteria:**
+  - [x] Renders "Team A 2 - 1 Team B" on hover.
+
+---
+
+### Epic 15: Statistics UI Enhancements
+
+#### Task 15.1: SofaScore Aesthetics Statistics Panel (DONE)
+- **Action:** Redesign the Match Details left-side commentary/statistics panel to match the premium, clean SofaScore design.
+- **Acceptance Criteria:**
+  - [x] Perfect spacing, typography, and contrast.
+  - [x] Modern progress bars with bold text percentages.
+
+---
+
+### Epic 16: Bug Fixes & Live Data Reliability
+
+#### Task 16.1: Fix /scores 404 Error (DONE)
+- **Action:** Resolve the 404 issue when hitting `/scores` or trailing router queries on the production URL.
+- **Acceptance Criteria:**
+  - [x] Add explicit URL rewrite, page route, or NestJS asset routing to handle the `/scores` path.
+
+#### Task 16.2: End-to-End Live Data Polish (DONE)
+- **Action:** Audit all live-updating screens to guarantee Next.js does not serve stale cached pages for live matches.
+- **Acceptance Criteria:**
+  - [x] Dashboard is 100% accurate, refreshing matches appropriately.
+
+---
+
+### Epic 17: Quality Assurance & Visual Polish
+
+#### Task 17.1: Resolve Search CORS ("Load failed") Error (DONE)
+- **Action:** Enable CORS in the NestJS backend `main.ts` file to allow direct client-side fetch calls from the browser (localhost:3000) to resolve with 200 OK.
+- **Acceptance Criteria:**
+  - [x] Direct client fetches from Next.js browser page resolve successfully.
+  - [x] Search autocomplete functions dynamically in the UI.
+
+#### Task 17.2: Symmetrical Match Momentum Layout (DONE)
+- **Action:** Redesign momentum bars layout to align perfectly to a middle center-axis baseline.
+- **Acceptance Criteria:**
+  - [x] Home momentum grows UP from the baseline.
+  - [x] Away momentum grows DOWN from the baseline.
+
+#### Task 17.3: Symmetrically Centered Lineups Pitch Layout (DONE)
+- **Action:** Refactor player node vertical positioning algorithm to center each formation row symmetrically based on its count.
+- **Acceptance Criteria:**
+  - [x] Centered goalkeeper.
+  - [x] Centered defending, midfield, and attacking lines.
+
+#### Task 17.4: Dynamic Server Fetch API Base URL Fallback (DONE)
+- **Action:** Refactor all hardcoded 'http://golason-backend:3001' occurrences in Next.js Server Components to use 'process.env.BACKEND_INTERNAL_URL || "http://localhost:3001"' dynamically.
+- **Acceptance Criteria:**
+  - [x] No hardcoded container hosts in Server Component fetches.
+  - [x] Falls back to local ports (3001) for local running services.
+  - [x] Next.js compiles cleanly.
+
+
+

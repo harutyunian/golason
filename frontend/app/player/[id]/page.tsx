@@ -83,7 +83,8 @@ export default async function PlayerProfilePage({ params }: PlayerPageProps) {
 
   try {
     // 2. Fetch player profile details server-side from NestJS API endpoint
-    const res = await fetch(`http://golason-backend:3001/football/players/${playerId}`, {
+    const apiBase = process.env.BACKEND_INTERNAL_URL || "http://localhost:3001";
+    const res = await fetch(`${apiBase}/football/players/${playerId}`, {
       cache: "no-store",
     });
 
