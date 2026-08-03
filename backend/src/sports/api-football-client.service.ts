@@ -235,4 +235,13 @@ export class ApiFootballClientService {
     this.logger.log(`Searching leagues with query: ${query}`);
     return this.fetchWithTimeout(url);
   }
+
+  /**
+   * Search soccer players matching a search query name.
+   */
+  async searchPlayers(query: string): Promise<any> {
+    const url = `${this.baseUrl}/players?search=${encodeURIComponent(query)}`;
+    this.logger.log(`Searching players with query: ${query}`);
+    return this.fetchWithTimeout(url);
+  }
 }

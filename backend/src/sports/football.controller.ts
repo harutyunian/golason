@@ -358,15 +358,11 @@ export class FootballController {
     };
 
     try {
-      // Fetch Teams and Leagues from API-Football, and search players in Prisma database
-      const [teamsData, leaguesData, dbPlayers] = await Promise.all([
+      // Fetch Teams, Leagues, and Players concurrently from API-Football
+      const [teamsData, leaguesData, playersData] = await Promise.all([
         this.apiFootballClient.searchTeams(q).catch(() => ({ response: [] })),
         this.apiFootballClient.searchLeagues(q).catch(() => ({ response: [] })),
-        this.prisma.player.findMany({
-          where: { name: { contains: q, mode: 'insensitive' } },
-          include: { team: true },
-          take: 5,
-        }).catch(() => []),
+        this.apiFootballClient.searchPlayers(q).catch(() => ({ response: [] })),
       ]);
 
       const formattedTeams = (teamsData?.response || []).map((t: any) => ({
@@ -387,13 +383,13 @@ export class FootballController {
         type: 'competition',
       }));
 
-      const formattedPlayers = dbPlayers.map((p) => ({
-        id: p.id,
-        name: p.name,
-        photo: p.photo,
-        position: p.position,
-        teamName: p.team?.name || null,
-        teamLogo: p.team?.logo || null,
+      const formattedPlayers = (playersData?.response || []).map((item: any) => ({
+        id: item.player.id,
+        name: item.player.name,
+        photo: item.player.photo,
+        position: item.statistics?.[0]?.games?.position || null,
+        teamName: item.statistics?.[0]?.team?.name || null,
+        teamLogo: item.statistics?.[0]?.team?.logo || null,
         type: 'player',
       }));
 
@@ -404,7 +400,7 @@ export class FootballController {
         competitions: formattedCompetitions,
       };
     } catch (err) {
-      console.error(`[Search Error] Failed to search via live API or DB:`, err);
+      console.error(`[Search Error] Failed to search via live API:`, err);
       return { teams: [], players: [], matches: [], competitions: [] };
     }
   }
