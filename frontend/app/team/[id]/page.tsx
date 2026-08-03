@@ -77,7 +77,7 @@ export default async function TeamProfilePage({ params }: TeamPageProps) {
 
   try {
     // 2. Fetch team profile details server-side from NestJS API endpoint
-    const res = await fetch(`http://localhost:3001/football/teams/${teamId}`, {
+    const res = await fetch(`http://golason-backend:3001/football/teams/${teamId}`, {
       cache: "no-store",
     });
 
@@ -96,7 +96,7 @@ export default async function TeamProfilePage({ params }: TeamPageProps) {
   let standings = [];
 
   try {
-    const standingsRes = await fetch(`http://localhost:3001/football/standings?league=${leagueId}&season=2026`, {
+    const standingsRes = await fetch(`http://golason-backend:3001/football/standings?league=${leagueId}&season=2026`, {
       cache: "no-store",
     });
 

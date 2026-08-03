@@ -1,0 +1,33 @@
+name: CI/CD Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            echo "Starting deployment..."
+            cd /var/www/golason
+            
+            # Fetch latest changes
+            git pull origin main
+            
+            # Rebuild and recreate containers
+            docker compose up -d --build
+            
+            # Clean up dangling images to save disk space
+            docker image prune -f
+            
+            echo "Deployment completed successfully!"

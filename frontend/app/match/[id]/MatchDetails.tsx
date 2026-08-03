@@ -110,7 +110,7 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
   useEffect(() => {
     if (activeTab === 'standings' && standings.length === 0 && !isLoadingStandings) {
       setIsLoadingStandings(true);
-      fetch(`http://localhost:3001/football/standings?league=${match.league.id}&season=2026`)
+      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/football/standings?league=${match.league.id}&season=2026`)
         .then(res => {
           if (res.ok) return res.json();
           throw new Error("Failed to fetch standings");

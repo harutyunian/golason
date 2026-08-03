@@ -64,7 +64,7 @@ export async function GET() {
 
     // Fetch live/active fixtures from backend
     try {
-      const fixturesRes = await fetchWithTimeout('http://localhost:3001/football/fixtures');
+      const fixturesRes = await fetchWithTimeout('http://golason-backend:3001/football/fixtures');
       if (fixturesRes.ok) {
         const fixtures = await fixturesRes.json();
         if (Array.isArray(fixtures)) {
@@ -81,7 +81,7 @@ export async function GET() {
 
     // Fetch standings to get active team profiles
     try {
-      const standingsRes = await fetchWithTimeout('http://localhost:3001/football/standings?league=39&season=2026');
+      const standingsRes = await fetchWithTimeout('http://golason-backend:3001/football/standings?league=39&season=2026');
       if (standingsRes.ok) {
         const standings = await standingsRes.json();
         if (Array.isArray(standings)) {

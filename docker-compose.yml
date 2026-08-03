@@ -1,0 +1,46 @@
+services:
+  golason-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - golason_postgres_data:/var/lib/postgresql/data
+    networks:
+      - pinterest_default
+
+  golason-backend:
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    restart: unless-stopped
+    environment:
+      PORT: 3001
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@golason-db:5432/${POSTGRES_DB}?schema=public
+      SPORTS_API_KEY: ${SPORTS_API_KEY}
+      SPORTS_API_HOST: ${SPORTS_API_HOST}
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      - golason-db
+    networks:
+      - pinterest_default
+
+  golason-frontend:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: https://golason.com
+        NEXT_PUBLIC_WS_URL: https://golason.com
+    restart: unless-stopped
+    networks:
+      - pinterest_default
+
+volumes:
+  golason_postgres_data:
+
+networks:
+  pinterest_default:
+    external: true
