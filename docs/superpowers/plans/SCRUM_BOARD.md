@@ -329,8 +329,8 @@ Our subagents will strictly utilize the following skills during execution:
 - **Acceptance Criteria:**
   - [x] Add explicit URL rewrite, page route, or NestJS asset routing to handle the `/scores` path.
 
-#### Task 16.2: End-to-End Live Data Polish
+#### Task 16.2: End-to-End Live Data Polish (DONE)
 - **Action:** Audit all live-updating screens to guarantee Next.js does not serve stale cached pages for live matches.
 - **Acceptance Criteria:**
-  - [ ] Dashboard is 100% accurate, refreshing matches appropriately.
+  - [x] Dashboard is 100% accurate, refreshing matches appropriately.
 
