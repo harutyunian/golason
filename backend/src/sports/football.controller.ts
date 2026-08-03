@@ -71,6 +71,9 @@ const mapApiFootballToStandardPlayer = (raw: any) => {
 
 @Controller('football')
 export class FootballController {
+  // Controller-level cache for normalized standings
+  private readonly standingsCache = new Map<string, { data: StandardStandingWithTeam[]; expiresAt: number }>();
+
   constructor(
     private readonly apiFootballClient: ApiFootballClientService,
     private readonly footballNormalizer: FootballNormalizerService,
@@ -310,6 +313,14 @@ export class FootballController {
   ): Promise<StandardStandingWithTeam[]> {
     const targetLeague = Number(league) || 39; // Default to Premier League (39)
     const targetSeason = Number(season) || 2026; // Default to 2026
+    const cacheKey = `${targetLeague}-${targetSeason}`;
+
+    // Check Controller Cache first
+    const cached = this.standingsCache.get(cacheKey);
+    if (cached && cached.expiresAt > Date.now()) {
+      console.log(`[Controller Cache HIT] Returning cached standings for: ${cacheKey}`);
+      return cached.data;
+    }
 
     console.log(
       `[API-Football] Requesting standings for league: ${targetLeague}, season: ${targetSeason}`,
@@ -488,7 +499,12 @@ export class FootballController {
         console.warn(
           `[API-Football] No standings data found for league: ${targetLeague}, season: ${targetSeason}. Falling back to mock.`,
         );
-        return getMockStandings();
+        const mockStandings = getMockStandings();
+        this.standingsCache.set(cacheKey, {
+          data: mockStandings,
+          expiresAt: Date.now() + 10 * 60 * 1000, // Cache mock for 10 minutes
+        });
+        return mockStandings;
       }
 
       const rawStandings = results[0].league.standings[0];
@@ -501,13 +517,25 @@ export class FootballController {
       console.log(
         `[API-Football] Successfully fetched and normalized ${normalized.length} standings rows for league: ${targetLeague}`,
       );
+      
+      // Save successful standings in controller-level cache for 1 hour
+      this.standingsCache.set(cacheKey, {
+        data: normalized,
+        expiresAt: Date.now() + 60 * 60 * 1000, // 1 hour TTL
+      });
+
       return normalized;
     } catch (err) {
       console.warn(
         `[API-Football] Failed to fetch standings for league ${targetLeague}, season ${targetSeason}. Using local mock fallback.`,
         err.message,
       );
-      return getMockStandings();
+      const mockStandings = getMockStandings();
+      this.standingsCache.set(cacheKey, {
+        data: mockStandings,
+        expiresAt: Date.now() + 10 * 60 * 1000, // Cache mock for 10 minutes
+      });
+      return mockStandings;
     }
   }
 
