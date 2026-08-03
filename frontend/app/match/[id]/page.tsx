@@ -42,6 +42,11 @@ interface StandardMatchWithDetails {
   stats?: StandardMatchStats | null;
   lineups?: StandardMatchLineups | null;
   events?: StandardMatchEvent[] | null;
+  odds?: {
+    homeWin: string;
+    draw: string;
+    awayWin: string;
+  } | null;
 }
 
 interface MatchPageProps {

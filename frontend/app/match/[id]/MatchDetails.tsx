@@ -48,6 +48,11 @@ interface StandardMatchWithDetails {
   stats?: StandardMatchStats | null;
   lineups?: StandardMatchLineups | null;
   events?: StandardMatchEvent[] | null;
+  odds?: {
+    homeWin: string;
+    draw: string;
+    awayWin: string;
+  } | null;
 }
 
 interface MatchDetailsProps {
@@ -635,6 +640,7 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
                 lineups={match.lineups} 
                 homeTeam={match.homeTeam} 
                 awayTeam={match.awayTeam} 
+                odds={match.odds}
               />
             )}
 

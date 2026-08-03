@@ -72,6 +72,7 @@ interface MatchStatsProps {
   lineups?: StandardMatchLineups | null;
   homeTeam: { id: number; name: string };
   awayTeam: { id: number; name: string };
+  odds?: { homeWin: string; draw: string; awayWin: string } | null;
 }
 
 // --------------------------------------------------------------------------
@@ -218,7 +219,7 @@ function ComparisonBarRow({ label, homeValue, awayValue, homeRaw, awayRaw, isLow
   );
 }
 
-export default function MatchStats({ stats, events, lineups, homeTeam, awayTeam }: MatchStatsProps) {
+export default function MatchStats({ stats, events, lineups, homeTeam, awayTeam, odds }: MatchStatsProps) {
   if (!stats || !stats.home || !stats.away) {
     return (
       <div className={styles.emptyState} aria-label="Stats Unavailable">
@@ -238,6 +239,28 @@ export default function MatchStats({ stats, events, lineups, homeTeam, awayTeam 
 
   return (
     <div className={styles.container}>
+      {/* 0. MATCH ODDS SECTION */}
+      {odds && (
+        <div className={styles.oddsSection}>
+          <div className={styles.oddsSegmentedControl}>
+            <button className={styles.oddsButton}>
+              <span className={styles.oddsLabel}>1</span>
+              <span className={styles.oddsValue}>{odds.homeWin}</span>
+            </button>
+            <div className={styles.oddsDivider} />
+            <button className={styles.oddsButton}>
+              <span className={styles.oddsLabel}>X</span>
+              <span className={styles.oddsValue}>{odds.draw}</span>
+            </button>
+            <div className={styles.oddsDivider} />
+            <button className={styles.oddsButton}>
+              <span className={styles.oddsLabel}>2</span>
+              <span className={styles.oddsValue}>{odds.awayWin}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Visual Shotmap Position Plot (SofaScore styled!) */}
       <MatchShotmap 
         stats={stats} 
