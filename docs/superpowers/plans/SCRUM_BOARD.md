@@ -344,16 +344,16 @@ Our subagents will strictly utilize the following skills during execution:
   - [x] Direct client fetches from Next.js browser page resolve successfully.
   - [x] Search autocomplete functions dynamically in the UI.
 
-#### Task 17.2: Symmetrical Match Momentum Layout
+#### Task 17.2: Symmetrical Match Momentum Layout (DONE)
 - **Action:** Redesign momentum bars layout to align perfectly to a middle center-axis baseline.
 - **Acceptance Criteria:**
-  - [ ] Home momentum grows UP from the baseline.
-  - [ ] Away momentum grows DOWN from the baseline.
+  - [x] Home momentum grows UP from the baseline.
+  - [x] Away momentum grows DOWN from the baseline.
 
-#### Task 17.3: Symmetrically Centered Lineups Pitch Layout
+#### Task 17.3: Symmetrically Centered Lineups Pitch Layout (DONE)
 - **Action:** Refactor player node vertical positioning algorithm to center each formation row symmetrically based on its count.
 - **Acceptance Criteria:**
-  - [ ] Centered goalkeeper.
-  - [ ] Centered defending, midfield, and attacking lines.
+  - [x] Centered goalkeeper.
+  - [x] Centered defending, midfield, and attacking lines.
 
 
