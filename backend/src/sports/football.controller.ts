@@ -672,7 +672,7 @@ export class FootballController {
   async search(@Query('q') query: string): Promise<any> {
     const q = query ? query.trim() : '';
     if (!q) {
-      return { teams: [], players: [] };
+      return { teams: [], players: [], matches: [], competitions: [] };
     }
 
     const fallbackTeams = [
@@ -696,6 +696,20 @@ export class FootballController {
       { id: 280, name: 'Mohamed Salah', photo: 'https://media.api-sports.io/football/players/280.png', teamName: 'Liverpool', type: 'player' },
       { id: 909, name: 'Bruno Fernandes', photo: 'https://media.api-sports.io/football/players/909.png', teamName: 'Manchester United', type: 'player' },
       { id: 184, name: 'Son Heung-min', photo: 'https://media.api-sports.io/football/players/184.png', teamName: 'Tottenham', type: 'player' },
+    ];
+
+    const fallbackMatches = [
+      { id: 101, homeTeam: 'Arsenal', awayTeam: 'Chelsea', date: '2026-08-02', type: 'match' },
+      { id: 102, homeTeam: 'Real Madrid', awayTeam: 'Barcelona', date: '2026-08-02', type: 'match' },
+      { id: 103, homeTeam: 'Inter Milan', awayTeam: 'AC Milan', date: '2026-08-02', type: 'match' },
+      { id: 104, homeTeam: 'Manchester City', awayTeam: 'Manchester United', date: '2026-08-02', type: 'match' },
+      { id: 105, homeTeam: 'Atletico Madrid', awayTeam: 'Sevilla', date: '2026-08-02', type: 'match' },
+    ];
+
+    const fallbackCompetitions = [
+      { id: 1, name: 'Premier League', logo: 'https://media.api-sports.io/football/leagues/39.png', country: 'England', type: 'competition' },
+      { id: 2, name: 'La Liga', logo: '🇪🇸', country: 'Spain', type: 'competition' },
+      { id: 3, name: 'Serie A', logo: '🇮🇹', country: 'Italy', type: 'competition' },
     ];
 
     try {
@@ -738,6 +752,8 @@ export class FootballController {
         return {
           teams: formattedTeams,
           players: formattedPlayers,
+          matches: [],
+          competitions: [],
         };
       }
     } catch (dbErr) {
@@ -754,9 +770,19 @@ export class FootballController {
       .filter((p) => p.name.toLowerCase().includes(q.toLowerCase()))
       .slice(0, 5);
 
+    const matchedMockMatches = fallbackMatches
+      .filter((m) => m.homeTeam.toLowerCase().includes(q.toLowerCase()) || m.awayTeam.toLowerCase().includes(q.toLowerCase()))
+      .slice(0, 5);
+
+    const matchedMockCompetitions = fallbackCompetitions
+      .filter((c) => c.name.toLowerCase().includes(q.toLowerCase()))
+      .slice(0, 5);
+
     return {
       teams: matchedMockTeams,
       players: matchedMockPlayers,
+      matches: matchedMockMatches,
+      competitions: matchedMockCompetitions,
     };
   }
 }
