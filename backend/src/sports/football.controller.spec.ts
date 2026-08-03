@@ -15,6 +15,7 @@ describe('FootballController', () => {
     mockApiFootballClient = {
       getFixturesByDate: jest.fn().mockResolvedValue({ response: [] }),
       getFixtureById: jest.fn().mockResolvedValue({ response: [] }),
+      getOddsByFixtureId: jest.fn().mockResolvedValue({ response: [] }),
       getStandings: jest.fn().mockResolvedValue({
         response: [
           {
