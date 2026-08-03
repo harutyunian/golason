@@ -334,3 +334,26 @@ Our subagents will strictly utilize the following skills during execution:
 - **Acceptance Criteria:**
   - [x] Dashboard is 100% accurate, refreshing matches appropriately.
 
+---
+
+### Epic 17: Quality Assurance & Visual Polish
+
+#### Task 17.1: Resolve Search CORS ("Load failed") Error (DONE)
+- **Action:** Enable CORS in the NestJS backend `main.ts` file to allow direct client-side fetch calls from the browser (localhost:3000) to resolve with 200 OK.
+- **Acceptance Criteria:**
+  - [x] Direct client fetches from Next.js browser page resolve successfully.
+  - [x] Search autocomplete functions dynamically in the UI.
+
+#### Task 17.2: Symmetrical Match Momentum Layout
+- **Action:** Redesign momentum bars layout to align perfectly to a middle center-axis baseline.
+- **Acceptance Criteria:**
+  - [ ] Home momentum grows UP from the baseline.
+  - [ ] Away momentum grows DOWN from the baseline.
+
+#### Task 17.3: Symmetrically Centered Lineups Pitch Layout
+- **Action:** Refactor player node vertical positioning algorithm to center each formation row symmetrically based on its count.
+- **Acceptance Criteria:**
+  - [ ] Centered goalkeeper.
+  - [ ] Centered defending, midfield, and attacking lines.
+
+
