@@ -284,16 +284,16 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 13: Caching & Performance Optimization
 
-#### Task 13.1: API Request Caching Mechanism
+#### Task 13.1: API Request Caching Mechanism (DONE)
 - **Action:** Implement in-memory caching for API-Football requests in `api-football-client.service.ts` to prevent redundant external calls for non-live data.
 - **Acceptance Criteria:**
-  - [ ] Cache duration of 24 hours for historical matches and standings.
-  - [ ] Bypass cache for live/ongoing matches (live pollers).
+  - [x] Cache duration of 24 hours for historical matches and standings.
+  - [x] Bypass cache for live/ongoing matches (live pollers).
 
-#### Task 13.2: Cache Standings Endpoint
+#### Task 13.2: Cache Standings Endpoint (DONE)
 - **Action:** Cache the standard standings response in NestJS controller for 1 hour to reduce DB load.
 - **Acceptance Criteria:**
-  - [ ] Fast standings retrieval.
+  - [x] Fast standings retrieval.
 
 ---
 
@@ -324,10 +324,10 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 16: Bug Fixes & Live Data Reliability
 
-#### Task 16.1: Fix /scores 404 Error
+#### Task 16.1: Fix /scores 404 Error (DONE)
 - **Action:** Resolve the 404 issue when hitting `/scores` or trailing router queries on the production URL.
 - **Acceptance Criteria:**
-  - [ ] Add explicit URL rewrite, page route, or NestJS asset routing to handle the `/scores` path.
+  - [x] Add explicit URL rewrite, page route, or NestJS asset routing to handle the `/scores` path.
 
 #### Task 16.2: End-to-End Live Data Polish
 - **Action:** Audit all live-updating screens to guarantee Next.js does not serve stale cached pages for live matches.
