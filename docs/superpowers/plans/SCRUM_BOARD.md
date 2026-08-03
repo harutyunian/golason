@@ -273,12 +273,12 @@ Our subagents will strictly utilize the following skills during execution:
   - [x] Returns max 5 teams and 5 players in standard format `{ id, name, type: 'team'|'player', logoOrImage }`.
   - [x] Passes `.pre-flight-check` validation.
 
-#### Task 12.2: Implement Frontend Search Bar UI
+#### Task 12.2: Implement Frontend Search Bar UI (DONE)
 - **Action:** Create a search input component in the Next.js header with a dropdown list of matching teams and players.
 - **Acceptance Criteria:**
-  - [ ] Accessible search input in the global header matching SofaScore aesthetic.
-  - [ ] Dropdown list grouped by 'Teams' and 'Players' with respective logos.
-  - [ ] Keyboard navigable (Up/Down arrows to select, Enter to navigate, Escape to close).
+  - [x] Accessible search input in the global header matching SofaScore aesthetic.
+  - [x] Dropdown list grouped by 'Teams' and 'Players' with respective logos.
+  - [x] Keyboard navigable (Up/Down arrows to select, Enter to navigate, Escape to close).
 
 ---
 

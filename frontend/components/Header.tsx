@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Sun, Moon, Menu, X } from "lucide-react";
+import SearchBar from "./SearchBar";
 import styles from "./Header.module.css";
 
 export default function Header() {
@@ -81,6 +82,11 @@ export default function Header() {
           ))}
         </nav>
 
+        {/* Desktop Search */}
+        <div className={styles.desktopSearch}>
+          <SearchBar />
+        </div>
+
         {/* Desktop Actions Section */}
         <div className={styles.desktopActions}>
           {/* Theme Toggle */}
@@ -147,6 +153,9 @@ export default function Header() {
         aria-hidden={!isMobileMenuOpen}
       >
         <nav className={styles.mobileNav} aria-label="Mobile navigation">
+          <div className={styles.mobileSearch}>
+            <SearchBar />
+          </div>
           {navLinks.map((link) => (
             <Link
               key={link.label}
