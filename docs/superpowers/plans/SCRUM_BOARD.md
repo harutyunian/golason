@@ -314,11 +314,11 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 15: Statistics UI Enhancements
 
-#### Task 15.1: SofaScore Aesthetics Statistics Panel
+#### Task 15.1: SofaScore Aesthetics Statistics Panel (DONE)
 - **Action:** Redesign the Match Details left-side commentary/statistics panel to match the premium, clean SofaScore design.
 - **Acceptance Criteria:**
-  - [ ] Perfect spacing, typography, and contrast.
-  - [ ] Modern progress bars with bold text percentages.
+  - [x] Perfect spacing, typography, and contrast.
+  - [x] Modern progress bars with bold text percentages.
 
 ---
 
