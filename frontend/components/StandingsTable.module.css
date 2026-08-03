@@ -120,3 +120,51 @@
   font-family: var(--font-sans);
   font-size: 14px;
 }
+
+.formCol, .formCell {
+  width: 120px;
+  text-align: center;
+}
+
+.formCell {
+  padding: 8px 5px !important;
+}
+
+.formContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.formBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: 700;
+  color: #ffffff;
+  user-select: none;
+  transition: transform 0.15s ease;
+}
+
+.win {
+  background-color: #2ed573;
+}
+
+.loss {
+  background-color: #ff4757;
+}
+
+.draw {
+  background-color: #747d8c;
+}
+
+.noForm {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+

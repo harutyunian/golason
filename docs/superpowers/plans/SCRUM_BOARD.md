@@ -299,11 +299,11 @@ Our subagents will strictly utilize the following skills during execution:
 
 ### Epic 14: Standings UI Enhancements
 
-#### Task 14.1: Standings "Last 5 Matches" Form Row
+#### Task 14.1: Standings "Last 5 Matches" Form Row (DONE)
 - **Action:** Add a "Form" column to the `StandingsTable` component showing colored circular badges (W/D/L) before the "Points" column.
 - **Acceptance Criteria:**
-  - [ ] Uses classic colored indicators (Green for Win, Red for Loss, Gray for Draw).
-  - [ ] Responsive design (collapses nicely on mobile).
+  - [x] Uses classic colored indicators (Green for Win, Red for Loss, Gray for Draw).
+  - [x] Responsive design (collapses nicely on mobile).
 
 #### Task 14.2: Form Hover Tooltips
 - **Action:** Add tooltips on hover over each form circle displaying the actual match result details.

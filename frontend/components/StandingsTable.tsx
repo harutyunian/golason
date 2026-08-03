@@ -43,12 +43,16 @@ export default function StandingsTable({ standings = [], activeTeamId }: Standin
             <th className={styles.teamCol}>Team</th>
             <th className={styles.numCol} title="Played">P</th>
             <th className={styles.numCol} title="Goal Difference">GD</th>
+            <th className={styles.formCol} title="Recent Form">Form</th>
             <th className={styles.ptsCol} title="Points">PTS</th>
           </tr>
         </thead>
         <tbody>
           {standings.map((row) => {
             const isActive = row.teamId === activeTeamId;
+            // Get last 5 matches for form
+            const formList = row.form ? row.form.slice(-5).split("") : [];
+            
             return (
               <tr
                 key={row.teamId}
@@ -66,6 +70,28 @@ export default function StandingsTable({ standings = [], activeTeamId }: Standin
                 <td className={styles.numCell}>{row.played}</td>
                 <td className={`${styles.numCell} ${row.goalsDiff > 0 ? styles.positiveGd : row.goalsDiff < 0 ? styles.negativeGd : ""}`}>
                   {row.goalsDiff > 0 ? `+${row.goalsDiff}` : row.goalsDiff}
+                </td>
+                <td className={styles.formCell}>
+                  <div className={styles.formContainer}>
+                    {formList.length > 0 ? (
+                      formList.map((letter, idx) => (
+                        <span
+                          key={idx}
+                          className={`${styles.formBadge} ${
+                            letter === "W"
+                              ? styles.win
+                              : letter === "L"
+                              ? styles.loss
+                              : styles.draw
+                          }`}
+                        >
+                          {letter}
+                        </span>
+                      ))
+                    ) : (
+                      <span className={styles.noForm}>-</span>
+                    )}
+                  </div>
                 </td>
                 <td className={styles.ptsCell}>{row.points}</td>
               </tr>
