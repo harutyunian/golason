@@ -3,6 +3,7 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from './../src/app.module';
+import { PrismaService } from './../src/prisma/prisma.service';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
@@ -10,10 +11,24 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(PrismaService)
+      .useValue({
+        // Mocked Prisma Service to avoid database connections in E2E tests
+      })
+      .overrideProvider('REDIS_CLIENT')
+      .useValue({
+        on: jest.fn(),
+        quit: jest.fn().mockResolvedValue('OK'),
+      })
+      .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
   });
 
   it('/ (GET)', () => {

@@ -22,8 +22,11 @@ services:
       SPORTS_API_KEY: ${SPORTS_API_KEY}
       SPORTS_API_HOST: ${SPORTS_API_HOST}
       JWT_SECRET: ${JWT_SECRET}
+      REDIS_HOST: golason-redis
+      REDIS_PORT: 6379
     depends_on:
       - golason-db
+      - golason-redis
     networks:
       - pinterest_default
 
@@ -38,8 +41,19 @@ services:
     networks:
       - pinterest_default
 
+  golason-redis:
+    image: redis:alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - golason_redis_data:/data
+    networks:
+      - pinterest_default
+
 volumes:
   golason_postgres_data:
+  golason_redis_data:
 
 networks:
   pinterest_default:
