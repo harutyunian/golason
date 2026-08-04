@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Trophy, Star, Flame, Award } from "lucide-react";
 import AdBanner from "@/components/AdBanner";
 import DateSelector from "@/components/DateSelector";
 import MatchCard, { MatchStatus } from "@/components/MatchCard";
+import { useAuth } from "@/contexts/AuthContext";
 import styles from "../app/page.module.css";
 
 interface League {
@@ -44,6 +46,76 @@ const isUrl = (str: string) => str && (str.startsWith("http://") || str.startsWi
 export default function DashboardFeed({ initialMatches, selectedDate }: DashboardFeedProps) {
   const router = useRouter();
   const [filter, setFilter] = useState<"ALL" | "LIVE">("ALL");
+  const { token, isAuthenticated } = useAuth();
+  const [bookmarks, setBookmarks] = useState<any[]>([]);
+
+  // Synchronize favorites with user bookmarks from backend
+  useEffect(() => {
+    if (isAuthenticated && token) {
+      const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+      fetch(`${apiBase}/bookmarks`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (Array.isArray(data)) setBookmarks(data);
+        })
+        .catch((err) => console.error("Failed to load bookmarks:", err));
+    } else {
+      setBookmarks([]);
+    }
+  }, [isAuthenticated, token]);
+
+  const handleToggleBookmark = async (matchId: number) => {
+    if (!isAuthenticated || !token) {
+      router.push("/login");
+      return;
+    }
+
+    const isBookmarked = bookmarks.some((b) => b.type === "match" && b.entity?.id === matchId);
+    const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:3001";
+
+    try {
+      if (isBookmarked) {
+        const res = await fetch(`${apiBase}/bookmarks/composite/match/${matchId}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res.ok) {
+          setBookmarks((prev) => prev.filter((b) => !(b.type === "match" && b.entity?.id === matchId)));
+        }
+      } else {
+        const res = await fetch(`${apiBase}/bookmarks`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ matchId }),
+        });
+        if (res.ok) {
+          const newBookmark = await res.json();
+          const matchEntity = initialMatches.find((m) => m.id === matchId);
+          setBookmarks((prev) => [
+            {
+              id: newBookmark.id,
+              sport: "FOOTBALL",
+              type: "match",
+              entity: matchEntity || { id: matchId },
+              createdAt: new Date().toISOString(),
+            },
+            ...prev,
+          ]);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to toggle bookmark:", err);
+    }
+  };
 
   const handleDateChange = (newDate: string) => {
     router.push(`/?date=${newDate}`);
@@ -168,6 +240,10 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
                           awayScore: match.awayScore,
                           date: match.date,
                         }}
+                        isBookmarked={bookmarks.some(
+                          (b) => b.type === "match" && b.entity?.id === match.id
+                        )}
+                        onToggleBookmark={handleToggleBookmark}
                       />
                     ))}
                   </div>
@@ -211,12 +287,39 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
               <Star size={18} className={styles.sidebarIcon} />
               My Favorites
             </h2>
-            <div className={styles.favoritesEmpty}>
-              <Award className={styles.favoritesEmptyIcon} size={32} />
-              <p className={styles.favoritesEmptyText}>
-                Favorite leagues and teams to view their live scores instantly at the top of your feed.
-              </p>
-            </div>
+            {bookmarks.length > 0 ? (
+              <div className={styles.sidebarList}>
+                {bookmarks.map((b) => (
+                  <div key={`${b.type}-${b.id}`} className={styles.sidebarItem}>
+                    <span className={styles.leagueFlag} aria-hidden="true">
+                      {b.type === "team" ? "🛡️" : b.type === "competition" ? "🏆" : "⚽"}
+                    </span>
+                    <div className={styles.sidebarTextContainer}>
+                      {b.type === "match" ? (
+                        <Link href={`/match/${b.entity?.id}`} className={styles.sidebarLink}>
+                          {b.entity?.homeTeam?.name || "Match"} vs {b.entity?.awayTeam?.name || "Opponent"}
+                        </Link>
+                      ) : b.type === "team" ? (
+                        <Link href={`/team/${b.entity?.id}`} className={styles.sidebarLink}>
+                          {b.entity?.name}
+                        </Link>
+                      ) : (
+                        <span className={styles.sidebarLink}>{b.entity?.name}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className={styles.favoritesEmpty}>
+                <Award className={styles.favoritesEmptyIcon} size={32} />
+                <p className={styles.favoritesEmptyText}>
+                  {isAuthenticated
+                    ? "You haven't bookmarked any matches yet! Click the star next to any match to pin it here."
+                    : "Log in to bookmark leagues, teams, and matches, and see their live scores instantly."}
+                </p>
+              </div>
+            )}
           </div>
         </aside>
       </div>

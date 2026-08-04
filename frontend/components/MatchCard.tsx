@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Star } from 'lucide-react';
 import TeamLink from './TeamLink';
 import styles from './MatchCard.module.css';
 
@@ -47,6 +48,8 @@ export interface MatchCardProps {
   homeScore?: number | null;
   awayScore?: number | null;
   date?: Date | string;
+  isBookmarked?: boolean;
+  onToggleBookmark?: (matchId: number) => void;
 }
 
 /**
@@ -110,6 +113,8 @@ export default function MatchCard({
   homeScore,
   awayScore,
   date,
+  isBookmarked,
+  onToggleBookmark,
 }: MatchCardProps) {
   // Resolve unified fields from either the `match` object or top-level props
   const resolvedId = match?.id ?? id ?? 0;
@@ -257,6 +262,21 @@ export default function MatchCard({
             {showScore ? resolvedAwayScore ?? 0 : ''}
           </div>
         </div>
+
+        {/* Dynamic Star Bookmark Action */}
+        {onToggleBookmark && (
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onToggleBookmark(resolvedId);
+            }}
+            className={`${styles.starBtn} ${isBookmarked ? styles.starActive : ''}`}
+            aria-label={isBookmarked ? 'Remove match from bookmarks' : 'Add match to bookmarks'}
+          >
+            <Star size={16} fill={isBookmarked ? 'var(--color-primary, #0070f3)' : 'transparent'} />
+          </button>
+        )}
       </div>
     </div>
   );
