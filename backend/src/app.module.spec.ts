@@ -13,6 +13,11 @@ describe('AppModule', () => {
       .useValue({
         // Mocked Prisma Service to avoid connecting to the database in unit tests
       })
+      .overrideProvider('REDIS_CLIENT')
+      .useValue({
+        on: jest.fn(),
+        quit: jest.fn(),
+      })
       .compile();
   });
 
