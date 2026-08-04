@@ -46,10 +46,10 @@ describe('FootballController', () => {
     mockFootballNormalizer = {
       normalizeFixture: jest
         .fn()
-        .mockReturnValue({ id: 101, status: 'FINISHED' }),
+        .mockReturnValue({ id: 101, status: 'FINISHED', league: { id: 1 }, homeTeam: { id: 11 }, awayTeam: { id: 12 } }),
       normalizeFixtures: jest
         .fn()
-        .mockReturnValue([{ id: 101, status: 'FINISHED' }]),
+        .mockReturnValue([{ id: 101, status: 'FINISHED', league: { id: 1 }, homeTeam: { id: 11 }, awayTeam: { id: 12 } }]),
       normalizeStandings: jest.fn().mockReturnValue([]),
       getDemoMatchById: jest.fn().mockReturnValue({ id: 101, status: 'LIVE' }),
     };
@@ -57,9 +57,18 @@ describe('FootballController', () => {
     mockPrismaService = {
       team: {
         findMany: jest.fn().mockResolvedValue([]),
+        upsert: jest.fn().mockResolvedValue({}),
       },
       player: {
         findMany: jest.fn().mockResolvedValue([]),
+      },
+      league: {
+        upsert: jest.fn().mockResolvedValue({}),
+      },
+      match: {
+        findMany: jest.fn().mockResolvedValue([]),
+        findUnique: jest.fn().mockResolvedValue(null),
+        upsert: jest.fn().mockResolvedValue({}),
       },
     };
 
@@ -89,8 +98,9 @@ describe('FootballController', () => {
   });
 
   describe('getFixtures', () => {
-    it('should call getFixturesByDate and normalizeFixtures', async () => {
+    it('should call getFixturesByDate and normalizeFixtures when DB is empty', async () => {
       const results = await controller.getFixtures('2026-08-02');
+      expect(mockPrismaService.match.findMany).toHaveBeenCalled();
       expect(mockApiFootballClient.getFixturesByDate).toHaveBeenCalledWith(
         '2026-08-02',
       );
@@ -98,10 +108,22 @@ describe('FootballController', () => {
       expect(results).toHaveLength(1);
       expect(results[0].id).toBe(101);
     });
+
+    it('should return fixtures from database if present, without calling API-Football', async () => {
+      const mockDbMatch = { id: 101, status: 'FINISHED', date: new Date('2026-08-02T15:00:00Z') };
+      mockPrismaService.match.findMany.mockResolvedValueOnce([mockDbMatch]);
+
+      const result = await controller.getFixtures('2026-08-02');
+      expect(mockPrismaService.match.findMany).toHaveBeenCalled();
+      expect(mockApiFootballClient.getFixturesByDate).not.toHaveBeenCalled();
+      expect(result).toHaveLength(1);
+      expect(result[0].id).toBe(101);
+    });
   });
 
   describe('getFixtureById', () => {
-    it('should throw HttpException if fixture not found', async () => {
+    it('should throw HttpException if fixture not found in DB or API', async () => {
+      mockPrismaService.match.findUnique.mockResolvedValueOnce(null);
       mockApiFootballClient.getFixtureById.mockResolvedValueOnce({
         response: [],
       });
@@ -110,14 +132,32 @@ describe('FootballController', () => {
       );
     });
 
-    it('should return normalized fixture if found', async () => {
+    it('should return normalized fixture if found via API and DB is empty', async () => {
+      mockPrismaService.match.findUnique.mockResolvedValueOnce(null);
       mockApiFootballClient.getFixtureById.mockResolvedValueOnce({
         response: [{ fixture: { id: 123456 } }],
       });
       const result = await controller.getFixtureById('123456');
+      expect(mockPrismaService.match.findUnique).toHaveBeenCalledWith({
+        where: { id: 123456 },
+        include: { league: true, homeTeam: true, awayTeam: true },
+      });
       expect(mockApiFootballClient.getFixtureById).toHaveBeenCalledWith(123456);
       expect(mockFootballNormalizer.normalizeFixture).toHaveBeenCalled();
-      expect(result.id).toBe(101); // mockFootballNormalizer returns { id: 101 } in mock configuration
+      expect(result.id).toBe(101);
+    });
+
+    it('should return match from database if finished, without calling API-Football', async () => {
+      const mockDbMatch = { id: 101, status: 'FINISHED', date: new Date('2026-08-02T15:00:00Z') };
+      mockPrismaService.match.findUnique.mockResolvedValueOnce(mockDbMatch);
+
+      const result = await controller.getFixtureById('101');
+      expect(mockPrismaService.match.findUnique).toHaveBeenCalledWith({
+        where: { id: 101 },
+        include: { league: true, homeTeam: true, awayTeam: true },
+      });
+      expect(mockApiFootballClient.getFixtureById).not.toHaveBeenCalled();
+      expect(result.id).toBe(101);
     });
   });
 
