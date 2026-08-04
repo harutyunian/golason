@@ -208,4 +208,40 @@ export class ApiFootballClientService {
     this.logger.log(`Requesting player profile for ID: ${playerId}, season: ${season}`);
     return this.fetchWithTimeout(url);
   }
+
+  /**
+   * Fetch odds data for a specific match fixture ID.
+   */
+  async getOddsByFixtureId(fixtureId: number): Promise<any> {
+    const url = `${this.baseUrl}/odds?fixture=${fixtureId}`;
+    this.logger.log(`Requesting odds for fixture ID: ${fixtureId}`);
+    return this.fetchWithTimeout(url);
+  }
+
+  /**
+   * Search soccer teams matching a search query name.
+   */
+  async searchTeams(query: string): Promise<any> {
+    const url = `${this.baseUrl}/teams?search=${encodeURIComponent(query)}`;
+    this.logger.log(`Searching teams with query: ${query}`);
+    return this.fetchWithTimeout(url);
+  }
+
+  /**
+   * Search leagues/competitions matching a search query name.
+   */
+  async searchLeagues(query: string): Promise<any> {
+    const url = `${this.baseUrl}/leagues?name=${encodeURIComponent(query)}`;
+    this.logger.log(`Searching leagues with query: ${query}`);
+    return this.fetchWithTimeout(url);
+  }
+
+  /**
+   * Search soccer players globally matching a search query name.
+   */
+  async searchPlayers(query: string): Promise<any> {
+    const url = `${this.baseUrl}/players/profiles?search=${encodeURIComponent(query)}`;
+    this.logger.log(`Searching player profiles with query: ${query}`);
+    return this.fetchWithTimeout(url);
+  }
 }

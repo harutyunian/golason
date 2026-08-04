@@ -1,0 +1,182 @@
+.itemContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: transparent;
+  transition: background-color 0.15s ease;
+  font-family: var(--font-sans);
+}
+
+.itemContainer:hover,
+.selectedItem {
+  background-color: var(--bg-hover);
+}
+
+.leftSegment {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  flex: 1;
+}
+
+.mediaWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  background-color: var(--bg-hover);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+}
+
+.circular {
+  border-radius: 50%;
+}
+
+.rounded {
+  border-radius: 8px;
+}
+
+.avatar {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.logo {
+  object-fit: contain;
+  padding: 3px;
+  width: 100%;
+  height: 100%;
+}
+
+.fallbackIcon {
+  color: var(--text-secondary);
+}
+
+.fallbackIconSmall {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.centerSegment {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  gap: 2px;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.itemName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.followerBadge {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  background-color: var(--bg-hover);
+  padding: 1px 6px;
+  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
+.subtitleRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  min-width: 0;
+}
+
+.flagIcon {
+  object-fit: cover;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.teamLogo {
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.metaText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.separator {
+  color: var(--text-muted);
+  font-size: 10px;
+  user-select: none;
+}
+
+.sportName {
+  color: var(--text-muted);
+}
+
+.rightSegment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+}
+
+.favoriteButton {
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.15s ease;
+}
+
+.favoriteButton:hover {
+  background-color: var(--bg-hover);
+  transform: scale(1.1);
+}
+
+.outlineStar {
+  color: var(--text-secondary);
+  transition: color 0.15s ease;
+}
+
+.favoriteButton:hover .outlineStar {
+  color: #f1c40f; /* Premium yellow outline */
+}
+
+.favoritedStar {
+  color: #ffb300; /* Gold */
+  fill: #ffb300;
+  transition: transform 0.15s ease;
+}
+
+.favoriteButton:hover .favoritedStar {
+  transform: scale(1.15);
+}
