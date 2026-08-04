@@ -51,10 +51,10 @@ export default function Header() {
   };
 
   const navLinks = [
-    { label: "Scores", href: "/scores" },
-    { label: "Leagues", href: "/leagues" },
-    { label: "Favorites", href: "/favorites" },
-    { label: "Predictor", href: "/predictor" },
+    { label: "Scores", href: "/" },
+    { label: "Leagues", href: "/" },
+    { label: "Favorites", href: "/" },
+    { label: "Predictor", href: "/" },
   ];
 
   return (
