@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Sun, Moon, Menu, X } from "lucide-react";
+import { Sun, Moon, Menu, X, LogOut, User as UserIcon } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import SearchBar from "./SearchBar";
 import styles from "./Header.module.css";
 
@@ -11,6 +12,7 @@ export default function Header() {
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const [mounted, setMounted] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, logout, isAuthenticated } = useAuth();
 
   // Synchronize theme with localStorage and document element
   useEffect(() => {
@@ -107,12 +109,26 @@ export default function Header() {
 
           {/* Auth Buttons */}
           <div className={styles.authGroup}>
-            <Link href="/login" className={styles.loginBtn}>
-              Login
-            </Link>
-            <Link href="/register" className={styles.registerBtn}>
-              Register
-            </Link>
+            {isAuthenticated && user ? (
+              <div className={styles.userProfileGroup}>
+                <span className={styles.userName} title={user.email}>
+                  <UserIcon size={14} style={{ marginRight: '4px' }} />
+                  {user.name || user.email.split('@')[0]}
+                </span>
+                <button onClick={logout} className={styles.logoutBtn} aria-label="Log Out">
+                  <LogOut size={16} />
+                </button>
+              </div>
+            ) : (
+              <>
+                <Link href="/login" className={styles.loginBtn}>
+                  Login
+                </Link>
+                <Link href="/register" className={styles.registerBtn}>
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
@@ -168,22 +184,44 @@ export default function Header() {
             </Link>
           ))}
           <div className={styles.mobileAuthGroup}>
-            <Link
-              href="/login"
-              className={styles.mobileLoginBtn}
-              onClick={closeMobileMenu}
-              tabIndex={isMobileMenuOpen ? 0 : -1}
-            >
-              Login
-            </Link>
-            <Link
-              href="/register"
-              className={styles.mobileRegisterBtn}
-              onClick={closeMobileMenu}
-              tabIndex={isMobileMenuOpen ? 0 : -1}
-            >
-              Register
-            </Link>
+            {isAuthenticated && user ? (
+              <div className={styles.mobileUserProfileGroup}>
+                <span className={styles.mobileUserName}>
+                  <UserIcon size={16} style={{ marginRight: '6px' }} />
+                  {user.name || user.email.split('@')[0]}
+                </span>
+                <button
+                  onClick={() => {
+                    logout();
+                    closeMobileMenu();
+                  }}
+                  className={styles.mobileLogoutBtn}
+                  tabIndex={isMobileMenuOpen ? 0 : -1}
+                >
+                  <LogOut size={16} style={{ marginRight: '6px' }} />
+                  Log Out
+                </button>
+              </div>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className={styles.mobileLoginBtn}
+                  onClick={closeMobileMenu}
+                  tabIndex={isMobileMenuOpen ? 0 : -1}
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className={styles.mobileRegisterBtn}
+                  onClick={closeMobileMenu}
+                  tabIndex={isMobileMenuOpen ? 0 : -1}
+                >
+                  Register
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       </div>

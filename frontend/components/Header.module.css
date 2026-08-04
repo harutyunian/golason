@@ -357,3 +357,91 @@
   margin-bottom: 0.5rem;
 }
 
+/* User Profile & Logout Styles */
+.userProfileGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.userName {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #ffffff;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  outline: none;
+}
+
+.logoutBtn:hover {
+  background-color: rgba(255, 77, 79, 0.15);
+  color: #ff4d4f;
+}
+
+.logoutBtn:focus-visible {
+  outline: 2px solid var(--color-primary);
+}
+
+.mobileUserProfileGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.mobileUserName {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #ffffff;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mobileLogoutBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.75rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: rgba(255, 77, 79, 0.1);
+  border: 1px solid rgba(255, 77, 79, 0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  outline: none;
+}
+
+.mobileLogoutBtn:hover {
+  background-color: rgba(255, 77, 79, 0.2);
+}
+
+.mobileLogoutBtn:focus-visible {
+  outline: 2px solid #ff4d4f;
+}
+
+
