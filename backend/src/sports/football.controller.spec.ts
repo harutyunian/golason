@@ -38,6 +38,9 @@ describe('FootballController', () => {
       }),
       getTeamProfile: jest.fn().mockResolvedValue({ response: [] }),
       getPlayerProfile: jest.fn().mockResolvedValue({ response: [] }),
+      searchTeams: jest.fn().mockResolvedValue({ response: [] }),
+      searchLeagues: jest.fn().mockResolvedValue({ response: [] }),
+      searchPlayers: jest.fn().mockResolvedValue({ response: [] }),
     };
 
     mockFootballNormalizer = {
