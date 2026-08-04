@@ -75,7 +75,7 @@ export default async function TeamProfilePage({ params }: TeamPageProps) {
 
   let team: TeamProfile;
 
-  const apiBase = process.env.BACKEND_INTERNAL_URL || "http://localhost:3001";
+  const apiBase = process.env.BACKEND_INTERNAL_URL || "http://127.0.0.1:3001";
 
   try {
     // 2. Fetch team profile details server-side from NestJS API endpoint

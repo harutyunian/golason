@@ -17,7 +17,7 @@ export const useWebSocket = (matchId: number, onUpdate: (match: any) => void) =>
 
   useEffect(() => {
     // Connect to the NestJS API server port (default 3001)
-    const socketInstance = io(process.env.NEXT_PUBLIC_WS_URL || "http://localhost:3001", {
+    const socketInstance = io(process.env.NEXT_PUBLIC_WS_URL || "http://127.0.0.1:3001", {
       transports: ["websocket"], // Forces WebSocket connection instantly for maximum performance
     });
 

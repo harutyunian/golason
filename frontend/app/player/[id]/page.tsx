@@ -23,16 +23,26 @@ interface PlayerProfile {
   teamId: number | null;
   teamName: string | null;
   teamLogo?: string | null;
+  rating: number | null;
   stats: {
-    matchesPlayed: number;
-    matchesStarted: number;
-    minutesPlayed: number;
-    goals: number;
-    assists: number;
-    yellowCards: number;
-    redCards: number;
-    passAccuracyPercent: number;
-    rating: number;
+    matches: {
+      played: number;
+      starts: number;
+      minutes: number;
+    };
+    goals: {
+      total: number;
+      assists: number;
+    };
+    passes: {
+      total: number;
+      accuracyPercent: number;
+      key: number;
+    };
+    cards: {
+      yellow: number;
+      red: number;
+    };
   };
 }
 
@@ -60,16 +70,26 @@ const getFallbackPlayerProfile = (idStr: string): PlayerProfile => {
     teamId: 42,
     teamName: "Arsenal",
     teamLogo: "https://media.api-sports.io/football/teams/42.png",
+    rating: isSaka ? 7.6 : 7.8,
     stats: {
-      matchesPlayed: 32,
-      matchesStarted: 29,
-      minutesPlayed: 2540,
-      goals: isSaka ? 16 : 8,
-      assists: isSaka ? 9 : 12,
-      yellowCards: 2,
-      redCards: 0,
-      passAccuracyPercent: isSaka ? 82 : 87,
-      rating: isSaka ? 7.6 : 7.8,
+      matches: {
+        played: isSaka ? 32 : 30,
+        starts: isSaka ? 29 : 28,
+        minutes: isSaka ? 2540 : 2400,
+      },
+      goals: {
+        total: isSaka ? 16 : 8,
+        assists: isSaka ? 9 : 12,
+      },
+      passes: {
+        total: isSaka ? 820 : 1240,
+        accuracyPercent: isSaka ? 82 : 87,
+        key: isSaka ? 28 : 45,
+      },
+      cards: {
+        yellow: 2,
+        red: 0,
+      },
     }
   };
 };
@@ -83,7 +103,7 @@ export default async function PlayerProfilePage({ params }: PlayerPageProps) {
 
   try {
     // 2. Fetch player profile details server-side from NestJS API endpoint
-    const apiBase = process.env.BACKEND_INTERNAL_URL || "http://localhost:3001";
+    const apiBase = process.env.BACKEND_INTERNAL_URL || "http://127.0.0.1:3001";
     const res = await fetch(`${apiBase}/football/players/${playerId}`, {
       cache: "no-store",
     });
@@ -217,10 +237,10 @@ export default async function PlayerProfilePage({ params }: PlayerPageProps) {
             </h2>
             <div className={styles.statsGrid}>
               {/* Rating Box */}
-              {player.stats.rating && (
+              {player.rating && (
                 <div className={styles.metricBox}>
                   <span className={`${styles.metricValue} ${styles.metricValueHighlighted}`}>
-                    {player.stats.rating.toFixed(1)}
+                    {Number(player.rating).toFixed(1)}
                   </span>
                   <span className={styles.metricLabel}>SofaRating</span>
                 </div>
@@ -228,43 +248,43 @@ export default async function PlayerProfilePage({ params }: PlayerPageProps) {
 
               {/* Goals Box */}
               <div className={styles.metricBox}>
-                <span className={styles.metricValue}>{player.stats.goals}</span>
+                <span className={styles.metricValue}>{player.stats.goals.total}</span>
                 <span className={styles.metricLabel}>Goals</span>
               </div>
 
               {/* Assists Box */}
               <div className={styles.metricBox}>
-                <span className={styles.metricValue}>{player.stats.assists}</span>
+                <span className={styles.metricValue}>{player.stats.goals.assists}</span>
                 <span className={styles.metricLabel}>Assists</span>
               </div>
 
               {/* Matches Box */}
               <div className={styles.metricBox}>
-                <span className={styles.metricValue}>{player.stats.matchesPlayed}</span>
+                <span className={styles.metricValue}>{player.stats.matches.played}</span>
                 <span className={styles.metricLabel}>Played (Starts)</span>
               </div>
 
               {/* Minutes Box */}
               <div className={styles.metricBox}>
-                <span className={styles.metricValue}>{player.stats.minutesPlayed}&apos;</span>
+                <span className={styles.metricValue}>{player.stats.matches.minutes}&apos;</span>
                 <span className={styles.metricLabel}>Min Played</span>
               </div>
 
               {/* Pass % Box */}
               <div className={styles.metricBox}>
-                <span className={styles.metricValue}>{player.stats.passAccuracyPercent}%</span>
+                <span className={styles.metricValue}>{player.stats.passes.accuracyPercent}%</span>
                 <span className={styles.metricLabel}>Pass Accuracy</span>
               </div>
 
               {/* Yellow Cards Box */}
               <div className={styles.metricBox}>
-                <span className={styles.metricValue}>{player.stats.yellowCards}</span>
+                <span className={styles.metricValue}>{player.stats.cards.yellow}</span>
                 <span className={styles.metricLabel}>Yellow Cards</span>
               </div>
 
               {/* Red Cards Box */}
               <div className={styles.metricBox}>
-                <span className={styles.metricValue}>{player.stats.redCards}</span>
+                <span className={styles.metricValue}>{player.stats.cards.red}</span>
                 <span className={styles.metricLabel}>Red Cards</span>
               </div>
             </div>

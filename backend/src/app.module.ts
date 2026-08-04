@@ -1,22 +1,21 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { FootballController } from './sports/football.controller';
 import { LiveScoreGateway } from './gateway/live-score.gateway';
-import { ApiFootballClientService } from './sports/api-football-client.service';
-import { FootballNormalizerService } from './sports/football-normalizer.service';
 import { PrismaService } from './prisma/prisma.service';
+import { SportsModule } from './sports/sports.module';
+import { AuthModule } from './auth/auth.module';
+import { BookmarksModule } from './bookmarks/bookmarks.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController, FootballController],
-  providers: [
-    AppService,
-    LiveScoreGateway,
-    ApiFootballClientService,
-    FootballNormalizerService,
-    PrismaService,
+  imports: [
+    ScheduleModule.forRoot(),
+    SportsModule,
+    AuthModule,
+    BookmarksModule,
   ],
-  exports: [FootballNormalizerService],
+  controllers: [AppController],
+  providers: [AppService, LiveScoreGateway, PrismaService],
 })
 export class AppModule {}

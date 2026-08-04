@@ -89,7 +89,7 @@ export default async function Home({ searchParams }: PageProps) {
 
   try {
     // 2. Server-Side fetch matches for resolvedDate from our NestJS backend API
-    const apiBase = process.env.BACKEND_INTERNAL_URL || "http://localhost:3001";
+    const apiBase = process.env.BACKEND_INTERNAL_URL || "http://127.0.0.1:3001";
     const res = await fetch(`${apiBase}/football/fixtures?date=${resolvedDate}`, {
       cache: "no-store", // Guarantees we never cache live scores on server component builds
       headers: {

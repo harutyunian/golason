@@ -36,6 +36,7 @@ export interface StandardMatchWithDetails {
   stats?: any | null;
   lineups?: any | null;
   events?: any[] | null;
+  momentum?: any | null;
 }
 
 export interface StandardStandingWithTeam {
@@ -80,9 +81,25 @@ export class FootballNormalizerService {
           draw: '3.40',
           awayWin: '3.50',
         },
-        league: { id: 1, name: 'Premier League', country: 'England', logo: 'https://media.api-sports.io/football/leagues/39.png', sport: 'FOOTBALL' },
-        homeTeam: { id: 11, name: 'Arsenal', logo: 'https://media.api-sports.io/football/teams/42.png', sport: 'FOOTBALL' },
-        awayTeam: { id: 12, name: 'Chelsea', logo: 'https://media.api-sports.io/football/teams/49.png', sport: 'FOOTBALL' },
+        league: {
+          id: 1,
+          name: 'Premier League',
+          country: 'England',
+          logo: 'https://media.api-sports.io/football/leagues/39.png',
+          sport: 'FOOTBALL',
+        },
+        homeTeam: {
+          id: 11,
+          name: 'Arsenal',
+          logo: 'https://media.api-sports.io/football/teams/42.png',
+          sport: 'FOOTBALL',
+        },
+        awayTeam: {
+          id: 12,
+          name: 'Chelsea',
+          logo: 'https://media.api-sports.io/football/teams/49.png',
+          sport: 'FOOTBALL',
+        },
         stats: {
           home: {
             possessionPercent: 55,
@@ -173,46 +190,248 @@ export class FootballNormalizerService {
           home: {
             formation: '4-3-3',
             startXI: [
-              { id: 1, name: 'Ramsdale', number: 1, position: 'G', grid: '1:1', rating: 6.8 },
-              { id: 2, name: 'White', number: 4, position: 'D', grid: '2:1', rating: 7.1 },
-              { id: 3, name: 'Saliba', number: 2, position: 'D', grid: '2:2', rating: 7.5 },
-              { id: 4, name: 'Gabriel', number: 6, position: 'D', grid: '2:3', rating: 7.4 },
-              { id: 5, name: 'Zinchenko', number: 35, position: 'D', grid: '2:4', rating: 6.9 },
-              { id: 6, name: 'Odegaard', number: 8, position: 'M', grid: '3:1', rating: 8.2 },
-              { id: 7, name: 'Partey', number: 5, position: 'M', grid: '3:2', rating: 7.2 },
-              { id: 8, name: 'Xhaka', number: 34, position: 'M', grid: '3:3', rating: 7.0 },
-              { id: 9, name: 'Saka', number: 7, position: 'F', grid: '4:1', rating: 8.5 },
-              { id: 10, name: 'Jesus', number: 9, position: 'F', grid: '4:2', rating: 7.3 },
-              { id: 11, name: 'Martinelli', number: 11, position: 'F', grid: '4:3', rating: 7.9 },
+              {
+                id: 1,
+                name: 'Ramsdale',
+                number: 1,
+                position: 'G',
+                grid: '1:1',
+                rating: 6.8,
+              },
+              {
+                id: 2,
+                name: 'White',
+                number: 4,
+                position: 'D',
+                grid: '2:1',
+                rating: 7.1,
+              },
+              {
+                id: 3,
+                name: 'Saliba',
+                number: 2,
+                position: 'D',
+                grid: '2:2',
+                rating: 7.5,
+              },
+              {
+                id: 4,
+                name: 'Gabriel',
+                number: 6,
+                position: 'D',
+                grid: '2:3',
+                rating: 7.4,
+              },
+              {
+                id: 5,
+                name: 'Zinchenko',
+                number: 35,
+                position: 'D',
+                grid: '2:4',
+                rating: 6.9,
+              },
+              {
+                id: 6,
+                name: 'Odegaard',
+                number: 8,
+                position: 'M',
+                grid: '3:1',
+                rating: 8.2,
+              },
+              {
+                id: 7,
+                name: 'Partey',
+                number: 5,
+                position: 'M',
+                grid: '3:2',
+                rating: 7.2,
+              },
+              {
+                id: 8,
+                name: 'Xhaka',
+                number: 34,
+                position: 'M',
+                grid: '3:3',
+                rating: 7.0,
+              },
+              {
+                id: 9,
+                name: 'Saka',
+                number: 7,
+                position: 'F',
+                grid: '4:1',
+                rating: 8.5,
+              },
+              {
+                id: 10,
+                name: 'Jesus',
+                number: 9,
+                position: 'F',
+                grid: '4:2',
+                rating: 7.3,
+              },
+              {
+                id: 11,
+                name: 'Martinelli',
+                number: 11,
+                position: 'F',
+                grid: '4:3',
+                rating: 7.9,
+              },
             ],
             substitutes: [
-              { id: 12, name: 'Turner', number: 30, position: 'G', rating: null },
-              { id: 13, name: 'Holding', number: 16, position: 'D', rating: 6.2 },
-              { id: 14, name: 'Trossard', number: 19, position: 'F', rating: 7.0 },
-              { id: 15, name: 'Jorginho', number: 20, position: 'M', rating: 6.7 },
+              {
+                id: 12,
+                name: 'Turner',
+                number: 30,
+                position: 'G',
+                rating: null,
+              },
+              {
+                id: 13,
+                name: 'Holding',
+                number: 16,
+                position: 'D',
+                rating: 6.2,
+              },
+              {
+                id: 14,
+                name: 'Trossard',
+                number: 19,
+                position: 'F',
+                rating: 7.0,
+              },
+              {
+                id: 15,
+                name: 'Jorginho',
+                number: 20,
+                position: 'M',
+                rating: 6.7,
+              },
             ],
             coach: { id: 50, name: 'Mikel Arteta' },
           },
           away: {
             formation: '3-4-2-1',
             startXI: [
-              { id: 101, name: 'Kepa', number: 1, position: 'G', grid: '1:1', rating: 6.4 },
-              { id: 102, name: 'Fofana', number: 33, position: 'D', grid: '2:1', rating: 6.7 },
-              { id: 103, name: 'Silva', number: 6, position: 'D', grid: '2:2', rating: 7.2 },
-              { id: 104, name: 'Koulibaly', number: 26, position: 'D', grid: '2:3', rating: 6.9 },
-              { id: 105, name: 'James', number: 24, position: 'M', grid: '3:1', rating: 7.1 },
-              { id: 106, name: 'Enzo', number: 5, position: 'M', grid: '3:2', rating: 7.3 },
-              { id: 107, name: 'Kovacic', number: 8, position: 'M', grid: '3:3', rating: 6.8 },
-              { id: 108, name: 'Chilwell', number: 21, position: 'M', grid: '3:4', rating: 7.0 },
-              { id: 109, name: 'Felix', number: 11, position: 'M', grid: '4:1', rating: 7.4 },
-              { id: 110, name: 'Mudryk', number: 15, position: 'M', grid: '4:2', rating: 6.5 },
-              { id: 111, name: 'Havertz', number: 29, position: 'F', grid: '5:1', rating: 7.1 },
+              {
+                id: 101,
+                name: 'Kepa',
+                number: 1,
+                position: 'G',
+                grid: '1:1',
+                rating: 6.4,
+              },
+              {
+                id: 102,
+                name: 'Fofana',
+                number: 33,
+                position: 'D',
+                grid: '2:1',
+                rating: 6.7,
+              },
+              {
+                id: 103,
+                name: 'Silva',
+                number: 6,
+                position: 'D',
+                grid: '2:2',
+                rating: 7.2,
+              },
+              {
+                id: 104,
+                name: 'Koulibaly',
+                number: 26,
+                position: 'D',
+                grid: '2:3',
+                rating: 6.9,
+              },
+              {
+                id: 105,
+                name: 'James',
+                number: 24,
+                position: 'M',
+                grid: '3:1',
+                rating: 7.1,
+              },
+              {
+                id: 106,
+                name: 'Enzo',
+                number: 5,
+                position: 'M',
+                grid: '3:2',
+                rating: 7.3,
+              },
+              {
+                id: 107,
+                name: 'Kovacic',
+                number: 8,
+                position: 'M',
+                grid: '3:3',
+                rating: 6.8,
+              },
+              {
+                id: 108,
+                name: 'Chilwell',
+                number: 21,
+                position: 'M',
+                grid: '3:4',
+                rating: 7.0,
+              },
+              {
+                id: 109,
+                name: 'Felix',
+                number: 11,
+                position: 'M',
+                grid: '4:1',
+                rating: 7.4,
+              },
+              {
+                id: 110,
+                name: 'Mudryk',
+                number: 15,
+                position: 'M',
+                grid: '4:2',
+                rating: 6.5,
+              },
+              {
+                id: 111,
+                name: 'Havertz',
+                number: 29,
+                position: 'F',
+                grid: '5:1',
+                rating: 7.1,
+              },
             ],
             substitutes: [
-              { id: 112, name: 'Mendy', number: 16, position: 'G', rating: null },
-              { id: 113, name: 'Badiashile', number: 4, position: 'D', rating: 6.5 },
-              { id: 114, name: 'Mount', number: 19, position: 'M', rating: 6.8 },
-              { id: 115, name: 'Sterling', number: 17, position: 'F', rating: 7.1 },
+              {
+                id: 112,
+                name: 'Mendy',
+                number: 16,
+                position: 'G',
+                rating: null,
+              },
+              {
+                id: 113,
+                name: 'Badiashile',
+                number: 4,
+                position: 'D',
+                rating: 6.5,
+              },
+              {
+                id: 114,
+                name: 'Mount',
+                number: 19,
+                position: 'M',
+                rating: 6.8,
+              },
+              {
+                id: 115,
+                name: 'Sterling',
+                number: 17,
+                position: 'F',
+                rating: 7.1,
+              },
             ],
             coach: { id: 150, name: 'Graham Potter' },
           },
@@ -269,9 +488,25 @@ export class FootballNormalizerService {
         awayTeamId: 22,
         homeScore: 0,
         awayScore: 0,
-        league: { id: 2, name: 'La Liga', country: 'Spain', logo: '🇪🇸', sport: 'FOOTBALL' },
-        homeTeam: { id: 21, name: 'Real Madrid', logo: 'https://media.api-sports.io/football/teams/541.png', sport: 'FOOTBALL' },
-        awayTeam: { id: 22, name: 'Barcelona', logo: 'https://media.api-sports.io/football/teams/529.png', sport: 'FOOTBALL' },
+        league: {
+          id: 2,
+          name: 'La Liga',
+          country: 'Spain',
+          logo: '🇪🇸',
+          sport: 'FOOTBALL',
+        },
+        homeTeam: {
+          id: 21,
+          name: 'Real Madrid',
+          logo: 'https://media.api-sports.io/football/teams/541.png',
+          sport: 'FOOTBALL',
+        },
+        awayTeam: {
+          id: 22,
+          name: 'Barcelona',
+          logo: 'https://media.api-sports.io/football/teams/529.png',
+          sport: 'FOOTBALL',
+        },
         stats: null,
         lineups: null,
       },
@@ -286,9 +521,25 @@ export class FootballNormalizerService {
         awayTeamId: 32,
         homeScore: null,
         awayScore: null,
-        league: { id: 3, name: 'Serie A', country: 'Italy', logo: '🇮🇹', sport: 'FOOTBALL' },
-        homeTeam: { id: 31, name: 'Inter Milan', logo: 'https://media.api-sports.io/football/teams/505.png', sport: 'FOOTBALL' },
-        awayTeam: { id: 32, name: 'AC Milan', logo: 'https://media.api-sports.io/football/teams/489.png', sport: 'FOOTBALL' },
+        league: {
+          id: 3,
+          name: 'Serie A',
+          country: 'Italy',
+          logo: '🇮🇹',
+          sport: 'FOOTBALL',
+        },
+        homeTeam: {
+          id: 31,
+          name: 'Inter Milan',
+          logo: 'https://media.api-sports.io/football/teams/505.png',
+          sport: 'FOOTBALL',
+        },
+        awayTeam: {
+          id: 32,
+          name: 'AC Milan',
+          logo: 'https://media.api-sports.io/football/teams/489.png',
+          sport: 'FOOTBALL',
+        },
         stats: null,
         lineups: null,
       },
@@ -303,9 +554,25 @@ export class FootballNormalizerService {
         awayTeamId: 14,
         homeScore: 3,
         awayScore: 1,
-        league: { id: 1, name: 'Premier League', country: 'England', logo: '🇬🇧', sport: 'FOOTBALL' },
-        homeTeam: { id: 13, name: 'Manchester City', logo: 'https://media.api-sports.io/football/teams/50.png', sport: 'FOOTBALL' },
-        awayTeam: { id: 14, name: 'Manchester United', logo: 'https://media.api-sports.io/football/teams/33.png', sport: 'FOOTBALL' },
+        league: {
+          id: 1,
+          name: 'Premier League',
+          country: 'England',
+          logo: '🇬🇧',
+          sport: 'FOOTBALL',
+        },
+        homeTeam: {
+          id: 13,
+          name: 'Manchester City',
+          logo: 'https://media.api-sports.io/football/teams/50.png',
+          sport: 'FOOTBALL',
+        },
+        awayTeam: {
+          id: 14,
+          name: 'Manchester United',
+          logo: 'https://media.api-sports.io/football/teams/33.png',
+          sport: 'FOOTBALL',
+        },
         stats: null,
         lineups: null,
       },
@@ -320,9 +587,25 @@ export class FootballNormalizerService {
         awayTeamId: 24,
         homeScore: null,
         awayScore: null,
-        league: { id: 2, name: 'La Liga', country: 'Spain', logo: '🇪🇸', sport: 'FOOTBALL' },
-        homeTeam: { id: 23, name: 'Atletico Madrid', logo: 'https://media.api-sports.io/football/teams/530.png', sport: 'FOOTBALL' },
-        awayTeam: { id: 24, name: 'Sevilla', logo: 'https://media.api-sports.io/football/teams/536.png', sport: 'FOOTBALL' },
+        league: {
+          id: 2,
+          name: 'La Liga',
+          country: 'Spain',
+          logo: '🇪🇸',
+          sport: 'FOOTBALL',
+        },
+        homeTeam: {
+          id: 23,
+          name: 'Atletico Madrid',
+          logo: 'https://media.api-sports.io/football/teams/530.png',
+          sport: 'FOOTBALL',
+        },
+        awayTeam: {
+          id: 24,
+          name: 'Sevilla',
+          logo: 'https://media.api-sports.io/football/teams/536.png',
+          sport: 'FOOTBALL',
+        },
         stats: null,
         lineups: null,
       },
@@ -335,7 +618,9 @@ export class FootballNormalizerService {
    * Incorporates ultra-robust safe-navigation guards on every single field mapping.
    */
   normalizeFixture(raw: any, rawOdds?: any): StandardMatchWithDetails {
-    const odds = rawOdds ? this.parseOdds(rawOdds, raw?.fixture?.id || 999) : null;
+    const odds = rawOdds
+      ? this.parseOdds(rawOdds, raw?.fixture?.id || 999)
+      : null;
 
     if (!raw || !raw.fixture || !raw.teams) {
       // Emergency safe fallback if the raw object is completely mangled
@@ -423,14 +708,23 @@ export class FootballNormalizerService {
 
     // 2. EXTRACT REAL STATS IF PRESENT (Safe navigation enabled!)
     let stats = null;
-    if (raw.statistics && Array.isArray(raw.statistics) && raw.statistics.length >= 2) {
-      const homeRaw = raw.statistics.find((s: any) => s?.team?.id === homeTeamId) || raw.statistics[0];
-      const awayRaw = raw.statistics.find((s: any) => s?.team?.id === awayTeamId) || raw.statistics[1];
+    if (
+      raw.statistics &&
+      Array.isArray(raw.statistics) &&
+      raw.statistics.length >= 2
+    ) {
+      const homeRaw =
+        raw.statistics.find((s: any) => s?.team?.id === homeTeamId) ||
+        raw.statistics[0];
+      const awayRaw =
+        raw.statistics.find((s: any) => s?.team?.id === awayTeamId) ||
+        raw.statistics[1];
 
       const parseVal = (statsList: any[], type: string): number | null => {
         if (!statsList || !Array.isArray(statsList)) return null;
         const item = statsList.find((s) => s?.type === type);
-        if (!item || item.value === null || item.value === undefined) return null;
+        if (!item || item.value === null || item.value === undefined)
+          return null;
         if (typeof item.value === 'string') {
           return parseFloat(item.value.replace('%', ''));
         }
@@ -446,8 +740,12 @@ export class FootballNormalizerService {
     // 3. EXTRACT REAL LINEUPS IF PRESENT (Safe navigation enabled!)
     let lineups = null;
     if (raw.lineups && Array.isArray(raw.lineups) && raw.lineups.length >= 2) {
-      const homeLineup = raw.lineups.find((l: any) => l?.team?.id === homeTeamId) || raw.lineups[0];
-      const awayLineup = raw.lineups.find((l: any) => l?.team?.id === awayTeamId) || raw.lineups[1];
+      const homeLineup =
+        raw.lineups.find((l: any) => l?.team?.id === homeTeamId) ||
+        raw.lineups[0];
+      const awayLineup =
+        raw.lineups.find((l: any) => l?.team?.id === awayTeamId) ||
+        raw.lineups[1];
 
       lineups = {
         home: this.buildLineupObject(homeLineup),
@@ -459,124 +757,662 @@ export class FootballNormalizerService {
     const hasStarted = false; // Strict API data mode: live fallbacks are completely disabled
     if (hasStarted && (!lineups || !stats)) {
       const absencesGen = this.getAbsencesByTeams(homeTeamName, awayTeamName);
-      
+
       // SQUAD ACCURATE REAL USL LINEUPS (Birmingham Legion vs Rhode Island FC)
       const uslHomeLineups = [
-        { id: 3001, name: 'Matt Van Oekel', number: 1, position: 'G', grid: '1:1', rating: 6.8 },
-        { id: 3002, name: 'Phanuel Kavita', number: 3, position: 'D', grid: '2:1', rating: 7.1 },
-        { id: 3003, name: 'Alex Crognale', number: 21, position: 'D', grid: '2:2', rating: 7.3 },
-        { id: 3004, name: 'Moses Mensah', number: 13, position: 'D', grid: '2:3', rating: 6.9 },
-        { id: 3005, name: 'Kofi Nembhard', number: 2, position: 'D', grid: '2:4', rating: 6.7 },
-        { id: 3006, name: 'Matthew Corcoran', number: 17, position: 'M', grid: '3:1', rating: 7.2 },
-        { id: 3007, name: 'Enzo Martinez', number: 19, position: 'M', grid: '3:2', rating: 7.6 },
-        { id: 3008, name: 'Prosper Kasim', number: 10, position: 'M', grid: '3:3', rating: 7.0 },
-        { id: 3009, name: 'Neco Brett', number: 11, position: 'F', grid: '4:1', rating: 7.4 },
-        { id: 3010, name: 'Darnell King', number: 23, position: 'F', grid: '4:2', rating: 6.8 },
-        { id: 3011, name: 'Tyler Pasher', number: 15, position: 'F', grid: '4:3', rating: 7.0 },
+        {
+          id: 3001,
+          name: 'Matt Van Oekel',
+          number: 1,
+          position: 'G',
+          grid: '1:1',
+          rating: 6.8,
+        },
+        {
+          id: 3002,
+          name: 'Phanuel Kavita',
+          number: 3,
+          position: 'D',
+          grid: '2:1',
+          rating: 7.1,
+        },
+        {
+          id: 3003,
+          name: 'Alex Crognale',
+          number: 21,
+          position: 'D',
+          grid: '2:2',
+          rating: 7.3,
+        },
+        {
+          id: 3004,
+          name: 'Moses Mensah',
+          number: 13,
+          position: 'D',
+          grid: '2:3',
+          rating: 6.9,
+        },
+        {
+          id: 3005,
+          name: 'Kofi Nembhard',
+          number: 2,
+          position: 'D',
+          grid: '2:4',
+          rating: 6.7,
+        },
+        {
+          id: 3006,
+          name: 'Matthew Corcoran',
+          number: 17,
+          position: 'M',
+          grid: '3:1',
+          rating: 7.2,
+        },
+        {
+          id: 3007,
+          name: 'Enzo Martinez',
+          number: 19,
+          position: 'M',
+          grid: '3:2',
+          rating: 7.6,
+        },
+        {
+          id: 3008,
+          name: 'Prosper Kasim',
+          number: 10,
+          position: 'M',
+          grid: '3:3',
+          rating: 7.0,
+        },
+        {
+          id: 3009,
+          name: 'Neco Brett',
+          number: 11,
+          position: 'F',
+          grid: '4:1',
+          rating: 7.4,
+        },
+        {
+          id: 3010,
+          name: 'Darnell King',
+          number: 23,
+          position: 'F',
+          grid: '4:2',
+          rating: 6.8,
+        },
+        {
+          id: 3011,
+          name: 'Tyler Pasher',
+          number: 15,
+          position: 'F',
+          grid: '4:3',
+          rating: 7.0,
+        },
       ];
       const uslHomeSubs = [
-        { id: 3012, name: 'Trevor Spangenberg', number: 18, position: 'G', rating: null },
-        { id: 3013, name: 'Phanuel Kavita', number: 4, position: 'D', rating: 6.2 },
+        {
+          id: 3012,
+          name: 'Trevor Spangenberg',
+          number: 18,
+          position: 'G',
+          rating: null,
+        },
+        {
+          id: 3013,
+          name: 'Phanuel Kavita',
+          number: 4,
+          position: 'D',
+          rating: 6.2,
+        },
         { id: 3014, name: 'Jake Rufe', number: 5, position: 'M', rating: 6.5 },
-        { id: 3015, name: 'Prosper Kasim', number: 7, position: 'F', rating: 6.6 },
+        {
+          id: 3015,
+          name: 'Prosper Kasim',
+          number: 7,
+          position: 'F',
+          rating: 6.6,
+        },
       ];
 
       const uslAwayLineups = [
-        { id: 4001, name: 'Koke Vegas', number: 1, position: 'G', grid: '1:1', rating: 6.9 },
-        { id: 4002, name: 'Stephen Turnbull', number: 2, position: 'D', grid: '2:1', rating: 7.0 },
-        { id: 4003, name: 'Grant Stoneman', number: 4, position: 'D', grid: '2:2', rating: 7.2 },
-        { id: 4004, name: 'Jojea Kwizera', number: 11, position: 'D', grid: '2:3', rating: 7.4 },
-        { id: 4005, name: 'Karlo Kometiani', number: 15, position: 'D', grid: '2:4', rating: 6.6 },
-        { id: 4006, name: 'Clay Holstad', number: 16, position: 'M', grid: '3:1', rating: 7.1 },
-        { id: 4007, name: 'Marc Ybarra', number: 17, position: 'M', grid: '3:2', rating: 7.2 },
-        { id: 4008, name: 'Jack Panayotou', number: 10, position: 'M', grid: '3:3', rating: 6.8 },
-        { id: 4009, name: 'Albert Dikwa', number: 9, position: 'F', grid: '4:1', rating: 7.5 },
-        { id: 4010, name: 'Noah Fuson', number: 14, position: 'F', grid: '4:2', rating: 7.1 },
-        { id: 4011, name: 'Mark Doyle', number: 7, position: 'F', grid: '4:3', rating: 6.7 },
+        {
+          id: 4001,
+          name: 'Koke Vegas',
+          number: 1,
+          position: 'G',
+          grid: '1:1',
+          rating: 6.9,
+        },
+        {
+          id: 4002,
+          name: 'Stephen Turnbull',
+          number: 2,
+          position: 'D',
+          grid: '2:1',
+          rating: 7.0,
+        },
+        {
+          id: 4003,
+          name: 'Grant Stoneman',
+          number: 4,
+          position: 'D',
+          grid: '2:2',
+          rating: 7.2,
+        },
+        {
+          id: 4004,
+          name: 'Jojea Kwizera',
+          number: 11,
+          position: 'D',
+          grid: '2:3',
+          rating: 7.4,
+        },
+        {
+          id: 4005,
+          name: 'Karlo Kometiani',
+          number: 15,
+          position: 'D',
+          grid: '2:4',
+          rating: 6.6,
+        },
+        {
+          id: 4006,
+          name: 'Clay Holstad',
+          number: 16,
+          position: 'M',
+          grid: '3:1',
+          rating: 7.1,
+        },
+        {
+          id: 4007,
+          name: 'Marc Ybarra',
+          number: 17,
+          position: 'M',
+          grid: '3:2',
+          rating: 7.2,
+        },
+        {
+          id: 4008,
+          name: 'Jack Panayotou',
+          number: 10,
+          position: 'M',
+          grid: '3:3',
+          rating: 6.8,
+        },
+        {
+          id: 4009,
+          name: 'Albert Dikwa',
+          number: 9,
+          position: 'F',
+          grid: '4:1',
+          rating: 7.5,
+        },
+        {
+          id: 4010,
+          name: 'Noah Fuson',
+          number: 14,
+          position: 'F',
+          grid: '4:2',
+          rating: 7.1,
+        },
+        {
+          id: 4011,
+          name: 'Mark Doyle',
+          number: 7,
+          position: 'F',
+          grid: '4:3',
+          rating: 6.7,
+        },
       ];
       const uslAwaySubs = [
-        { id: 4012, name: 'Jackson Lee', number: 30, position: 'G', rating: null },
-        { id: 4013, name: 'Collin Smith', number: 3, position: 'D', rating: 6.4 },
-        { id: 4014, name: 'Clay Holstad', number: 6, position: 'M', rating: 6.3 },
-        { id: 4015, name: 'JJ Williams', number: 12, position: 'F', rating: 6.9 },
+        {
+          id: 4012,
+          name: 'Jackson Lee',
+          number: 30,
+          position: 'G',
+          rating: null,
+        },
+        {
+          id: 4013,
+          name: 'Collin Smith',
+          number: 3,
+          position: 'D',
+          rating: 6.4,
+        },
+        {
+          id: 4014,
+          name: 'Clay Holstad',
+          number: 6,
+          position: 'M',
+          rating: 6.3,
+        },
+        {
+          id: 4015,
+          name: 'JJ Williams',
+          number: 12,
+          position: 'F',
+          rating: 6.9,
+        },
       ];
 
       // Generic international stars if other league fails
       const isRealMadrid = homeTeamName.toLowerCase().includes('madrid');
       const isBarcelona = awayTeamName.toLowerCase().includes('barcelona');
 
-      const genericHomeXI = isRealMadrid ? [
-        { id: 5001, name: 'Courtois', number: 1, position: 'G', grid: '1:1', rating: 7.4 },
-        { id: 5002, name: 'Carvajal', number: 2, position: 'D', grid: '2:1', rating: 7.1 },
-        { id: 5003, name: 'Militao', number: 3, position: 'D', grid: '2:2', rating: 7.5 },
-        { id: 5004, name: 'Rudiger', number: 22, position: 'D', grid: '2:3', rating: 7.2 },
-        { id: 5005, name: 'Mendy', number: 23, position: 'D', grid: '2:4', rating: 6.9 },
-        { id: 5006, name: 'Valverde', number: 8, position: 'M', grid: '3:1', rating: 7.8 },
-        { id: 5007, name: 'Tchouameni', number: 14, position: 'M', grid: '3:2', rating: 7.3 },
-        { id: 5008, name: 'Bellingham', number: 5, position: 'M', grid: '3:3', rating: 8.4 },
-        { id: 5009, name: 'Rodrygo', number: 11, position: 'F', grid: '4:1', rating: 7.6 },
-        { id: 5010, name: 'Mbappe', number: 9, position: 'F', grid: '4:2', rating: 8.0 },
-        { id: 5011, name: 'Vinicius Jr', number: 7, position: 'F', grid: '4:3', rating: 8.5 },
-      ] : [
-        { id: 7001, name: 'GK Star A', number: 1, position: 'G', grid: '1:1', rating: 6.8 },
-        { id: 7002, name: 'Def A1', number: 2, position: 'D', grid: '2:1', rating: 7.0 },
-        { id: 7003, name: 'Def A2', number: 4, position: 'D', grid: '2:2', rating: 7.1 },
-        { id: 7004, name: 'Def A3', number: 5, position: 'D', grid: '2:3', rating: 6.9 },
-        { id: 7005, name: 'Def A4', number: 12, position: 'D', grid: '2:4', rating: 6.7 },
-        { id: 7006, name: 'Mid A1', number: 8, position: 'M', grid: '3:1', rating: 7.1 },
-        { id: 7007, name: 'Mid A2', number: 6, position: 'M', grid: '3:2', rating: 7.2 },
-        { id: 7008, name: 'Mid A3', number: 10, position: 'M', grid: '3:3', rating: 7.5 },
-        { id: 7009, name: 'For A1', number: 7, position: 'F', grid: '4:1', rating: 7.4 },
-        { id: 7010, name: 'For A2', number: 9, position: 'F', grid: '4:2', rating: 7.3 },
-        { id: 7011, name: 'For A3', number: 11, position: 'F', grid: '4:3', rating: 7.0 },
-      ];
+      const genericHomeXI = isRealMadrid
+        ? [
+            {
+              id: 5001,
+              name: 'Courtois',
+              number: 1,
+              position: 'G',
+              grid: '1:1',
+              rating: 7.4,
+            },
+            {
+              id: 5002,
+              name: 'Carvajal',
+              number: 2,
+              position: 'D',
+              grid: '2:1',
+              rating: 7.1,
+            },
+            {
+              id: 5003,
+              name: 'Militao',
+              number: 3,
+              position: 'D',
+              grid: '2:2',
+              rating: 7.5,
+            },
+            {
+              id: 5004,
+              name: 'Rudiger',
+              number: 22,
+              position: 'D',
+              grid: '2:3',
+              rating: 7.2,
+            },
+            {
+              id: 5005,
+              name: 'Mendy',
+              number: 23,
+              position: 'D',
+              grid: '2:4',
+              rating: 6.9,
+            },
+            {
+              id: 5006,
+              name: 'Valverde',
+              number: 8,
+              position: 'M',
+              grid: '3:1',
+              rating: 7.8,
+            },
+            {
+              id: 5007,
+              name: 'Tchouameni',
+              number: 14,
+              position: 'M',
+              grid: '3:2',
+              rating: 7.3,
+            },
+            {
+              id: 5008,
+              name: 'Bellingham',
+              number: 5,
+              position: 'M',
+              grid: '3:3',
+              rating: 8.4,
+            },
+            {
+              id: 5009,
+              name: 'Rodrygo',
+              number: 11,
+              position: 'F',
+              grid: '4:1',
+              rating: 7.6,
+            },
+            {
+              id: 5010,
+              name: 'Mbappe',
+              number: 9,
+              position: 'F',
+              grid: '4:2',
+              rating: 8.0,
+            },
+            {
+              id: 5011,
+              name: 'Vinicius Jr',
+              number: 7,
+              position: 'F',
+              grid: '4:3',
+              rating: 8.5,
+            },
+          ]
+        : [
+            {
+              id: 7001,
+              name: 'GK Star A',
+              number: 1,
+              position: 'G',
+              grid: '1:1',
+              rating: 6.8,
+            },
+            {
+              id: 7002,
+              name: 'Def A1',
+              number: 2,
+              position: 'D',
+              grid: '2:1',
+              rating: 7.0,
+            },
+            {
+              id: 7003,
+              name: 'Def A2',
+              number: 4,
+              position: 'D',
+              grid: '2:2',
+              rating: 7.1,
+            },
+            {
+              id: 7004,
+              name: 'Def A3',
+              number: 5,
+              position: 'D',
+              grid: '2:3',
+              rating: 6.9,
+            },
+            {
+              id: 7005,
+              name: 'Def A4',
+              number: 12,
+              position: 'D',
+              grid: '2:4',
+              rating: 6.7,
+            },
+            {
+              id: 7006,
+              name: 'Mid A1',
+              number: 8,
+              position: 'M',
+              grid: '3:1',
+              rating: 7.1,
+            },
+            {
+              id: 7007,
+              name: 'Mid A2',
+              number: 6,
+              position: 'M',
+              grid: '3:2',
+              rating: 7.2,
+            },
+            {
+              id: 7008,
+              name: 'Mid A3',
+              number: 10,
+              position: 'M',
+              grid: '3:3',
+              rating: 7.5,
+            },
+            {
+              id: 7009,
+              name: 'For A1',
+              number: 7,
+              position: 'F',
+              grid: '4:1',
+              rating: 7.4,
+            },
+            {
+              id: 7010,
+              name: 'For A2',
+              number: 9,
+              position: 'F',
+              grid: '4:2',
+              rating: 7.3,
+            },
+            {
+              id: 7011,
+              name: 'For A3',
+              number: 11,
+              position: 'F',
+              grid: '4:3',
+              rating: 7.0,
+            },
+          ];
 
-      const genericAwayXI = isBarcelona ? [
-        { id: 6001, name: 'Ter Stegen', number: 1, position: 'G', grid: '1:1', rating: 7.0 },
-        { id: 6002, name: 'Kounde', number: 23, position: 'D', grid: '2:1', rating: 7.2 },
-        { id: 6003, name: 'Araujo', number: 4, position: 'D', grid: '2:2', rating: 7.4 },
-        { id: 6004, name: 'Cubarsi', number: 2, position: 'D', grid: '2:3', rating: 7.1 },
-        { id: 6005, name: 'Balde', number: 3, position: 'D', grid: '2:4', rating: 6.8 },
-        { id: 6006, name: 'Pedri', number: 8, position: 'M', grid: '3:1', rating: 7.9 },
-        { id: 6007, name: 'De Jong', number: 21, position: 'M', grid: '3:2', rating: 7.4 },
-        { id: 6008, name: 'Gavi', number: 6, position: 'M', grid: '3:3', rating: 7.5 },
-        { id: 6009, name: 'Yamal', number: 19, position: 'F', grid: '4:1', rating: 8.6 },
-        { id: 6010, name: 'Lewandowski', number: 9, position: 'F', grid: '4:2', rating: 8.1 },
-        { id: 6011, name: 'Raphinha', number: 11, position: 'F', grid: '4:3', rating: 8.0 },
-      ] : [
-        { id: 8001, name: 'GK Star B', number: 30, position: 'G', grid: '1:1', rating: 6.9 },
-        { id: 8002, name: 'Def B1', number: 3, position: 'D', grid: '2:1', rating: 7.0 },
-        { id: 8003, name: 'Def B2', number: 14, position: 'D', grid: '2:2', rating: 6.8 },
-        { id: 8004, name: 'Def B3', number: 24, position: 'D', grid: '2:3', rating: 6.7 },
-        { id: 8005, name: 'Def B4', number: 15, position: 'D', grid: '2:4', rating: 6.9 },
-        { id: 8006, name: 'Mid B1', number: 16, position: 'M', grid: '3:1', rating: 7.1 },
-        { id: 8007, name: 'Mid B2', number: 17, position: 'M', grid: '3:2', rating: 7.0 },
-        { id: 8008, name: 'Mid B3', number: 20, position: 'M', grid: '3:3', rating: 7.2 },
-        { id: 8009, name: 'For B1', number: 22, position: 'F', grid: '4:1', rating: 7.3 },
-        { id: 8010, name: 'For B2', number: 18, position: 'F', grid: '4:2', rating: 7.1 },
-        { id: 8011, name: 'For B3', number: 14, position: 'F', grid: '4:3', rating: 6.8 },
-      ];
+      const genericAwayXI = isBarcelona
+        ? [
+            {
+              id: 6001,
+              name: 'Ter Stegen',
+              number: 1,
+              position: 'G',
+              grid: '1:1',
+              rating: 7.0,
+            },
+            {
+              id: 6002,
+              name: 'Kounde',
+              number: 23,
+              position: 'D',
+              grid: '2:1',
+              rating: 7.2,
+            },
+            {
+              id: 6003,
+              name: 'Araujo',
+              number: 4,
+              position: 'D',
+              grid: '2:2',
+              rating: 7.4,
+            },
+            {
+              id: 6004,
+              name: 'Cubarsi',
+              number: 2,
+              position: 'D',
+              grid: '2:3',
+              rating: 7.1,
+            },
+            {
+              id: 6005,
+              name: 'Balde',
+              number: 3,
+              position: 'D',
+              grid: '2:4',
+              rating: 6.8,
+            },
+            {
+              id: 6006,
+              name: 'Pedri',
+              number: 8,
+              position: 'M',
+              grid: '3:1',
+              rating: 7.9,
+            },
+            {
+              id: 6007,
+              name: 'De Jong',
+              number: 21,
+              position: 'M',
+              grid: '3:2',
+              rating: 7.4,
+            },
+            {
+              id: 6008,
+              name: 'Gavi',
+              number: 6,
+              position: 'M',
+              grid: '3:3',
+              rating: 7.5,
+            },
+            {
+              id: 6009,
+              name: 'Yamal',
+              number: 19,
+              position: 'F',
+              grid: '4:1',
+              rating: 8.6,
+            },
+            {
+              id: 6010,
+              name: 'Lewandowski',
+              number: 9,
+              position: 'F',
+              grid: '4:2',
+              rating: 8.1,
+            },
+            {
+              id: 6011,
+              name: 'Raphinha',
+              number: 11,
+              position: 'F',
+              grid: '4:3',
+              rating: 8.0,
+            },
+          ]
+        : [
+            {
+              id: 8001,
+              name: 'GK Star B',
+              number: 30,
+              position: 'G',
+              grid: '1:1',
+              rating: 6.9,
+            },
+            {
+              id: 8002,
+              name: 'Def B1',
+              number: 3,
+              position: 'D',
+              grid: '2:1',
+              rating: 7.0,
+            },
+            {
+              id: 8003,
+              name: 'Def B2',
+              number: 14,
+              position: 'D',
+              grid: '2:2',
+              rating: 6.8,
+            },
+            {
+              id: 8004,
+              name: 'Def B3',
+              number: 24,
+              position: 'D',
+              grid: '2:3',
+              rating: 6.7,
+            },
+            {
+              id: 8005,
+              name: 'Def B4',
+              number: 15,
+              position: 'D',
+              grid: '2:4',
+              rating: 6.9,
+            },
+            {
+              id: 8006,
+              name: 'Mid B1',
+              number: 16,
+              position: 'M',
+              grid: '3:1',
+              rating: 7.1,
+            },
+            {
+              id: 8007,
+              name: 'Mid B2',
+              number: 17,
+              position: 'M',
+              grid: '3:2',
+              rating: 7.0,
+            },
+            {
+              id: 8008,
+              name: 'Mid B3',
+              number: 20,
+              position: 'M',
+              grid: '3:3',
+              rating: 7.2,
+            },
+            {
+              id: 8009,
+              name: 'For B1',
+              number: 22,
+              position: 'F',
+              grid: '4:1',
+              rating: 7.3,
+            },
+            {
+              id: 8010,
+              name: 'For B2',
+              number: 18,
+              position: 'F',
+              grid: '4:2',
+              rating: 7.1,
+            },
+            {
+              id: 8011,
+              name: 'For B3',
+              number: 14,
+              position: 'F',
+              grid: '4:3',
+              rating: 6.8,
+            },
+          ];
 
-      const isUSL = homeTeamName.toLowerCase().includes('birmingham') || awayTeamName.toLowerCase().includes('birmingham');
+      const isUSL =
+        homeTeamName.toLowerCase().includes('birmingham') ||
+        awayTeamName.toLowerCase().includes('birmingham');
 
       if (!lineups) {
         lineups = {
           home: {
             formation: '4-3-3',
             startXI: isUSL ? uslHomeLineups : genericHomeXI,
-            substitutes: isUSL ? uslHomeSubs : [
-              { id: 7012, name: 'Sub A1', number: 16, position: 'M', rating: 6.5 },
-              { id: 7013, name: 'Sub A2', number: 17, position: 'F', rating: 6.8 },
-            ],
+            substitutes: isUSL
+              ? uslHomeSubs
+              : [
+                  {
+                    id: 7012,
+                    name: 'Sub A1',
+                    number: 16,
+                    position: 'M',
+                    rating: 6.5,
+                  },
+                  {
+                    id: 7013,
+                    name: 'Sub A2',
+                    number: 17,
+                    position: 'F',
+                    rating: 6.8,
+                  },
+                ],
             coach: { id: 3050, name: isUSL ? 'Tom Soehn' : 'Manager Home' },
           },
           away: {
             formation: '4-3-3',
             startXI: isUSL ? uslAwayLineups : genericAwayXI,
-            substitutes: isUSL ? uslAwaySubs : [
-              { id: 8012, name: 'Sub B1', number: 26, position: 'M', rating: 6.4 },
-              { id: 8013, name: 'Sub B2', number: 27, position: 'F', rating: 6.9 },
-            ],
+            substitutes: isUSL
+              ? uslAwaySubs
+              : [
+                  {
+                    id: 8012,
+                    name: 'Sub B1',
+                    number: 26,
+                    position: 'M',
+                    rating: 6.4,
+                  },
+                  {
+                    id: 8013,
+                    name: 'Sub B2',
+                    number: 27,
+                    position: 'F',
+                    rating: 6.9,
+                  },
+                ],
             coach: { id: 4050, name: isUSL ? 'Khano Smith' : 'Manager Away' },
           },
         };
@@ -664,8 +1500,12 @@ export class FootballNormalizerService {
 
         for (let i = 0; i < hScore; i++) {
           const min = 12 + i * 31;
-          const p = mainLineupHome[Math.min(mainLineupHome.length - 1, 6 + i)] || { id: 990 + i, name: 'Home Attacker' };
-          const assistP = mainLineupHome[Math.min(mainLineupHome.length - 1, 5 - i)] || { id: 980 + i, name: 'Home Midfielder' };
+          const p = mainLineupHome[
+            Math.min(mainLineupHome.length - 1, 6 + i)
+          ] || { id: 990 + i, name: 'Home Attacker' };
+          const assistP = mainLineupHome[
+            Math.min(mainLineupHome.length - 1, 5 - i)
+          ] || { id: 980 + i, name: 'Home Midfielder' };
           events.push({
             time: { elapsed: min, extra: null },
             team: { id: homeTeamId, name: homeTeamName },
@@ -678,8 +1518,12 @@ export class FootballNormalizerService {
 
         for (let i = 0; i < aScore; i++) {
           const min = 24 + i * 38;
-          const p = mainLineupAway[Math.min(mainLineupAway.length - 1, 8 - i)] || { id: 890 + i, name: 'Away Attacker' };
-          const assistP = mainLineupAway[Math.min(mainLineupAway.length - 1, 7 - i)] || { id: 880 + i, name: 'Away Midfielder' };
+          const p = mainLineupAway[
+            Math.min(mainLineupAway.length - 1, 8 - i)
+          ] || { id: 890 + i, name: 'Away Attacker' };
+          const assistP = mainLineupAway[
+            Math.min(mainLineupAway.length - 1, 7 - i)
+          ] || { id: 880 + i, name: 'Away Midfielder' };
           events.push({
             time: { elapsed: min, extra: null },
             team: { id: awayTeamId, name: awayTeamName },
@@ -877,21 +1721,37 @@ export class FootballNormalizerService {
    */
   parseOdds(rawOddsResponse: any, fixtureId: number) {
     try {
-      if (rawOddsResponse && Array.isArray(rawOddsResponse) && rawOddsResponse.length > 0) {
+      if (
+        rawOddsResponse &&
+        Array.isArray(rawOddsResponse) &&
+        rawOddsResponse.length > 0
+      ) {
         const fixtureOdds = rawOddsResponse[0];
-        if (fixtureOdds && Array.isArray(fixtureOdds.bookmakers) && fixtureOdds.bookmakers.length > 0) {
+        if (
+          fixtureOdds &&
+          Array.isArray(fixtureOdds.bookmakers) &&
+          fixtureOdds.bookmakers.length > 0
+        ) {
           // Find Bet365 (id: 8) or Bwin (id: 2) or just take the first bookmaker
-          const bookmaker = fixtureOdds.bookmakers.find((b: any) => b.id === 8 || b.id === 2) || fixtureOdds.bookmakers[0];
-          
+          const bookmaker =
+            fixtureOdds.bookmakers.find((b: any) => b.id === 8 || b.id === 2) ||
+            fixtureOdds.bookmakers[0];
+
           if (bookmaker && Array.isArray(bookmaker.bets)) {
             // Find "Match Winner" bet (id: 1)
-            const matchWinnerBet = bookmaker.bets.find((bet: any) => bet.id === 1);
-            if (matchWinnerBet && Array.isArray(matchWinnerBet.values) && matchWinnerBet.values.length === 3) {
+            const matchWinnerBet = bookmaker.bets.find(
+              (bet: any) => bet.id === 1,
+            );
+            if (
+              matchWinnerBet &&
+              Array.isArray(matchWinnerBet.values) &&
+              matchWinnerBet.values.length === 3
+            ) {
               const values = matchWinnerBet.values;
               const home = values.find((v: any) => v.value === 'Home');
               const draw = values.find((v: any) => v.value === 'Draw');
               const away = values.find((v: any) => v.value === 'Away');
-              
+
               if (home && draw && away) {
                 return {
                   homeWin: home.odd,
@@ -904,9 +1764,12 @@ export class FootballNormalizerService {
         }
       }
     } catch (e) {
-      console.warn(`[API-Football] Error parsing odds for fixture ${fixtureId}`, e);
+      console.warn(
+        `[API-Football] Error parsing odds for fixture ${fixtureId}`,
+        e,
+      );
     }
-    
+
     return this.generateFallbackOdds(fixtureId);
   }
 }

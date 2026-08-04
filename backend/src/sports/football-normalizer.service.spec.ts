@@ -18,7 +18,10 @@ describe('FootballNormalizerService', () => {
   });
 
   describe('normalizeFixture', () => {
-    const createRawFixture = (statusShort: string, elapsed: number | null = null) => ({
+    const createRawFixture = (
+      statusShort: string,
+      elapsed: number | null = null,
+    ) => ({
       fixture: {
         id: 123456,
         date: '2026-08-02T15:00:00Z',
@@ -57,7 +60,10 @@ describe('FootballNormalizerService', () => {
       },
     });
 
-    const testStatusMapping = (shortStatus: string, expectedStatus: MatchStatus) => {
+    const testStatusMapping = (
+      shortStatus: string,
+      expectedStatus: MatchStatus,
+    ) => {
       const raw = createRawFixture(shortStatus, 45);
       const normalized = service.normalizeFixture(raw);
       expect(normalized.status).toBe(expectedStatus);
@@ -150,15 +156,29 @@ describe('FootballNormalizerService', () => {
     it('should map list of raw fixtures', () => {
       const rawFixtures = [
         {
-          fixture: { id: 101, date: '2026-08-02T15:00:00Z', status: { short: 'FT', elapsed: 90 } },
+          fixture: {
+            id: 101,
+            date: '2026-08-02T15:00:00Z',
+            status: { short: 'FT', elapsed: 90 },
+          },
           league: { id: 39, name: 'PL', country: 'England', logo: null },
-          teams: { home: { id: 42, name: 'Arsenal', logo: null }, away: { id: 49, name: 'Chelsea', logo: null } },
+          teams: {
+            home: { id: 42, name: 'Arsenal', logo: null },
+            away: { id: 49, name: 'Chelsea', logo: null },
+          },
           goals: { home: 1, away: 0 },
         },
         {
-          fixture: { id: 102, date: '2026-08-02T17:00:00Z', status: { short: 'NS', elapsed: null } },
+          fixture: {
+            id: 102,
+            date: '2026-08-02T17:00:00Z',
+            status: { short: 'NS', elapsed: null },
+          },
           league: { id: 39, name: 'PL', country: 'England', logo: null },
-          teams: { home: { id: 50, name: 'Man City', logo: null }, away: { id: 40, name: 'Liverpool', logo: null } },
+          teams: {
+            home: { id: 50, name: 'Man City', logo: null },
+            away: { id: 40, name: 'Liverpool', logo: null },
+          },
           goals: { home: null, away: null },
         },
       ];
