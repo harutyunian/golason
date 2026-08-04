@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { FootballController } from './football.controller';
 import { ApiFootballClientService } from './api-football-client.service';
 import { FootballNormalizerService } from './football-normalizer.service';
+import { MomentumService } from './momentum.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { HttpException } from '@nestjs/common';
 
@@ -9,6 +10,7 @@ describe('FootballController', () => {
   let controller: FootballController;
   let mockApiFootballClient: any;
   let mockFootballNormalizer: any;
+  let mockMomentumService: any;
   let mockPrismaService: any;
 
   beforeEach(async () => {
@@ -54,6 +56,10 @@ describe('FootballController', () => {
       getDemoMatchById: jest.fn().mockReturnValue({ id: 101, status: 'LIVE' }),
     };
 
+    mockMomentumService = {
+      calculateMomentum: jest.fn().mockReturnValue([]),
+    };
+
     mockPrismaService = {
       team: {
         findMany: jest.fn().mockResolvedValue([]),
@@ -82,6 +88,10 @@ describe('FootballController', () => {
         {
           provide: FootballNormalizerService,
           useValue: mockFootballNormalizer,
+        },
+        {
+          provide: MomentumService,
+          useValue: mockMomentumService,
         },
         {
           provide: PrismaService,

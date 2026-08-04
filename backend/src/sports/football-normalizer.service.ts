@@ -36,6 +36,7 @@ export interface StandardMatchWithDetails {
   stats?: any | null;
   lineups?: any | null;
   events?: any[] | null;
+  momentum?: any | null;
 }
 
 export interface StandardStandingWithTeam {

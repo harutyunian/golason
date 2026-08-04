@@ -17,6 +17,7 @@ import {
 } from './interfaces/sports.types';
 import { ApiFootballClientService } from './api-football-client.service';
 import { FootballNormalizerService } from './football-normalizer.service';
+import { MomentumService } from './momentum.service';
 import { PrismaService } from '../prisma/prisma.service';
 
 export interface StandardMatchWithDetails extends StandardMatch {
@@ -82,6 +83,7 @@ export class FootballController {
     private readonly apiFootballClient: ApiFootballClientService,
     private readonly footballNormalizer: FootballNormalizerService,
     private readonly prisma: PrismaService,
+    private readonly momentumService: MomentumService,
   ) {}
 
   private getHeaders() {
@@ -155,6 +157,7 @@ export class FootballController {
           stats: match.stats || undefined,
           lineups: match.lineups || undefined,
           events: match.events || undefined,
+          momentum: match.momentum || undefined,
         },
         create: {
           id: match.id,
@@ -172,6 +175,7 @@ export class FootballController {
           stats: match.stats || undefined,
           lineups: match.lineups || undefined,
           events: match.events || undefined,
+          momentum: match.momentum || undefined,
         },
       });
     } catch (err: any) {
@@ -276,9 +280,18 @@ export class FootballController {
       const finishedStatuses = ['FINISHED', 'CANCELLED', 'POSTPONED'];
       if (dbMatch && finishedStatuses.includes(dbMatch.status)) {
         console.log(
-          `[Controller DB HIT] Serving finished Match ID ${numericId} directly from database.`,
+          `[Controller DB HIT] Serving finished Match ID ${numericId} directly from database.`
         );
-        return dbMatch as any;
+        const matchAny = dbMatch as any;
+        const homePossession = matchAny.stats?.home?.possessionPercent || 50;
+        matchAny.momentum = {
+          points: this.momentumService.calculateMomentum(
+            matchAny.elapsedTime || 0,
+            matchAny.events || [],
+            homePossession,
+          )
+        };
+        return matchAny;
       }
 
       // 2. Fetch match details and odds concurrently from external provider
@@ -292,9 +305,18 @@ export class FootballController {
         // Fallback to serving the database record (even if scheduled/live) rather than throwing 404
         if (dbMatch) {
           console.warn(
-            `[API-Football] Match ID ${numericId} not found on external servers. Serving database record fallback.`,
+            `[API-Football] Match ID ${numericId} not found on external servers. Serving database record fallback.`
           );
-          return dbMatch as any;
+          const matchAny = dbMatch as any;
+          const homePossession = matchAny.stats?.home?.possessionPercent || 50;
+          matchAny.momentum = {
+            points: this.momentumService.calculateMomentum(
+              matchAny.elapsedTime || 0,
+              matchAny.events || [],
+              homePossession,
+            )
+          };
+          return matchAny;
         }
         throw new HttpException(
           `Match with ID ${id} was not found on the sports servers.`,
@@ -311,6 +333,16 @@ export class FootballController {
         results[0],
         rawOdds,
       );
+
+      // Calculate and attach momentum conforming to StandardMomentumData structure
+      const homePossession = normalized.stats?.home?.possessionPercent || 50;
+      normalized.momentum = {
+        points: this.momentumService.calculateMomentum(
+          normalized.elapsedTime || 0,
+          normalized.events || [],
+          homePossession,
+        )
+      };
 
       // Async caching into database
       this.saveMatchToDatabase(normalized);
