@@ -182,6 +182,15 @@ export class ApiFootballClientService {
   }
 
   /**
+   * Fetch currently ongoing (live) match fixtures.
+   */
+  async getLiveFixtures(): Promise<any> {
+    const url = `${this.baseUrl}/fixtures?live=all`;
+    this.logger.log('Requesting all live fixtures');
+    return this.fetchWithTimeout(url);
+  }
+
+  /**
    * Retrieve comprehensive event, timeline, lineup, and stat details for a match ID.
    */
   async getFixtureById(id: number): Promise<any> {
