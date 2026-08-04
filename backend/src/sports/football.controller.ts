@@ -359,10 +359,14 @@ export class FootballController {
 
     try {
       // Fetch Teams, Leagues, and Players concurrently from API-Football
+      const playersPromise = q.length >= 4
+        ? this.apiFootballClient.searchPlayers(q).catch(() => ({ response: [] }))
+        : Promise.resolve({ response: [] });
+
       const [teamsData, leaguesData, playersData] = await Promise.all([
         this.apiFootballClient.searchTeams(q).catch(() => ({ response: [] })),
         this.apiFootballClient.searchLeagues(q).catch(() => ({ response: [] })),
-        this.apiFootballClient.searchPlayers(q).catch(() => ({ response: [] })),
+        playersPromise,
       ]);
 
       const formattedTeams = (teamsData?.response || []).map((t: any) => ({
@@ -387,9 +391,9 @@ export class FootballController {
         id: item.player.id,
         name: item.player.name,
         photo: item.player.photo,
-        position: item.statistics?.[0]?.games?.position || null,
-        teamName: item.statistics?.[0]?.team?.name || null,
-        teamLogo: item.statistics?.[0]?.team?.logo || null,
+        country: item.player.nationality || null,
+        teamName: item.player.position || 'Football Player',
+        teamLogo: null,
         type: 'player',
       }));
 
