@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     setError(null);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+      const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:3001';
       const res = await fetch(`${apiBase}/auth/login`, {
         method: 'POST',
         headers: {
@@ -86,7 +86,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     setError(null);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+      const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:3001';
       const res = await fetch(`${apiBase}/auth/register`, {
         method: 'POST',
         headers: {

@@ -329,7 +329,7 @@ export default async function MatchProfilePage({ params }: MatchPageProps) {
 
   try {
     // 2. Fetch match information server-side from NestJS API endpoint
-    const apiBase = process.env.BACKEND_INTERNAL_URL || "http://localhost:3001";
+    const apiBase = process.env.BACKEND_INTERNAL_URL || "http://127.0.0.1:3001";
     const res = await fetch(`${apiBase}/football/fixtures/${matchId}`, {
       cache: "no-store",
     });
