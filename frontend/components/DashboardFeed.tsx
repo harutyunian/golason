@@ -52,7 +52,7 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
   // Synchronize favorites with user bookmarks from backend
   useEffect(() => {
     if (isAuthenticated && token) {
-      const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:3001";
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://golason.com";
       fetch(`${apiBase}/bookmarks`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
     }
 
     const isBookmarked = bookmarks.some((b) => b.type === "match" && b.entity?.id === matchId);
-    const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:3001";
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://golason.com";
 
     try {
       if (isBookmarked) {

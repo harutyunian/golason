@@ -47,7 +47,7 @@ export default function SearchBar() {
     setLoading(true);
     const delayDebounce = setTimeout(async () => {
       try {
-        const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:3001";
+        const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://golason.com";
         const res = await fetch(`${apiBase}/football/search?q=${encodeURIComponent(query)}`);
         if (res.ok) {
           const data = await res.json();
