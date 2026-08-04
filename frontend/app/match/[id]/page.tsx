@@ -42,6 +42,7 @@ interface StandardMatchWithDetails {
   stats?: StandardMatchStats | null;
   lineups?: StandardMatchLineups | null;
   events?: StandardMatchEvent[] | null;
+  momentum?: { points: { minute: number; value: number }[] } | null;
   odds?: {
     homeWin: string;
     draw: string;
