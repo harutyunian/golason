@@ -4,26 +4,11 @@ import { ApiFootballClientService } from '../api-football-client.service';
 import { FootballNormalizerService } from '../football-normalizer.service';
 import { PrismaService } from '../../prisma/prisma.service';
 
-const mockRedisSet = jest.fn();
-const mockRedisDel = jest.fn();
-const mockRedisQuit = jest.fn();
-const mockRedisOn = jest.fn();
-
-jest.mock('ioredis', () => {
-  return jest.fn().mockImplementation(() => {
-    return {
-      on: mockRedisOn,
-      set: mockRedisSet,
-      del: mockRedisDel,
-      quit: mockRedisQuit,
-    };
-  });
-});
-
 describe('LiveSyncCronService', () => {
   let service: LiveSyncCronService;
   let mockApiFootballClient: Record<string, jest.Mock>;
   let mockFootballNormalizer: Record<string, jest.Mock>;
+  let mockRedis: Record<string, jest.Mock>;
   let mockPrismaService: {
     league: { upsert: jest.Mock };
     team: { upsert: jest.Mock };
@@ -41,6 +26,13 @@ describe('LiveSyncCronService', () => {
       normalizeFixtures: jest.fn(),
     };
 
+    mockRedis = {
+      on: jest.fn(),
+      set: jest.fn(),
+      del: jest.fn(),
+      quit: jest.fn(),
+    };
+
     mockPrismaService = {
       league: {
         upsert: jest.fn().mockResolvedValue({}),
@@ -56,6 +48,10 @@ describe('LiveSyncCronService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         LiveSyncCronService,
+        {
+          provide: 'REDIS_CLIENT',
+          useValue: mockRedis,
+        },
         {
           provide: ApiFootballClientService,
           useValue: mockApiFootballClient,
@@ -80,23 +76,23 @@ describe('LiveSyncCronService', () => {
 
   describe('handleLiveSync', () => {
     it('should skip execution if Redis lock is already held', async () => {
-      mockRedisSet.mockResolvedValue(null);
+      mockRedis.set.mockResolvedValue(null);
 
       await service.handleLiveSync();
 
-      expect(mockRedisSet).toHaveBeenCalledWith('cron:live-sync:lock', 'locked', 'PX', 20000, 'NX');
+      expect(mockRedis.set).toHaveBeenCalledWith('cron:live-sync:lock', 'locked', 'PX', 20000, 'NX');
       expect(mockApiFootballClient.getLiveFixtures).not.toHaveBeenCalled();
     });
 
     it('should skip if API response is invalid or empty', async () => {
-      mockRedisSet.mockResolvedValue('OK');
+      mockRedis.set.mockResolvedValue('OK');
       mockApiFootballClient.getLiveFixtures.mockResolvedValue(null);
 
       await service.handleLiveSync();
 
       expect(mockApiFootballClient.getLiveFixtures).toHaveBeenCalled();
       expect(mockFootballNormalizer.normalizeFixtures).not.toHaveBeenCalled();
-      expect(mockRedisDel).toHaveBeenCalledWith('cron:live-sync:lock');
+      expect(mockRedis.del).toHaveBeenCalledWith('cron:live-sync:lock');
     });
 
     it('should fetch, normalize, and upsert live fixtures into the database', async () => {
@@ -134,13 +130,13 @@ describe('LiveSyncCronService', () => {
         },
       };
 
-      mockRedisSet.mockResolvedValue('OK');
+      mockRedis.set.mockResolvedValue('OK');
       mockApiFootballClient.getLiveFixtures.mockResolvedValue(mockRawResponse);
       mockFootballNormalizer.normalizeFixtures.mockReturnValue([mockMatch]);
 
       await service.handleLiveSync();
 
-      expect(mockRedisSet).toHaveBeenCalledWith('cron:live-sync:lock', 'locked', 'PX', 20000, 'NX');
+      expect(mockRedis.set).toHaveBeenCalledWith('cron:live-sync:lock', 'locked', 'PX', 20000, 'NX');
       expect(mockFootballNormalizer.normalizeFixtures).toHaveBeenCalledWith(mockRawResponse.response);
 
       expect(mockPrismaService.league.upsert).toHaveBeenCalledWith({
@@ -220,7 +216,7 @@ describe('LiveSyncCronService', () => {
         },
       });
 
-      expect(mockRedisDel).toHaveBeenCalledWith('cron:live-sync:lock');
+      expect(mockRedis.del).toHaveBeenCalledWith('cron:live-sync:lock');
     });
 
     it('should continue processing other fixtures if one database upsert throws an error', async () => {
@@ -256,7 +252,7 @@ describe('LiveSyncCronService', () => {
         },
       ];
 
-      mockRedisSet.mockResolvedValue('OK');
+      mockRedis.set.mockResolvedValue('OK');
       mockApiFootballClient.getLiveFixtures.mockResolvedValue(mockRawResponse);
       mockFootballNormalizer.normalizeFixtures.mockReturnValue(mockMatches);
 
@@ -267,30 +263,30 @@ describe('LiveSyncCronService', () => {
       await service.handleLiveSync();
 
       expect(mockPrismaService.league.upsert).toHaveBeenCalledTimes(2);
-      expect(mockRedisDel).toHaveBeenCalledWith('cron:live-sync:lock');
+      expect(mockRedis.del).toHaveBeenCalledWith('cron:live-sync:lock');
     });
 
     it('should handle critical error and release Redis lock', async () => {
-      mockRedisSet.mockResolvedValue('OK');
+      mockRedis.set.mockResolvedValue('OK');
       mockApiFootballClient.getLiveFixtures.mockRejectedValue(new Error('Network issue'));
 
       await service.handleLiveSync();
 
-      expect(mockRedisDel).toHaveBeenCalledWith('cron:live-sync:lock');
+      expect(mockRedis.del).toHaveBeenCalledWith('cron:live-sync:lock');
     });
   });
 
   describe('onModuleDestroy', () => {
     it('should quit Redis client on destroy', async () => {
-      mockRedisQuit.mockResolvedValue('OK');
+      mockRedis.quit.mockResolvedValue('OK');
 
       await service.onModuleDestroy();
 
-      expect(mockRedisQuit).toHaveBeenCalled();
+      expect(mockRedis.quit).toHaveBeenCalled();
     });
 
     it('should handle error if quit Redis fails', async () => {
-      mockRedisQuit.mockRejectedValue(new Error('Quit failed'));
+      mockRedis.quit.mockRejectedValue(new Error('Quit failed'));
 
       await expect(service.onModuleDestroy()).resolves.not.toThrow();
     });

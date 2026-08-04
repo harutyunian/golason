@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, Logger, OnModuleDestroy, Inject } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import Redis from 'ioredis';
 import { ApiFootballClientService } from '../api-football-client.service';
@@ -8,12 +8,9 @@ import { PrismaService } from '../../prisma/prisma.service';
 @Injectable()
 export class LiveSyncCronService implements OnModuleDestroy {
   private readonly logger = new Logger(LiveSyncCronService.name);
-  private readonly redis = new Redis({
-    host: process.env.REDIS_HOST || 'localhost',
-    port: Number(process.env.REDIS_PORT) || 6379,
-  });
 
   constructor(
+    @Inject('REDIS_CLIENT') private readonly redis: Redis,
     private readonly apiFootballClient: ApiFootballClientService,
     private readonly normalizer: FootballNormalizerService,
     private readonly prisma: PrismaService,
