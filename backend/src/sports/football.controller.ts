@@ -73,7 +73,10 @@ const mapApiFootballToStandardPlayer = (raw: any) => {
 @Controller('football')
 export class FootballController {
   // Controller-level cache for normalized standings
-  private readonly standingsCache = new Map<string, { data: StandardStandingWithTeam[]; expiresAt: number }>();
+  private readonly standingsCache = new Map<
+    string,
+    { data: StandardStandingWithTeam[]; expiresAt: number }
+  >();
 
   constructor(
     private readonly apiFootballClient: ApiFootballClientService,
@@ -130,9 +133,9 @@ export class FootballController {
       // Fetch match details and odds concurrently
       const [data, oddsData] = await Promise.all([
         this.apiFootballClient.getFixtureById(numericId),
-        this.apiFootballClient.getOddsByFixtureId(numericId).catch(() => null)
+        this.apiFootballClient.getOddsByFixtureId(numericId).catch(() => null),
       ]);
-      
+
       const results = data.response || [];
       if (results.length === 0) {
         throw new HttpException(
@@ -144,7 +147,7 @@ export class FootballController {
       console.log(
         `[API-Football] Successfully found and normalized Match ID: ${id}`,
       );
-      
+
       const rawOdds = oddsData?.response || [];
       // Delegate dynamic fixture mapping to FootballNormalizerService
       return this.footballNormalizer.normalizeFixture(results[0], rawOdds);
@@ -196,7 +199,8 @@ export class FootballController {
         : { response: [] };
       const rawRecent = recentData.response || [];
       // Delegate map normalization to FootballNormalizerService
-      const normalizedRecent = this.footballNormalizer.normalizeFixtures(rawRecent);
+      const normalizedRecent =
+        this.footballNormalizer.normalizeFixtures(rawRecent);
 
       // 3. Fetch next 5 upcoming games
       const upcomingUrl = `https://v3.football.api-sports.io/fixtures?team=${id}&next=5`;
@@ -206,7 +210,8 @@ export class FootballController {
         : { response: [] };
       const rawUpcoming = upcomingData.response || [];
       // Delegate map normalization to FootballNormalizerService
-      const normalizedUpcoming = this.footballNormalizer.normalizeFixtures(rawUpcoming);
+      const normalizedUpcoming =
+        this.footballNormalizer.normalizeFixtures(rawUpcoming);
 
       console.log(
         `[API-Football] Successfully compiled profile for team ID: ${id} (${teamInfo.name})`,
@@ -248,7 +253,9 @@ export class FootballController {
     // Check Controller Cache first
     const cached = this.standingsCache.get(cacheKey);
     if (cached && cached.expiresAt > Date.now()) {
-      console.log(`[Controller Cache HIT] Returning cached standings for: ${cacheKey}`);
+      console.log(
+        `[Controller Cache HIT] Returning cached standings for: ${cacheKey}`,
+      );
       return cached.data;
     }
 
@@ -257,7 +264,10 @@ export class FootballController {
     );
 
     try {
-      const data = await this.apiFootballClient.getStandings(targetLeague, targetSeason);
+      const data = await this.apiFootballClient.getStandings(
+        targetLeague,
+        targetSeason,
+      );
 
       if (data.errors && Object.keys(data.errors).length > 0) {
         console.error('[API-Football] Standings Error payload:', data.errors);
@@ -284,7 +294,7 @@ export class FootballController {
       console.log(
         `[API-Football] Successfully fetched and normalized ${normalized.length} standings rows for league: ${targetLeague}`,
       );
-      
+
       // Save successful standings in controller-level cache for 1 hour
       this.standingsCache.set(cacheKey, {
         data: normalized,
@@ -311,7 +321,10 @@ export class FootballController {
     );
 
     try {
-      const data = await this.apiFootballClient.getPlayerProfile(playerId, 2026);
+      const data = await this.apiFootballClient.getPlayerProfile(
+        playerId,
+        2026,
+      );
       const results = data.response || [];
 
       if (results.length === 0) {
@@ -359,9 +372,12 @@ export class FootballController {
 
     try {
       // Fetch Teams, Leagues, and Players concurrently from API-Football
-      const playersPromise = q.length >= 4
-        ? this.apiFootballClient.searchPlayers(q).catch(() => ({ response: [] }))
-        : Promise.resolve({ response: [] });
+      const playersPromise =
+        q.length >= 4
+          ? this.apiFootballClient
+              .searchPlayers(q)
+              .catch(() => ({ response: [] }))
+          : Promise.resolve({ response: [] });
 
       const [teamsData, leaguesData, playersData] = await Promise.all([
         this.apiFootballClient.searchTeams(q).catch(() => ({ response: [] })),
@@ -378,24 +394,28 @@ export class FootballController {
         type: 'team',
       }));
 
-      const formattedCompetitions = (leaguesData?.response || []).map((l: any) => ({
-        id: l.league.id,
-        name: l.league.name,
-        logo: l.league.logo,
-        country: l.league.country || l.country?.name || null,
-        countryCode: l.country?.code || null,
-        type: 'competition',
-      }));
+      const formattedCompetitions = (leaguesData?.response || []).map(
+        (l: any) => ({
+          id: l.league.id,
+          name: l.league.name,
+          logo: l.league.logo,
+          country: l.league.country || l.country?.name || null,
+          countryCode: l.country?.code || null,
+          type: 'competition',
+        }),
+      );
 
-      const formattedPlayers = (playersData?.response || []).map((item: any) => ({
-        id: item.player.id,
-        name: item.player.name,
-        photo: item.player.photo,
-        country: item.player.nationality || null,
-        teamName: item.player.position || 'Football Player',
-        teamLogo: null,
-        type: 'player',
-      }));
+      const formattedPlayers = (playersData?.response || []).map(
+        (item: any) => ({
+          id: item.player.id,
+          name: item.player.name,
+          photo: item.player.photo,
+          country: item.player.nationality || null,
+          teamName: item.player.position || 'Football Player',
+          teamLogo: null,
+          type: 'player',
+        }),
+      );
 
       return {
         teams: formattedTeams,

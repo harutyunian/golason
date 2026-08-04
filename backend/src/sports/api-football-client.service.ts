@@ -10,7 +10,7 @@ export class ApiFootballClientService {
   private readonly logger = new Logger(ApiFootballClientService.name);
   private readonly baseUrl = 'https://v3.football.api-sports.io';
   private readonly defaultTimeoutMs = 15000; // 15s timeout for network reliability
-  
+
   // Custom in-memory cache map
   private readonly cache = new Map<string, CacheEntry>();
 
@@ -18,7 +18,8 @@ export class ApiFootballClientService {
    * Constructs authorization and tracking headers for API-Football calls.
    */
   private getHeaders(): Record<string, string> {
-    const key = process.env.SPORTS_API_KEY || '1623448fdc7994a7c7ce329610618cf4';
+    const key =
+      process.env.SPORTS_API_KEY || '1623448fdc7994a7c7ce329610618cf4';
     const host = process.env.SPORTS_API_HOST || 'v3.football.api-sports.io';
 
     return {
@@ -72,7 +73,10 @@ export class ApiFootballClientService {
   /**
    * Helper method to perform fetch operations with a timeout, caching, and abort boundary.
    */
-  private async fetchWithTimeout(url: string, options: RequestInit = {}): Promise<any> {
+  private async fetchWithTimeout(
+    url: string,
+    options: RequestInit = {},
+  ): Promise<any> {
     // Check Cache first
     const cached = this.cache.get(url);
     if (cached && cached.expiresAt > Date.now()) {
@@ -83,7 +87,10 @@ export class ApiFootballClientService {
     this.logger.debug(`[Cache MISS] Fetching from external API: ${url}`);
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), this.defaultTimeoutMs);
+    const timeoutId = setTimeout(
+      () => controller.abort(),
+      this.defaultTimeoutMs,
+    );
 
     try {
       const response = await fetch(url, {
@@ -98,9 +105,13 @@ export class ApiFootballClientService {
       clearTimeout(timeoutId);
 
       // Log external api responses & meta usage if available
-      const remainingRequests = response.headers.get('x-ratelimit-requests-remaining');
+      const remainingRequests = response.headers.get(
+        'x-ratelimit-requests-remaining',
+      );
       if (remainingRequests) {
-        this.logger.debug(`[API-Football] API Rate limit remaining: ${remainingRequests}`);
+        this.logger.debug(
+          `[API-Football] API Rate limit remaining: ${remainingRequests}`,
+        );
       }
 
       if (!response.ok) {
@@ -114,7 +125,9 @@ export class ApiFootballClientService {
 
       // Catch and bubble external gateway error structures
       if (data.errors && Object.keys(data.errors).length > 0) {
-        this.logger.error(`[API-Football] Gateway error payload: ${JSON.stringify(data.errors)}`);
+        this.logger.error(
+          `[API-Football] Gateway error payload: ${JSON.stringify(data.errors)}`,
+        );
         throw new HttpException(
           `API-Football gateway error: ${JSON.stringify(data.errors)}`,
           HttpStatus.BAD_GATEWAY,
@@ -128,7 +141,9 @@ export class ApiFootballClientService {
           data,
           expiresAt: Date.now() + ttl,
         });
-        this.logger.log(`[Cache SET] Cached response for URL: ${url} (TTL: ${ttl}ms)`);
+        this.logger.log(
+          `[Cache SET] Cached response for URL: ${url} (TTL: ${ttl}ms)`,
+        );
       }
 
       return data;
@@ -147,7 +162,9 @@ export class ApiFootballClientService {
         throw error;
       }
 
-      this.logger.error(`[API-Football] HTTP Request failed for URL: ${url}. Error: ${error.message}`);
+      this.logger.error(
+        `[API-Football] HTTP Request failed for URL: ${url}. Error: ${error.message}`,
+      );
       throw new HttpException(
         `Failed to fetch from external provider: ${error.message}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -178,7 +195,9 @@ export class ApiFootballClientService {
    */
   async getStandings(leagueId: number, season: number): Promise<any> {
     const url = `${this.baseUrl}/standings?league=${leagueId}&season=${season}`;
-    this.logger.log(`Requesting standings for league: ${leagueId}, season: ${season}`);
+    this.logger.log(
+      `Requesting standings for league: ${leagueId}, season: ${season}`,
+    );
     return this.fetchWithTimeout(url);
   }
 
@@ -194,9 +213,15 @@ export class ApiFootballClientService {
   /**
    * Fetch last/next fixture lists associated with a soccer team.
    */
-  async getTeamFixtures(teamId: number, type: 'last' | 'next', count: number): Promise<any> {
+  async getTeamFixtures(
+    teamId: number,
+    type: 'last' | 'next',
+    count: number,
+  ): Promise<any> {
     const url = `${this.baseUrl}/fixtures?team=${teamId}&${type}=${count}`;
-    this.logger.log(`Requesting ${type} ${count} fixtures for team ID: ${teamId}`);
+    this.logger.log(
+      `Requesting ${type} ${count} fixtures for team ID: ${teamId}`,
+    );
     return this.fetchWithTimeout(url);
   }
 
@@ -205,7 +230,9 @@ export class ApiFootballClientService {
    */
   async getPlayerProfile(playerId: number, season: number): Promise<any> {
     const url = `${this.baseUrl}/players?id=${playerId}&season=${season}`;
-    this.logger.log(`Requesting player profile for ID: ${playerId}, season: ${season}`);
+    this.logger.log(
+      `Requesting player profile for ID: ${playerId}, season: ${season}`,
+    );
     return this.fetchWithTimeout(url);
   }
 

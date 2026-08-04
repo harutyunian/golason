@@ -24,10 +24,10 @@ describe('FootballController', () => {
                 [
                   {
                     rank: 1,
-                    team: { id: 42, name: "Arsenal", logo: null },
+                    team: { id: 42, name: 'Arsenal', logo: null },
                     points: 3,
                     goalsDiff: 2,
-                    form: "W",
+                    form: 'W',
                     all: { played: 1, win: 1, draw: 0, lose: 0 },
                   },
                 ],
@@ -44,8 +44,12 @@ describe('FootballController', () => {
     };
 
     mockFootballNormalizer = {
-      normalizeFixture: jest.fn().mockReturnValue({ id: 101, status: 'FINISHED' }),
-      normalizeFixtures: jest.fn().mockReturnValue([{ id: 101, status: 'FINISHED' }]),
+      normalizeFixture: jest
+        .fn()
+        .mockReturnValue({ id: 101, status: 'FINISHED' }),
+      normalizeFixtures: jest
+        .fn()
+        .mockReturnValue([{ id: 101, status: 'FINISHED' }]),
       normalizeStandings: jest.fn().mockReturnValue([]),
       getDemoMatchById: jest.fn().mockReturnValue({ id: 101, status: 'LIVE' }),
     };
@@ -87,7 +91,9 @@ describe('FootballController', () => {
   describe('getFixtures', () => {
     it('should call getFixturesByDate and normalizeFixtures', async () => {
       const results = await controller.getFixtures('2026-08-02');
-      expect(mockApiFootballClient.getFixturesByDate).toHaveBeenCalledWith('2026-08-02');
+      expect(mockApiFootballClient.getFixturesByDate).toHaveBeenCalledWith(
+        '2026-08-02',
+      );
       expect(mockFootballNormalizer.normalizeFixtures).toHaveBeenCalled();
       expect(results).toHaveLength(1);
       expect(results[0].id).toBe(101);
@@ -96,12 +102,18 @@ describe('FootballController', () => {
 
   describe('getFixtureById', () => {
     it('should throw HttpException if fixture not found', async () => {
-      mockApiFootballClient.getFixtureById.mockResolvedValueOnce({ response: [] });
-      await expect(controller.getFixtureById('999')).rejects.toThrow(HttpException);
+      mockApiFootballClient.getFixtureById.mockResolvedValueOnce({
+        response: [],
+      });
+      await expect(controller.getFixtureById('999')).rejects.toThrow(
+        HttpException,
+      );
     });
 
     it('should return normalized fixture if found', async () => {
-      mockApiFootballClient.getFixtureById.mockResolvedValueOnce({ response: [{ fixture: { id: 123456 } }] });
+      mockApiFootballClient.getFixtureById.mockResolvedValueOnce({
+        response: [{ fixture: { id: 123456 } }],
+      });
       const result = await controller.getFixtureById('123456');
       expect(mockApiFootballClient.getFixtureById).toHaveBeenCalledWith(123456);
       expect(mockFootballNormalizer.normalizeFixture).toHaveBeenCalled();

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { FootballController } from './sports/football.controller';
@@ -8,7 +9,7 @@ import { FootballNormalizerService } from './sports/football-normalizer.service'
 import { PrismaService } from './prisma/prisma.service';
 
 @Module({
-  imports: [],
+  imports: [ScheduleModule.forRoot()],
   controllers: [AppController, FootballController],
   providers: [
     AppService,
