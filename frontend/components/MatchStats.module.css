@@ -258,3 +258,62 @@
     grid-template-columns: 60px 1fr 60px;
   }
 }
+
+/* ==========================================================================
+   Odds Section Styles
+   ========================================================================== */
+.oddsSection {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.oddsSegmentedControl {
+  display: flex;
+  align-items: center;
+  height: 48px;
+}
+
+.oddsButton {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.oddsButton:hover {
+  background-color: var(--bg-hover);
+}
+
+.oddsButton:active {
+  background-color: var(--color-accent);
+  color: #fff;
+}
+
+.oddsLabel {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.oddsValue {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.oddsDivider {
+  width: 1px;
+  height: 60%;
+  background-color: var(--border-color);
+}

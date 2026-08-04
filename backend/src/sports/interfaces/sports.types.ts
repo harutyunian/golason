@@ -171,6 +171,15 @@ export interface StandardMomentumData {
 }
 
 /**
+ * Standard Match Odds representation
+ */
+export interface MatchOdds {
+  homeWin: string;
+  draw: string;
+  awayWin: string;
+}
+
+/**
  * Standard representation of a Match
  */
 export interface StandardMatch {
@@ -186,6 +195,7 @@ export interface StandardMatch {
   awayScore?: number | null;
   homeScoreHT?: number | null;
   awayScoreHT?: number | null;
+  odds?: MatchOdds | null;
   stats?: StandardMatchStats | null;
   lineups?: StandardMatchLineups | null;
   events?: StandardMatchEvent[] | null;

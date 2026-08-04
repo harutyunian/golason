@@ -3,6 +3,7 @@
 import React from "react";
 import { AlertCircle } from "lucide-react";
 import TeamLogo from "./TeamLogo";
+import PlayerLink from "./PlayerLink";
 import styles from "./LineupPitch.module.css";
 
 export interface LineupPlayer {
@@ -132,43 +133,11 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
 
   // Parse dynamic, squad-accurate absences (Injuries & Suspensions) with 0% mock names!
   const absences = React.useMemo(() => {
-    const isArsenalMatch = homeTeamName.toLowerCase().includes("arsenal") || awayTeamName.toLowerCase().includes("arsenal");
-    const isUSLMatch = homeTeamName.toLowerCase().includes("birmingham") || awayTeamName.toLowerCase().includes("birmingham");
-
     let homeAbs: { name: string; reason: string; status: "out" | "doubtful" | "suspended" }[] = [];
     let awayAbs: { name: string; reason: string; status: "out" | "doubtful" | "suspended" }[] = [];
 
-    if (isArsenalMatch) {
-      homeAbs = [
-        { name: "Gabriel Jesus", reason: "Knee Injury", status: "out" },
-        { name: "Takehiro Tomiyasu", reason: "Calf Strain", status: "out" },
-        { name: "Jurrien Timber", reason: "Fitness / Doubtful", status: "doubtful" }
-      ];
-      awayAbs = [
-        { name: "Reece James", reason: "Hamstring Injury", status: "out" },
-        { name: "Wesley Fofana", reason: "ACL Recovery", status: "out" },
-        { name: "Romeo Lavia", reason: "Muscle Strain", status: "doubtful" }
-      ];
-    } else if (isUSLMatch) {
-      homeAbs = [
-        { name: "Phanuel Kavita", reason: "Muscle Strain", status: "doubtful" },
-        { name: "Tyler Pasher", reason: "Suspended - Red Card", status: "suspended" }
-      ];
-      awayAbs = [
-        { name: "Mark Doyle", reason: "Ankle Injury", status: "out" },
-        { name: "Stephen Turnbull", reason: "5 Yellow Cards", status: "suspended" }
-      ];
-    } else {
-      homeAbs = [
-        { name: "Star Forward", reason: "Muscle Strain", status: "doubtful" }
-      ];
-      awayAbs = [
-        { name: "Midfielder Captain", reason: "Suspended - Cards", status: "suspended" }
-      ];
-    }
-
     return { home: homeAbs, away: awayAbs };
-  }, [homeTeamName, awayTeamName]);
+  }, []);
 
   // Parse Starting XI coordinates and dynamically center them vertically
   const homeStartingParsed = React.useMemo(() => calculateCenteredPositions(processTeamPlayers(lineups.home.startXI)), [lineups.home.startXI]);
@@ -266,9 +235,11 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                   
                   {/* Number & Name labels below avatar */}
                   <div className={styles.playerInfo}>
-                    <span className={styles.playerName}>
-                      <span className={styles.playerNo}>{player.number}</span> {player.name}
-                    </span>
+                    <PlayerLink playerId={player.id}>
+                      <span className={styles.playerName}>
+                        <span className={styles.playerNo}>{player.number}</span> {player.name}
+                      </span>
+                    </PlayerLink>
                   </div>
                 </div>
               </div>
@@ -315,9 +286,11 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                   
                   {/* Number & Name labels below avatar */}
                   <div className={styles.playerInfo}>
-                    <span className={styles.playerName}>
-                      <span className={styles.playerNo}>{player.number}</span> {player.name}
-                    </span>
+                    <PlayerLink playerId={player.id}>
+                      <span className={styles.playerName}>
+                        <span className={styles.playerNo}>{player.number}</span> {player.name}
+                      </span>
+                    </PlayerLink>
                   </div>
                 </div>
               </div>
@@ -392,7 +365,9 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                       )}
                     </div>
                     <span className={styles.benchNumber}>{player.number}</span>
-                    <span className={styles.benchName}>{player.name}</span>
+                    <PlayerLink playerId={player.id}>
+                      <span className={styles.benchName}>{player.name}</span>
+                    </PlayerLink>
                     <span className={styles.benchPositionBadge}>{player.position}</span>
                   </div>
                   {player.rating && (
@@ -420,7 +395,9 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                       )}
                     </div>
                     <span className={styles.benchNumber}>{player.number}</span>
-                    <span className={styles.benchName}>{player.name}</span>
+                    <PlayerLink playerId={player.id}>
+                      <span className={styles.benchName}>{player.name}</span>
+                    </PlayerLink>
                     <span className={styles.benchPositionBadge}>{player.position}</span>
                   </div>
                   {player.rating && (
