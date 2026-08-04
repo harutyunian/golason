@@ -4,6 +4,7 @@ import { ApiFootballClientService } from './api-football-client.service';
 import { FootballNormalizerService } from './football-normalizer.service';
 import { LiveSyncCronService } from './cron/live-sync.cron';
 import { NightlySyncCronService } from './cron/nightly-sync.cron';
+import { MomentumService } from './momentum.service';
 import { FootballController } from './football.controller';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -14,6 +15,7 @@ import { PrismaService } from '../prisma/prisma.service';
     FootballNormalizerService,
     LiveSyncCronService,
     NightlySyncCronService,
+    MomentumService,
     PrismaService,
     {
       provide: 'REDIS_CLIENT',
@@ -33,6 +35,7 @@ import { PrismaService } from '../prisma/prisma.service';
     FootballNormalizerService,
     LiveSyncCronService,
     NightlySyncCronService,
+    MomentumService,
     'REDIS_CLIENT',
   ],
 })
