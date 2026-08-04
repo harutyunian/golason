@@ -48,6 +48,7 @@ interface StandardMatchWithDetails {
   stats?: StandardMatchStats | null;
   lineups?: StandardMatchLineups | null;
   events?: StandardMatchEvent[] | null;
+  momentum?: { points: { minute: number; value: number }[] } | null;
   odds?: {
     homeWin: string;
     draw: string;
@@ -58,6 +59,32 @@ interface StandardMatchWithDetails {
 interface MatchDetailsProps {
   initialMatch: StandardMatchWithDetails;
 }
+
+// Downsample granular momentum arrays into exactly 20 grid columns to fit visual designs
+const downsampleMomentum = (points: { minute: number; value: number }[]) => {
+  if (!points || points.length === 0) return [];
+
+  const intervals = 20;
+  const chunkSize = points.length / intervals;
+  const downsampled = [];
+
+  for (let i = 0; i < intervals; i++) {
+    const start = Math.floor(i * chunkSize);
+    const end = Math.floor((i + 1) * chunkSize);
+    const chunk = points.slice(start, end);
+
+    const avgValue = chunk.length > 0
+      ? chunk.reduce((sum, p) => sum + p.value, 0) / chunk.length
+      : 0;
+
+    downsampled.push({
+      minute: Math.round(start + chunkSize / 2),
+      value: avgValue,
+    });
+  }
+
+  return downsampled;
+};
 
 // Helper to verify if a string is a standard external URL logo
 const isUrl = (str: string) => str && (str.startsWith("http://") || str.startsWith("https://"));
@@ -360,7 +387,7 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
             awayTeamName={match.awayTeam.name} 
           />
 
-          {/* Match Momentum Placeholder */}
+          {/* Match Momentum Section */}
           <section className={styles.sidebarCard} aria-label="Match Momentum">
             <div className={styles.sidebarCardHeader}>
               <TrendingUp size={16} className={styles.sidebarCardIcon} />
@@ -372,11 +399,11 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
                 <span className={styles.momentumTeamName}>{match.awayTeam.name}</span>
               </div>
               <div className={styles.momentumBars}>
-                {[12, -8, 20, -15, 10, -5, 30, 25, -18, -10, 5, -12, 18, -25, 15, -5, 8, -12, 22, -18].map((val, i) => {
-                  const isHome = val > 0;
-                  const heightPercentage = Math.min(Math.abs(val) * 3, 100);
+                {downsampleMomentum(match.momentum?.points || []).map((pt, i) => {
+                  const isHome = pt.value > 0;
+                  const heightPercentage = Math.min(Math.abs(pt.value) * 1.5, 100); // Scale nicely for visuals
                   return (
-                    <div key={i} className={styles.momentumCol}>
+                    <div key={i} className={styles.momentumCol} title={`Minute ~${pt.minute}: ${pt.value > 0 ? '+' : ''}${Math.round(pt.value)}`}>
                       {/* Top half (Home) grows from bottom up */}
                       <div className={styles.momentumHalfHome}>
                         {isHome && (
