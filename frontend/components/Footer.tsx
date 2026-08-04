@@ -28,16 +28,16 @@ const InstagramIcon = () => (
 
 export default function Footer() {
   const quickLinks = [
-    { label: "Scores", href: "/scores" },
-    { label: "Leagues", href: "/leagues" },
-    { label: "Favorites", href: "/favorites" },
-    { label: "Predictor", href: "/predictor" },
+    { label: "Scores", href: "/" },
+    { label: "Leagues", href: "/" },
+    { label: "Favorites", href: "/" },
+    { label: "Predictor", href: "/" },
   ];
 
   const contactLinks = [
-    { label: "Contact Us", href: "/contact" },
-    { label: "Support", href: "/support" },
-    { label: "FAQ", href: "/faq" },
+    { label: "Contact Us", href: "/" },
+    { label: "Support", href: "/" },
+    { label: "FAQ", href: "/" },
   ];
 
   return (
