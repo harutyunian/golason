@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, Shield, Award, Activity, FileText } from "lucide-react";
 import TeamLogo from "@/components/TeamLogo";
 import AdBanner from "@/components/AdBanner";
+import PlayerAttributeOverview from "@/components/PlayerAttributeOverview";
 import styles from "./player.module.css";
 
 // Forces server-side dynamic rendering on runtime (vital for live scores and SEO!)
@@ -24,6 +25,13 @@ interface PlayerProfile {
   teamName: string | null;
   teamLogo?: string | null;
   rating: number | null;
+  attributes?: {
+    att: number;
+    tec: number;
+    tac: number;
+    def: number;
+    cre: number;
+  };
   stats: {
     matches: {
       played: number;
@@ -71,6 +79,13 @@ const getFallbackPlayerProfile = (idStr: string): PlayerProfile => {
     teamName: "Arsenal",
     teamLogo: "https://media.api-sports.io/football/teams/42.png",
     rating: isSaka ? 7.6 : 7.8,
+    attributes: {
+      att: isSaka ? 85 : 72,
+      tec: isSaka ? 88 : 91,
+      tac: isSaka ? 65 : 82,
+      def: isSaka ? 45 : 58,
+      cre: isSaka ? 82 : 94,
+    },
     stats: {
       matches: {
         played: isSaka ? 32 : 30,
@@ -183,6 +198,14 @@ export default async function PlayerProfilePage({ params }: PlayerPageProps) {
       <div className={styles.mainGrid}>
         {/* Main Feed Column */}
         <div className={styles.feedColumn}>
+          {/* Visual SofaScore Radar Attribute Overview */}
+          <PlayerAttributeOverview
+            playerId={player.id}
+            playerName={player.name}
+            playerPosition={player.position}
+            initialAttributes={player.attributes || { att: 50, tec: 50, tac: 50, def: 50, cre: 50 }}
+          />
+
           {/* Biographical Details Card */}
           <section className={styles.profileCard} aria-label="Biographical details">
             <h2 className={styles.cardTitle}>

@@ -1,4 +1,5 @@
-import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Logger, Inject } from '@nestjs/common';
+import Redis from 'ioredis';
 
 interface CacheEntry {
   data: any;
@@ -13,6 +14,10 @@ export class ApiFootballClientService {
 
   // Custom in-memory cache map
   private readonly cache = new Map<string, CacheEntry>();
+
+  constructor(
+    @Inject('REDIS_CLIENT') private readonly redis: Redis,
+  ) {}
 
   /**
    * Constructs authorization and tracking headers for API-Football calls.
@@ -85,6 +90,27 @@ export class ApiFootballClientService {
     }
 
     this.logger.debug(`[Cache MISS] Fetching from external API: ${url}`);
+
+    // Track real-time API-Football usage metrics in Redis
+    try {
+      const parsedUrl = new URL(url);
+      const endpoint = parsedUrl.pathname; // e.g. "/v3/fixtures" or "/v3/players"
+
+      // 1. Increment total overall counter
+      await this.redis.incr('api:calls:total');
+
+      // 2. Increment daily counter (expiring after 48 hours)
+      const todayStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      await this.redis.incr(`api:calls:daily:${todayStr}`);
+      await this.redis.expire(`api:calls:daily:${todayStr}`, 172800);
+
+      // 3. Increment endpoint-specific hash counter
+      await this.redis.hincrby('api:calls:endpoints', endpoint, 1);
+    } catch (redisErr) {
+      this.logger.error(
+        `Failed to increment API call metric in Redis: ${redisErr.message}`,
+      );
+    }
 
     const controller = new AbortController();
     const timeoutId = setTimeout(

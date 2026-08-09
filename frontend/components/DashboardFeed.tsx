@@ -8,6 +8,7 @@ import AdBanner from "@/components/AdBanner";
 import DateSelector from "@/components/DateSelector";
 import MatchCard, { MatchStatus } from "@/components/MatchCard";
 import { useAuth } from "@/contexts/AuthContext";
+import { getApiBaseUrl } from "@/utils/api";
 import styles from "../app/page.module.css";
 
 interface League {
@@ -52,7 +53,7 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
   // Synchronize favorites with user bookmarks from backend
   useEffect(() => {
     if (isAuthenticated && token) {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://golason.com";
+      const apiBase = getApiBaseUrl();
       fetch(`${apiBase}/bookmarks`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -75,7 +76,7 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
     }
 
     const isBookmarked = bookmarks.some((b) => b.type === "match" && b.entity?.id === matchId);
-    const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://golason.com";
+    const apiBase = getApiBaseUrl();
 
     try {
       if (isBookmarked) {

@@ -97,6 +97,15 @@ describe('FootballController', () => {
           provide: PrismaService,
           useValue: mockPrismaService,
         },
+        {
+          provide: 'REDIS_CLIENT',
+          useValue: {
+            get: jest.fn().mockResolvedValue(null),
+            set: jest.fn().mockResolvedValue('OK'),
+            hgetall: jest.fn().mockResolvedValue({}),
+            keys: jest.fn().mockResolvedValue([]),
+          },
+        },
       ],
     }).compile();
 
