@@ -12,6 +12,7 @@ export interface AuthenticatedRequest extends Request {
   user: {
     id: number;
     email: string;
+    role?: string;
   };
 }
 
@@ -36,6 +37,7 @@ export class JwtAuthGuard implements CanActivate {
       request.user = {
         id: Number(payload.sub),
         email: payload.email,
+        role: payload.role,
       };
     } catch (err) {
       throw new UnauthorizedException('Invalid or expired authentication token.');
