@@ -5,7 +5,9 @@ import {
   Param,
   HttpException,
   HttpStatus,
+  Inject,
 } from '@nestjs/common';
+import Redis from 'ioredis';
 import {
   StandardMatch,
   SportType,
@@ -19,6 +21,7 @@ import { ApiFootballClientService } from './api-football-client.service';
 import { FootballNormalizerService } from './football-normalizer.service';
 import { MomentumService } from './momentum.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { LiveScoreGateway } from '../gateway/live-score.gateway';
 
 export interface StandardMatchWithDetails extends StandardMatch {
   league: StandardLeague;
@@ -192,23 +195,12 @@ export class FootballController {
     { data: StandardStandingWithTeam[]; expiresAt: number }
   >();
 
-  // Controller-level cache for player profiles to protect API rate limits against search engine crawls
-  private readonly playerCache = new Map<
-    number,
-    { data: any; expiresAt: number }
-  >();
-
-  // Controller-level cache for team profiles (saves 3 API requests per page load!)
-  private readonly teamCache = new Map<
-    number,
-    { data: any; expiresAt: number }
-  >();
-
   constructor(
     private readonly apiFootballClient: ApiFootballClientService,
     private readonly footballNormalizer: FootballNormalizerService,
     private readonly prisma: PrismaService,
     private readonly momentumService: MomentumService,
+    @Inject('REDIS_CLIENT') private readonly redis: Redis,
   ) {}
 
   private getHeaders() {
@@ -489,15 +481,21 @@ export class FootballController {
   @Get('teams/:id')
   async getTeamProfile(@Param('id') id: string): Promise<any> {
     const teamId = Number(id);
-    const now = Date.now();
+    const redisKey = `cache:team:${teamId}`;
 
-    // 1. Check in-memory cache first to protect API quota against bot crawlers
-    const cached = this.teamCache.get(teamId);
-    if (cached && cached.expiresAt > now) {
-      console.log(
-        `[Controller Cache HIT] Serving Team ID ${teamId} from in-memory cache.`,
+    // 1. Check Redis cache first to protect API quota against bot crawlers
+    try {
+      const cached = await this.redis.get(redisKey);
+      if (cached) {
+        console.log(
+          `[Controller Cache HIT] Serving Team ID ${teamId} from Redis cache.`,
+        );
+        return JSON.parse(cached);
+      }
+    } catch (redisErr) {
+      console.warn(
+        `Redis get failed for team profile ${teamId}: ${redisErr.message}`,
       );
-      return cached.data;
     }
 
     const key =
@@ -563,11 +561,14 @@ export class FootballController {
         upcomingMatches: normalizedUpcoming,
       };
 
-      // Save to cache for 12 hours (43,200,000 ms)
-      this.teamCache.set(teamId, {
-        data: result,
-        expiresAt: now + 43200000,
-      });
+      // Save to Redis cache for 12 hours (43200 seconds TTL)
+      try {
+        await this.redis.set(redisKey, JSON.stringify(result), 'EX', 43200);
+      } catch (redisErr) {
+        console.warn(
+          `Redis set failed for team profile ${teamId}: ${redisErr.message}`,
+        );
+      }
 
       return result;
     } catch (err) {
@@ -656,15 +657,21 @@ export class FootballController {
   @Get('players/:id')
   async getPlayerProfile(@Param('id') id: string): Promise<any> {
     const playerId = Number(id);
-    const now = Date.now();
+    const redisKey = `cache:player:${playerId}`;
 
-    // 1. Check in-memory cache first to protect API quota against bot crawlers
-    const cached = this.playerCache.get(playerId);
-    if (cached && cached.expiresAt > now) {
-      console.log(
-        `[Controller Cache HIT] Serving Player ID ${playerId} from in-memory cache.`,
+    // 1. Check Redis cache first to protect API quota against bot crawlers
+    try {
+      const cached = await this.redis.get(redisKey);
+      if (cached) {
+        console.log(
+          `[Controller Cache HIT] Serving Player ID ${playerId} from Redis cache.`,
+        );
+        return JSON.parse(cached);
+      }
+    } catch (redisErr) {
+      console.warn(
+        `Redis get failed for player profile ${playerId}: ${redisErr.message}`,
       );
-      return cached.data;
     }
 
     const headers = this.getHeaders();
@@ -692,11 +699,14 @@ export class FootballController {
         `[API-Football] Successfully fetched and normalized player profile for ID: ${playerId} (${mapped.name})`,
       );
 
-      // Save to cache for 24 hours (86,400,000 ms)
-      this.playerCache.set(playerId, {
-        data: mapped,
-        expiresAt: now + 86400000,
-      });
+      // Save to Redis cache for 24 hours (86400 seconds TTL)
+      try {
+        await this.redis.set(redisKey, JSON.stringify(mapped), 'EX', 86400);
+      } catch (redisErr) {
+        console.warn(
+          `Redis set failed for player profile ${playerId}: ${redisErr.message}`,
+        );
+      }
 
       return mapped;
     } catch (err) {
@@ -786,6 +796,42 @@ export class FootballController {
     } catch (err) {
       console.error(`[Search Error] Failed to search via live API:`, err);
       return { teams: [], players: [], matches: [], competitions: [] };
+    }
+  }
+
+  @Get('admin/api-metrics')
+  async getApiMetrics(): Promise<any> {
+    try {
+      const total = await this.redis.get('api:calls:total');
+      const endpoints = await this.redis.hgetall('api:calls:endpoints');
+
+      // Retrieve all daily key counts
+      const keys = await this.redis.keys('api:calls:daily:*');
+      const daily: Record<string, number> = {};
+
+      for (const key of keys) {
+        const date = key.replace('api:calls:daily:', '');
+        const val = await this.redis.get(key);
+        daily[date] = Number(val || 0);
+      }
+
+      // Read active connected WebSocket sessions from the static gateway tracker
+      const activeWebsockets = LiveScoreGateway.activeClients;
+
+      return {
+        totalCalls: Number(total || 0),
+        activeWebsockets,
+        endpoints: Object.entries(endpoints).reduce((acc, [k, v]) => {
+          acc[k] = Number(v || 0);
+          return acc;
+        }, {} as Record<string, number>),
+        daily,
+      };
+    } catch (err: any) {
+      throw new HttpException(
+        `Failed to retrieve API metrics: ${err.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
