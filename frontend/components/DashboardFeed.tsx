@@ -50,6 +50,23 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
   const [filter, setFilter] = useState<"ALL" | "LIVE">("ALL");
   const { token, isAuthenticated } = useAuth();
   const [bookmarks, setBookmarks] = useState<any[]>([]);
+  const [latestNews, setLatestNews] = useState<any[]>([]);
+
+  // Asynchronously load top 3 featured news articles
+  useEffect(() => {
+    const apiBase = getApiBaseUrl();
+    fetch(`${apiBase}/football/news`)
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("News API offline");
+      })
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setLatestNews(data.slice(0, 3));
+        }
+      })
+      .catch((err) => console.warn("[News] Dynamic homepage widget offline", err));
+  }, []);
 
   // Synchronize favorites with user bookmarks from backend
   useEffect(() => {
@@ -172,6 +189,36 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
       <div className={styles.mainGrid}>
         {/* Main Feed Column */}
         <div className={styles.mainFeed}>
+          {latestNews.length > 0 && (
+            <div className={styles.homeNewsWidget}>
+              <div className={styles.widgetHeader}>
+                <span className={styles.widgetTitle}>🔥 Latest Sports News</span>
+                <Link href="/news" className={styles.viewAllNews}>
+                  View All
+                </Link>
+              </div>
+              <div className={styles.newsGridHorizontal}>
+                {latestNews.map((article) => (
+                  <Link
+                    href={`/news/${article.slug}`}
+                    key={article.id}
+                    className={styles.homeNewsCard}
+                  >
+                    {article.imageUrl && (
+                      <div className={styles.newsCardImage}>
+                        <img src={article.imageUrl} alt={article.title} />
+                      </div>
+                    )}
+                    <div className={styles.newsCardContent}>
+                      <h3>{article.title}</h3>
+                      <p>{article.summary}</p>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className={styles.feedCard}>
             {/* Feed Sub-Header with Live/All Filter Toggle */}
             <div className={styles.feedHeader}>
