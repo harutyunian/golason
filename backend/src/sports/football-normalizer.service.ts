@@ -85,7 +85,7 @@ export class FootballNormalizerService {
           id: 1,
           name: 'Premier League',
           country: 'England',
-          logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDsNvyQ_JkIudhV48kpw5XN_5FfMsfRYkmzGeiYTH4U0AAcT0A_2SCTg77y0xEN49nMgzDT1eIbV3PV778kPxs_gIlfxDoqec9m5VnghZS1Mg2r9D3Q8yukYduLmxr9UdiKnLzuuHtKpu946QgAuE1ZJqoxMx4f0tAdV_5Iv1JDjhv2ObUm6QdndbrMclDuS4Zyg4KI5jru5GyNSPgXKurn1lpAeXhulNDU1h94ATMwf8jQpmg1Sss',
+          logo: 'https://media.api-sports.io/football/leagues/39.png',
           sport: 'FOOTBALL',
         },
         homeTeam: {
@@ -492,7 +492,7 @@ export class FootballNormalizerService {
           id: 2,
           name: 'La Liga',
           country: 'Spain',
-          logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDpGPQiBU0YlOQ-7Se-9rH1gJs7DWqPlbeMgaf5vCXXXCvC81B43QGyk_AGfCyOkBlrxTfxl6rCAN7fHQAr1S14ZNt23Av680wcD23ma9KUn_wnm4Vnk3eeDLL-KhZxm0Z94m0UPxo9GeWEqrPngUeb-h4hXYyzsqxh4ooEx0p9q08la-ArP2AGE2Rg61QuOG9o0ARsPmPcNKkXspQrYQ6rhvc0jCT3RRUwv_E5jG0a3hQ2RpwpycU',
+          logo: 'https://media.api-sports.io/football/leagues/140.png',
           sport: 'FOOTBALL',
         },
         homeTeam: {
@@ -591,7 +591,7 @@ export class FootballNormalizerService {
           id: 2,
           name: 'La Liga',
           country: 'Spain',
-          logo: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDpGPQiBU0YlOQ-7Se-9rH1gJs7DWqPlbeMgaf5vCXXXCvC81B43QGyk_AGfCyOkBlrxTfxl6rCAN7fHQAr1S14ZNt23Av680wcD23ma9KUn_wnm4Vnk3eeDLL-KhZxm0Z94m0UPxo9GeWEqrPngUeb-h4hXYyzsqxh4ooEx0p9q08la-ArP2AGE2Rg61QuOG9o0ARsPmPcNKkXspQrYQ6rhvc0jCT3RRUwv_E5jG0a3hQ2RpwpycU',
+          logo: 'https://media.api-sports.io/football/leagues/140.png',
           sport: 'FOOTBALL',
         },
         homeTeam: {
