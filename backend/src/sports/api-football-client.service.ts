@@ -1,19 +1,11 @@
 import { Injectable, HttpException, HttpStatus, Logger, Inject } from '@nestjs/common';
 import Redis from 'ioredis';
 
-interface CacheEntry {
-  data: any;
-  expiresAt: number;
-}
-
 @Injectable()
 export class ApiFootballClientService {
   private readonly logger = new Logger(ApiFootballClientService.name);
   private readonly baseUrl = 'https://v3.football.api-sports.io';
   private readonly defaultTimeoutMs = 15000; // 15s timeout for network reliability
-
-  // Custom in-memory cache map
-  private readonly cache = new Map<string, CacheEntry>();
 
   constructor(
     @Inject('REDIS_CLIENT') private readonly redis: Redis,
@@ -47,6 +39,12 @@ export class ApiFootballClientService {
     if (url.includes('/players')) {
       return 24 * 60 * 60 * 1000; // 24 hours for player profiles
     }
+    if (url.includes('/leagues')) {
+      return 24 * 60 * 60 * 1000; // 24 hours for leagues list / searches
+    }
+    if (url.includes('/odds?fixture=')) {
+      return 30 * 60 * 1000; // 30 minutes for odds data
+    }
     if (url.includes('/fixtures?team=')) {
       return 10 * 60 * 1000; // 10 minutes for team fixtures lists
     }
@@ -69,8 +67,23 @@ export class ApiFootballClientService {
         if (finishedStatuses.includes(status)) {
           return 24 * 60 * 60 * 1000; // 24 hours for finished matches
         }
+
+        // Smart Upcoming Match TTLs
+        const upcomingStatuses = ['NS', 'TBD'];
+        if (upcomingStatuses.includes(status)) {
+          const kickoff = fixture?.timestamp ? fixture.timestamp * 1000 : null;
+          if (kickoff) {
+            const msToKickoff = kickoff - Date.now();
+            if (msToKickoff > 2 * 60 * 60 * 1000) {
+              return 60 * 60 * 1000; // 1 hour for matches starting in > 2 hours
+            } else {
+              return 5 * 60 * 1000; // 5 minutes for matches starting in <= 2 hours
+            }
+          }
+          return 10 * 60 * 1000; // 10 minutes default fallback for upcoming
+        }
       }
-      return 10 * 1000; // 10 seconds for live / upcoming / ongoing matches
+      return 10 * 1000; // 10 seconds for live / ongoing matches
     }
     return 0; // Default: do not cache
   }
@@ -82,11 +95,16 @@ export class ApiFootballClientService {
     url: string,
     options: RequestInit = {},
   ): Promise<any> {
-    // Check Cache first
-    const cached = this.cache.get(url);
-    if (cached && cached.expiresAt > Date.now()) {
-      this.logger.debug(`[Cache HIT] Returning cached data for: ${url}`);
-      return cached.data;
+    // 1. Check Redis cache first (failsafe check)
+    const cacheKey = `cache:${url}`;
+    try {
+      const cached = await this.redis.get(cacheKey);
+      if (cached) {
+        this.logger.debug(`[Cache HIT] Returning cached data from Redis for: ${url}`);
+        return JSON.parse(cached);
+      }
+    } catch (redisErr: any) {
+      this.logger.warn(`Redis read cache failed: ${redisErr.message}`);
     }
 
     this.logger.debug(`[Cache MISS] Fetching from external API: ${url}`);
@@ -163,13 +181,14 @@ export class ApiFootballClientService {
       // Populate Cache dynamically if eligible
       const ttl = this.getTtlForUrl(url, data);
       if (ttl > 0) {
-        this.cache.set(url, {
-          data,
-          expiresAt: Date.now() + ttl,
-        });
-        this.logger.log(
-          `[Cache SET] Cached response for URL: ${url} (TTL: ${ttl}ms)`,
-        );
+        try {
+          await this.redis.set(cacheKey, JSON.stringify(data), 'PX', ttl);
+          this.logger.log(
+            `[Cache SET] Cached response in Redis for URL: ${url} (TTL: ${ttl}ms)`,
+          );
+        } catch (redisSetErr: any) {
+          this.logger.warn(`Redis save cache failed: ${redisSetErr.message}`);
+        }
       }
 
       return data;

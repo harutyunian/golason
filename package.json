@@ -10,6 +10,6 @@
     "frontend:dev": "npm run dev --workspace=frontend",
     "db:migrate": "npm run prisma:migrate --workspace=backend",
     "lint": "echo 'No files to lint yet'",
-    "test": "echo 'No tests yet'"
+    "test": "npm test --workspace=backend"
   }
 }
