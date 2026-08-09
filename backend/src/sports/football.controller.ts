@@ -498,20 +498,11 @@ export class FootballController {
       );
     }
 
-    const key =
-      process.env.SPORTS_API_KEY || '1623448fdc7994a7c7ce329610618cf4';
-    const headers = this.getHeaders();
-
     console.log(`[API-Football] Requesting Team Profile details for ID: ${id}`);
 
     try {
       // 1. Fetch team meta details
-      const teamUrl = `https://v3.football.api-sports.io/teams?id=${id}`;
-      const teamRes = await fetch(teamUrl, { method: 'GET', headers });
-      if (!teamRes.ok)
-        throw new Error(`Teams API failed: status ${teamRes.status}`);
-
-      const teamData = await teamRes.json();
+      const teamData = await this.apiFootballClient.getTeamProfile(teamId);
       const teamResults = teamData.response || [];
       if (teamResults.length === 0) {
         throw new HttpException(
@@ -524,22 +515,14 @@ export class FootballController {
       const venueInfo = teamResults[0].venue;
 
       // 2. Fetch last 5 recent results
-      const recentUrl = `https://v3.football.api-sports.io/fixtures?team=${id}&last=5`;
-      const recentRes = await fetch(recentUrl, { method: 'GET', headers });
-      const recentData = recentRes.ok
-        ? await recentRes.json()
-        : { response: [] };
+      const recentData = await this.apiFootballClient.getTeamFixtures(teamId, 'last', 5).catch(() => ({ response: [] }));
       const rawRecent = recentData.response || [];
       // Delegate map normalization to FootballNormalizerService
       const normalizedRecent =
         this.footballNormalizer.normalizeFixtures(rawRecent);
 
       // 3. Fetch next 5 upcoming games
-      const upcomingUrl = `https://v3.football.api-sports.io/fixtures?team=${id}&next=5`;
-      const upcomingRes = await fetch(upcomingUrl, { method: 'GET', headers });
-      const upcomingData = upcomingRes.ok
-        ? await upcomingRes.json()
-        : { response: [] };
+      const upcomingData = await this.apiFootballClient.getTeamFixtures(teamId, 'next', 5).catch(() => ({ response: [] }));
       const rawUpcoming = upcomingData.response || [];
       // Delegate map normalization to FootballNormalizerService
       const normalizedUpcoming =
