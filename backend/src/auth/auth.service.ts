@@ -34,7 +34,7 @@ export class AuthService {
     });
 
     // Generate JWT
-    const token = this.jwtService.sign({ sub: user.id, email: user.email });
+    const token = this.jwtService.sign({ sub: user.id, email: user.email, role: user.role });
 
     return {
       token,
@@ -43,6 +43,7 @@ export class AuthService {
         email: user.email,
         name: user.name,
         isAdmin: user.isAdmin,
+        role: user.role,
       },
     };
   }
@@ -65,7 +66,7 @@ export class AuthService {
     }
 
     // Generate JWT
-    const token = this.jwtService.sign({ sub: user.id, email: user.email });
+    const token = this.jwtService.sign({ sub: user.id, email: user.email, role: user.role });
 
     return {
       token,
@@ -74,6 +75,7 @@ export class AuthService {
         email: user.email,
         name: user.name,
         isAdmin: user.isAdmin,
+        role: user.role,
       },
     };
   }
