@@ -7,6 +7,7 @@ import { NightlySyncCronService } from './cron/nightly-sync.cron';
 import { MomentumService } from './momentum.service';
 import { FootballController } from './football.controller';
 import { PrismaService } from '../prisma/prisma.service';
+import { LiveScoreGateway } from '../gateway/live-score.gateway';
 
 @Module({
   controllers: [FootballController],
@@ -17,6 +18,7 @@ import { PrismaService } from '../prisma/prisma.service';
     NightlySyncCronService,
     MomentumService,
     PrismaService,
+    LiveScoreGateway,
     {
       provide: 'REDIS_CLIENT',
       useFactory: () => {
@@ -36,6 +38,7 @@ import { PrismaService } from '../prisma/prisma.service';
     LiveSyncCronService,
     NightlySyncCronService,
     MomentumService,
+    LiveScoreGateway,
     'REDIS_CLIENT',
   ],
 })

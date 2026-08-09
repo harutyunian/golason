@@ -18,6 +18,6 @@ import { NewsModule } from './news/news.module';
     NewsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, LiveScoreGateway, PrismaService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}

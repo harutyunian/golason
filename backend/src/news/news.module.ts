@@ -5,9 +5,10 @@ import { NewsCommentsController } from './news-comments.controller';
 import { NewsCommentsService } from './news-comments.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthModule } from '../auth/auth.module';
+import { SportsModule } from '../sports/sports.module';
 
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, SportsModule],
   controllers: [NewsController, NewsCommentsController],
   providers: [NewsService, NewsCommentsService, PrismaService],
 })
