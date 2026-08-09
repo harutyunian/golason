@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { getApiBaseUrl } from '@/utils/api';
 
 export interface User {
   id: number;
@@ -53,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     setError(null);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:3001';
+      const apiBase = getApiBaseUrl();
       const res = await fetch(`${apiBase}/auth/login`, {
         method: 'POST',
         headers: {
@@ -86,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     setError(null);
     try {
-      const apiBase = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:3001';
+      const apiBase = getApiBaseUrl();
       const res = await fetch(`${apiBase}/auth/register`, {
         method: 'POST',
         headers: {

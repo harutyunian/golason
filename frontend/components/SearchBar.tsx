@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Loader2, X, Trophy } from "lucide-react";
 import SearchResultItem from "./SearchResultItem";
+import { getApiBaseUrl } from "@/utils/api";
 import styles from "./SearchBar.module.css";
 
 interface SearchItem {
@@ -47,7 +48,7 @@ export default function SearchBar() {
     setLoading(true);
     const delayDebounce = setTimeout(async () => {
       try {
-        const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:3001";
+        const apiBase = getApiBaseUrl();
         const res = await fetch(`${apiBase}/football/search?q=${encodeURIComponent(query)}`);
         if (res.ok) {
           const data = await res.json();

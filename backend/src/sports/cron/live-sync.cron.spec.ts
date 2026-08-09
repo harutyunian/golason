@@ -3,6 +3,7 @@ import { LiveSyncCronService } from './live-sync.cron';
 import { ApiFootballClientService } from '../api-football-client.service';
 import { FootballNormalizerService } from '../football-normalizer.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { LiveScoreGateway } from '../../gateway/live-score.gateway';
 
 describe('LiveSyncCronService', () => {
   let service: LiveSyncCronService;
@@ -68,6 +69,8 @@ describe('LiveSyncCronService', () => {
     }).compile();
 
     service = module.get<LiveSyncCronService>(LiveSyncCronService);
+    // Simulate at least one active client in the tests to test the main execution path
+    LiveScoreGateway.activeClients = 1;
   });
 
   it('should be defined', () => {
@@ -75,6 +78,15 @@ describe('LiveSyncCronService', () => {
   });
 
   describe('handleLiveSync', () => {
+    it('should skip execution if there are 0 active connected clients', async () => {
+      LiveScoreGateway.activeClients = 0;
+
+      await service.handleLiveSync();
+
+      expect(mockRedis.set).not.toHaveBeenCalled();
+      expect(mockApiFootballClient.getLiveFixtures).not.toHaveBeenCalled();
+    });
+
     it('should skip execution if Redis lock is already held', async () => {
       mockRedis.set.mockResolvedValue(null);
 

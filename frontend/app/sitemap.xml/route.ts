@@ -49,7 +49,7 @@ export async function GET() {
 
   // 2. Attempt to dynamically fetch and enrich from backend APIs
   try {
-    const apiBase = process.env.BACKEND_INTERNAL_URL || "http://127.0.0.1:3001";
+    const apiBase = process.env.BACKEND_INTERNAL_URL || "http://golason-backend:3001";
 
     const fetchWithTimeout = async (url: string, timeout = 1500) => {
       const controller = new AbortController();

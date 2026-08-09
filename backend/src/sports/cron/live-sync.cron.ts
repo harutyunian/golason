@@ -4,6 +4,7 @@ import Redis from 'ioredis';
 import { ApiFootballClientService } from '../api-football-client.service';
 import { FootballNormalizerService } from '../football-normalizer.service';
 import { PrismaService } from '../../prisma/prisma.service';
+import { LiveScoreGateway } from '../../gateway/live-score.gateway';
 
 @Injectable()
 export class LiveSyncCronService implements OnModuleDestroy {
@@ -32,6 +33,15 @@ export class LiveSyncCronService implements OnModuleDestroy {
 
   @Cron(CronExpression.EVERY_30_SECONDS)
   async handleLiveSync() {
+    // Optimization: Conserve external API-Football subscription quotas by skipping execution
+    // when there are no active connected users (WebSocket clients) currently browsing the app.
+    if (LiveScoreGateway.activeClients === 0) {
+      this.logger.log(
+        '[LiveSyncCron] 0 active WebSocket sessions. Skipping live scores API poll to conserve subscription quota.',
+      );
+      return;
+    }
+
     const lockKey = 'cron:live-sync:lock';
     const lockTtlMs = 20000; // 20 seconds TTL
 

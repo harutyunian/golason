@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { io, Socket } from "socket.io-client";
+import { getWsBaseUrl } from "@/utils/api";
 
 export const useWebSocket = (matchId: number, onUpdate: (match: any) => void) => {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -17,7 +18,7 @@ export const useWebSocket = (matchId: number, onUpdate: (match: any) => void) =>
 
   useEffect(() => {
     // Connect to the NestJS API server port (default 3001)
-    const socketInstance = io(process.env.NEXT_PUBLIC_WS_URL || "http://127.0.0.1:3001", {
+    const socketInstance = io(getWsBaseUrl(), {
       transports: ["websocket"], // Forces WebSocket connection instantly for maximum performance
     });
 
