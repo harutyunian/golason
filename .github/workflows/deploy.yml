@@ -27,6 +27,9 @@ jobs:
             # Rebuild and recreate containers
             docker compose up -d --build
             
+            # Reload Nginx proxy configuration to refresh upstream DNS mappings
+            docker exec pinterest-proxy-1 nginx -s reload
+            
             # Clean up dangling images to save disk space
             docker image prune -f
             
