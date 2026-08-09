@@ -58,7 +58,7 @@ describe('JwtAuthGuard', () => {
     );
   });
 
-  it('should verify token, attach request.user, and return true if verified', async () => {
+  it('should verify token, attach request.user with role, and return true if verified', async () => {
     const mockRequest = { headers: { authorization: 'Bearer good-token' }, user: null };
     const mockContext = {
       switchToHttp: () => ({
@@ -66,12 +66,12 @@ describe('JwtAuthGuard', () => {
       }),
     } as any as ExecutionContext;
 
-    mockJwtService.verifyAsync.mockResolvedValue({ sub: '42', email: 'john@example.com' });
+    mockJwtService.verifyAsync.mockResolvedValue({ sub: '42', email: 'john@example.com', role: 'ADMIN' });
 
     const result = await guard.canActivate(mockContext);
 
     expect(result).toBe(true);
     expect(mockJwtService.verifyAsync).toHaveBeenCalledWith('good-token', { secret: 'super-secret' });
-    expect(mockRequest.user).toEqual({ id: 42, email: 'john@example.com' });
+    expect(mockRequest.user).toEqual({ id: 42, email: 'john@example.com', role: 'ADMIN' });
   });
 });
