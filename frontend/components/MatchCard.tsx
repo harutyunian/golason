@@ -93,7 +93,7 @@ const TeamLogo = ({ logo, name }: { logo?: string | null; name: string }) => {
   }
 
   return (
-    <Image
+    <img
       src={logo}
       alt={`${name} Logo`}
       className={styles.logoImage}

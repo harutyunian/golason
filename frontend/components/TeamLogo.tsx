@@ -52,7 +52,7 @@ export default function TeamLogo({ logo, name, size = 60, className = "" }: Team
   }
 
   return (
-    <Image 
+    <img 
       src={logo} 
       alt={`${name} Logo`} 
       className={`${styles.logoImage} ${className}`}
