@@ -29,12 +29,18 @@ enum VoteChoice {
   AWAY
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
 model User {
   id        Int        @id @default(autoincrement())
   email     String     @unique
   password  String     // Hashed password
   name      String?
   isAdmin   Boolean    @default(false)
+  role      UserRole   @default(USER)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   favorites Bookmark[]
@@ -179,4 +185,15 @@ model Standing {
   lose       Int
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+}
+
+model NewsArticle {
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  summary   String
+  content   String   // Markdown text content
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
