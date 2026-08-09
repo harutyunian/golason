@@ -21,6 +21,7 @@
   -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory; /* Modern scroll snapping for mobile gesture fluidity */
 }
 
 /* Hide scrollbar for Chrome/Safari/Webkit */
@@ -40,6 +41,7 @@
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
   outline: none;
+  scroll-snap-align: center; /* Snaps card centermost on touch-dragging */
 }
 
 .dayCard:hover {
