@@ -9,6 +9,8 @@ import { LiveScoreGateway } from '../../gateway/live-score.gateway';
 @Injectable()
 export class LiveSyncCronService implements OnModuleDestroy {
   private readonly logger = new Logger(LiveSyncCronService.name);
+  private readonly syncedLeagues = new Set<number>();
+  private readonly syncedTeams = new Set<number>();
 
   constructor(
     @Inject('REDIS_CLIENT') private readonly redis: Redis,
@@ -91,52 +93,61 @@ export class LiveSyncCronService implements OnModuleDestroy {
       let successCount = 0;
       for (const match of normalizedMatches) {
         try {
-          // A. Upsert League dependency
-          await this.prisma.league.upsert({
-            where: { id: match.league.id },
-            update: {
-              name: match.league.name,
-              country: match.league.country,
-              logo: match.league.logo,
-            },
-            create: {
-              id: match.league.id,
-              name: match.league.name,
-              country: match.league.country,
-              logo: match.league.logo,
-              sport: 'FOOTBALL',
-            },
-          });
+          // A. Upsert League dependency if not already synced in memory
+          if (!this.syncedLeagues.has(match.league.id)) {
+            await this.prisma.league.upsert({
+              where: { id: match.league.id },
+              update: {
+                name: match.league.name,
+                country: match.league.country,
+                logo: match.league.logo,
+              },
+              create: {
+                id: match.league.id,
+                name: match.league.name,
+                country: match.league.country,
+                logo: match.league.logo,
+                sport: 'FOOTBALL',
+              },
+            });
+            this.syncedLeagues.add(match.league.id);
+          }
 
-          // B. Upsert Home Team dependency
-          await this.prisma.team.upsert({
-            where: { id: match.homeTeam.id },
-            update: {
-              name: match.homeTeam.name,
-              logo: match.homeTeam.logo,
-            },
-            create: {
-              id: match.homeTeam.id,
-              name: match.homeTeam.name,
-              logo: match.homeTeam.logo,
-              sport: 'FOOTBALL',
-            },
-          });
+          // B. Upsert Home Team dependency if not already synced in memory
+          if (!this.syncedTeams.has(match.homeTeam.id)) {
+            await this.prisma.team.upsert({
+              where: { id: match.homeTeam.id },
+              update: {
+                name: match.homeTeam.name,
+                logo: match.homeTeam.logo,
+              },
+              create: {
+                id: match.homeTeam.id,
+                name: match.homeTeam.name,
+                logo: match.homeTeam.logo,
+                sport: 'FOOTBALL',
+              },
+            });
+            this.syncedTeams.add(match.homeTeam.id);
+          }
 
-          // C. Upsert Away Team dependency
-          await this.prisma.team.upsert({
-            where: { id: match.awayTeam.id },
-            update: {
-              name: match.awayTeam.name,
-              logo: match.awayTeam.logo,
-            },
-            create: {
-              id: match.awayTeam.id,
-              name: match.awayTeam.name,
-              logo: match.awayTeam.logo,
-              sport: 'FOOTBALL',
-            },
-          });
+          // C. Upsert Away Team dependency if not already synced in memory
+          if (!this.syncedTeams.has(match.awayTeam.id)) {
+            await this.prisma.team.upsert({
+              where: { id: match.awayTeam.id },
+              update: {
+                name: match.awayTeam.name,
+                logo: match.awayTeam.logo,
+              },
+              create: {
+                id: match.awayTeam.id,
+                name: match.awayTeam.name,
+                logo: match.awayTeam.logo,
+                sport: 'FOOTBALL',
+              },
+            });
+            this.syncedTeams.add(match.awayTeam.id);
+          }
 
           // D. Upsert Match
           await this.prisma.match.upsert({
