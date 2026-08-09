@@ -264,7 +264,7 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
                   <div className={styles.leagueHeader}>
                     <span className={styles.leagueFlag} aria-hidden="true">
                       {isUrl(league.logo) ? (
-                        <Image src={league.logo} alt={`${league.name} Logo`} className={styles.leagueLogoImage} width={18} height={18} />
+                        <img src={league.logo} alt={`${league.name} Logo`} className={styles.leagueLogoImage} width={18} height={18} />
                       ) : (
                         league.logo
                       )}
@@ -318,7 +318,11 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
               {trendingLeagues.map((league) => (
                 <div key={league.name} className={styles.sidebarItem} role="link" tabIndex={0}>
                   <span className={styles.leagueFlag} aria-hidden="true">
-                    {league.logo}
+                    {isUrl(league.logo) ? (
+                      <img src={league.logo} alt={`${league.name} Logo`} className={styles.leagueLogoImage} width={18} height={18} />
+                    ) : (
+                      league.logo
+                    )}
                   </span>
                   <div className={styles.sidebarTextContainer}>
                     <span>{league.name}</span>
