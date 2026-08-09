@@ -91,7 +91,7 @@ export default async function Home({ searchParams }: PageProps) {
     // 2. Server-Side fetch matches for resolvedDate from our NestJS backend API
     const apiBase = process.env.BACKEND_INTERNAL_URL || "http://golason-backend:3001";
     const res = await fetch(`${apiBase}/football/fixtures?date=${resolvedDate}`, {
-      cache: "no-store", // Guarantees we never cache live scores on server component builds
+      next: { revalidate: 15 }, // Protect backend from spam with 15-second revalidation cache
       headers: {
         "Accept": "application/json",
       },

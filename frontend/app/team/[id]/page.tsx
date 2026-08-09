@@ -80,7 +80,7 @@ export default async function TeamProfilePage({ params }: TeamPageProps) {
   try {
     // 2. Fetch team profile details server-side from NestJS API endpoint
     const res = await fetch(`${apiBase}/football/teams/${teamId}`, {
-      cache: "no-store",
+      next: { revalidate: 3600 }, // Cache team profiles for 1 hour
     });
 
     if (res.ok) {
@@ -99,7 +99,7 @@ export default async function TeamProfilePage({ params }: TeamPageProps) {
 
   try {
     const standingsRes = await fetch(`${apiBase}/football/standings?league=${leagueId}&season=2026`, {
-      cache: "no-store",
+      next: { revalidate: 3600 }, // Cache standings for 1 hour
     });
 
     if (standingsRes.ok) {
