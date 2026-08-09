@@ -21,14 +21,26 @@ export class LiveScoreGateway
 
   private readonly logger = new Logger(LiveScoreGateway.name);
 
+  // Static tracking for active connected browser sessions to optimize background cron jobs
+  static activeClients = 0;
+
   constructor(private readonly momentumService: MomentumService) {}
 
   handleConnection(client: Socket) {
-    this.logger.log(`Client connected: ${client.id}`);
+    LiveScoreGateway.activeClients++;
+    this.logger.log(
+      `Client connected: ${client.id}. Total active users: ${LiveScoreGateway.activeClients}`,
+    );
   }
 
   handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`);
+    LiveScoreGateway.activeClients = Math.max(
+      0,
+      LiveScoreGateway.activeClients - 1,
+    );
+    this.logger.log(
+      `Client disconnected: ${client.id}. Total active users: ${LiveScoreGateway.activeClients}`,
+    );
   }
 
   broadcastMatchUpdate(updatedMatch: any) {
