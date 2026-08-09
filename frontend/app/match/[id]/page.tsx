@@ -1,4 +1,5 @@
 import React from "react";
+import type { Metadata } from "next";
 import MatchDetails from "./MatchDetails";
 import { MatchStatus } from "@/components/MatchCard";
 import { StandardMatchStats } from "@/components/MatchStats";
@@ -319,6 +320,46 @@ const getFallbackMatch = (idStr: string): StandardMatchWithDetails => {
 
   return mockMatches[matchId] || mockMatches[101];
 };
+
+export async function generateMetadata({ params }: MatchPageProps): Promise<Metadata> {
+  const resolvedParams = await params;
+  const matchId = resolvedParams.id;
+  
+  let title = "Match Live Scores & Stats | Golason";
+  let description = "Get real-time live score, statistics, lineups, and live momentum waves.";
+  
+  try {
+    const apiBase = process.env.BACKEND_INTERNAL_URL || "http://golason-backend:3001";
+    const res = await fetch(`${apiBase}/football/fixtures/${matchId}`, {
+      next: { revalidate: 10 }
+    });
+    if (res.ok) {
+      const match = await res.json();
+      title = `${match.homeTeam.name} vs ${match.awayTeam.name} Live Score, Stats & Lineups | Golason`;
+      description = `Get real-time live scores, match statistics, lineups, head-to-head records, and prediction polls for ${match.homeTeam.name} vs ${match.awayTeam.name} on Golason.`;
+    } else {
+      throw new Error("API responded with error code");
+    }
+  } catch (err) {
+    const fallbackMatch = getFallbackMatch(matchId);
+    title = `${fallbackMatch.homeTeam.name} vs ${fallbackMatch.awayTeam.name} Live Score, Stats & Lineups | Golason`;
+    description = `Get real-time live scores, match statistics, lineups, head-to-head records, and prediction polls for ${fallbackMatch.homeTeam.name} vs ${fallbackMatch.awayTeam.name} on Golason.`;
+  }
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/match/${matchId}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://golason.com/match/${matchId}`,
+      type: "website",
+    }
+  };
+}
 
 export default async function MatchProfilePage({ params }: MatchPageProps) {
   // 1. Resolve unified route parameters supporting both Next.js 14 & 15 architectures
