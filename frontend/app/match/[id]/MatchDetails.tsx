@@ -112,7 +112,7 @@ const TeamLogo = ({ logo, name }: { logo?: string | null; name: string }) => {
   }
 
   return (
-    <Image 
+    <img 
       src={logo} 
       alt={`${name} Logo`} 
       className={styles.logoImage} 
@@ -238,7 +238,7 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
         <div className={styles.leagueHeader}>
           <span className={styles.leagueFlag} aria-hidden="true">
             {isUrl(match.league.logo) ? (
-              <Image src={match.league.logo} alt={`${match.league.name} Logo`} className={styles.leagueLogoImage} width={20} height={20} />
+              <img src={match.league.logo} alt={`${match.league.name} Logo`} className={styles.leagueLogoImage} width={20} height={20} />
             ) : (
               match.league.logo
             )}
