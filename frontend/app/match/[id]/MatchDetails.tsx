@@ -13,6 +13,7 @@ import MatchH2H from "@/components/MatchH2H";
 import PlayerOfTheMatch from "@/components/PlayerOfTheMatch";
 import PredictionPoll from "@/components/PredictionPoll";
 import StandingsTable from "@/components/StandingsTable";
+import { getApiBaseUrl } from "@/utils/api";
 import TeamLink from "@/components/TeamLink";
 import styles from "./match.module.css";
 
@@ -143,7 +144,8 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
   useEffect(() => {
     if (activeTab === 'standings' && standings.length === 0 && !isLoadingStandings) {
       setIsLoadingStandings(true);
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://golason.com"}/football/standings?league=${match.league.id}&season=2026`)
+      const apiBase = getApiBaseUrl();
+      fetch(`${apiBase}/football/standings?league=${match.league.id}&season=2026`)
         .then(res => {
           if (res.ok) return res.json();
           throw new Error("Failed to fetch standings");

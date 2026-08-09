@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Info, Search, X } from "lucide-react";
+import { getApiBaseUrl } from "@/utils/api";
 import styles from "./PlayerAttributeOverview.module.css";
 
 interface Attributes {
@@ -129,7 +130,7 @@ export default function PlayerAttributeOverview({
     setSearchLoading(true);
     const delayDebounce = setTimeout(async () => {
       try {
-        const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://golason.com";
+        const apiBase = getApiBaseUrl();
         const res = await fetch(`${apiBase}/football/search?q=${encodeURIComponent(searchQuery)}`);
         if (res.ok) {
           const data = await res.json();
@@ -165,7 +166,7 @@ export default function PlayerAttributeOverview({
     setSearchResults([]);
 
     try {
-      const apiBase = process.env.NEXT_PUBLIC_API_URL || "https://golason.com";
+      const apiBase = getApiBaseUrl();
       const res = await fetch(`${apiBase}/football/players/${target.id}`);
       if (res.ok) {
         const playerDetails = await res.json();
