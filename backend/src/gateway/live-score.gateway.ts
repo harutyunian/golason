@@ -3,6 +3,7 @@ import {
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  SubscribeMessage,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
@@ -65,5 +66,21 @@ export class LiveScoreGateway
     }
 
     this.server.emit('match:update', updatedMatch);
+  }
+
+  @SubscribeMessage('subscribeNews')
+  handleSubscribeNews(client: Socket, payload: { articleId: number }) {
+    client.join(`news:${payload.articleId}`);
+    return { status: 'subscribed' };
+  }
+
+  @SubscribeMessage('unsubscribeNews')
+  handleUnsubscribeNews(client: Socket, payload: { articleId: number }) {
+    client.leave(`news:${payload.articleId}`);
+    return { status: 'unsubscribed' };
+  }
+
+  broadcastNewComment(articleId: number, commentPayload: any) {
+    this.server.to(`news:${articleId}`).emit('newComment', commentPayload);
   }
 }

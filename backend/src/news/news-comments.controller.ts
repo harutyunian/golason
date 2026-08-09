@@ -3,10 +3,14 @@ import type { Request } from 'express';
 import { NewsCommentsService } from './news-comments.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { AuthenticatedRequest } from '../auth/guards/jwt-auth.guard';
+import { LiveScoreGateway } from '../gateway/live-score.gateway';
 
 @Controller('football/news/:articleId/comments')
 export class NewsCommentsController {
-  constructor(private readonly commentsService: NewsCommentsService) {}
+  constructor(
+    private readonly commentsService: NewsCommentsService,
+    private readonly gateway: LiveScoreGateway,
+  ) {}
 
   @Get()
   async findTree(@Param('articleId', ParseIntPipe) articleId: number) {
@@ -21,7 +25,9 @@ export class NewsCommentsController {
     @Body('content') content: string
   ) {
     const userId = (req as unknown as AuthenticatedRequest).user.id;
-    return this.commentsService.createComment(articleId, userId, content);
+    const comment = await this.commentsService.createComment(articleId, userId, content);
+    this.gateway.broadcastNewComment(articleId, comment);
+    return comment;
   }
 
   @Post(':parentId/reply')
@@ -33,6 +39,8 @@ export class NewsCommentsController {
     @Body('content') content: string
   ) {
     const userId = (req as unknown as AuthenticatedRequest).user.id;
-    return this.commentsService.createReply(articleId, parentId, userId, content);
+    const reply = await this.commentsService.createReply(articleId, parentId, userId, content);
+    this.gateway.broadcastNewComment(articleId, reply);
+    return reply;
   }
 }
