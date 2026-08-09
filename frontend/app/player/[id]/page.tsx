@@ -1,4 +1,5 @@
 import React from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Shield, Award, Activity, FileText } from "lucide-react";
 import TeamLogo from "@/components/TeamLogo";
@@ -108,6 +109,46 @@ const getFallbackPlayerProfile = (idStr: string): PlayerProfile => {
     }
   };
 };
+
+export async function generateMetadata({ params }: PlayerPageProps): Promise<Metadata> {
+  const resolvedParams = await params;
+  const playerId = resolvedParams.id;
+  
+  let title = "Player Profile | Golason";
+  let description = "View professional soccer player statistics, ratings, and performance.";
+  
+  try {
+    const apiBase = process.env.BACKEND_INTERNAL_URL || "http://golason-backend:3001";
+    const res = await fetch(`${apiBase}/football/players/${playerId}`, {
+      next: { revalidate: 86400 }
+    });
+    if (res.ok) {
+      const player = await res.json();
+      title = `${player.name} Career Stats, Rating & Profile | Golason`;
+      description = `Get the latest career statistics, bio details, current team details, and SofaRating attributes for professional athlete ${player.name} on Golason.`;
+    } else {
+      throw new Error("API responded with error code");
+    }
+  } catch (err) {
+    const fallbackPlayer = getFallbackPlayerProfile(playerId);
+    title = `${fallbackPlayer.name} Career Stats, Rating & Profile | Golason`;
+    description = `Get the latest career statistics, bio details, current team details, and SofaRating attributes for professional athlete ${fallbackPlayer.name} on Golason.`;
+  }
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/player/${playerId}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://golason.com/player/${playerId}`,
+      type: "profile",
+    }
+  };
+}
 
 export default async function PlayerProfilePage({ params }: PlayerPageProps) {
   // 1. Resolve unified route parameters supporting both Next.js 14 & 15 architectures

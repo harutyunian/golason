@@ -98,6 +98,42 @@ export async function GET() {
     } catch (e) {
       console.warn('[Sitemap] Failed to fetch dynamic standings from backend, using core fallback', e);
     }
+
+    // 2.3 Fetch details of featured matches to extract active players for sitemap indexing
+    try {
+      for (const id of coreMatches) {
+        try {
+          const matchRes = await fetchWithTimeout(`${apiBase}/football/fixtures/${id}`);
+          if (matchRes.ok) {
+            const match = await matchRes.json();
+            if (match && match.lineups) {
+              const processLineup = (lineup: any) => {
+                if (lineup && Array.isArray(lineup.startXI)) {
+                  lineup.startXI.forEach((p: any) => {
+                    if (p && p.id) {
+                      addUrl(`/player/${p.id}`, 'weekly', 0.7);
+                    }
+                  });
+                }
+                if (lineup && Array.isArray(lineup.substitutes)) {
+                  lineup.substitutes.forEach((p: any) => {
+                    if (p && p.id) {
+                      addUrl(`/player/${p.id}`, 'weekly', 0.7);
+                    }
+                  });
+                }
+              };
+              processLineup(match.lineups.home);
+              processLineup(match.lineups.away);
+            }
+          }
+        } catch (e) {
+          console.warn(`[Sitemap] Failed to fetch dynamic players for match ID ${id}`, e);
+        }
+      }
+    } catch (e) {
+      console.warn('[Sitemap] Failed to discover dynamic players from matches', e);
+    }
   } catch (e) {
     console.error('[Sitemap] Failed to enrich sitemap with dynamic backend data', e);
   }

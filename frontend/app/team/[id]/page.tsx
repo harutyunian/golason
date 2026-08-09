@@ -1,4 +1,5 @@
 import React from "react";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, MapPin, Calendar, Building2, BarChart2 } from "lucide-react";
 import TeamLogo from "@/components/TeamLogo";
@@ -67,6 +68,46 @@ const getFallbackTeamProfile = (idStr: string): TeamProfile => {
     ]
   };
 };
+
+export async function generateMetadata({ params }: TeamPageProps): Promise<Metadata> {
+  const resolvedParams = await params;
+  const teamId = resolvedParams.id;
+  
+  let title = "Team Profile | Golason";
+  let description = "View football team profile, recent results, standings, and upcoming fixtures.";
+  
+  try {
+    const apiBase = process.env.BACKEND_INTERNAL_URL || "http://golason-backend:3001";
+    const res = await fetch(`${apiBase}/football/teams/${teamId}`, {
+      next: { revalidate: 3600 }
+    });
+    if (res.ok) {
+      const team = await res.json();
+      title = `${team.name} Profile, Live Scores, Table & Fixtures | Golason`;
+      description = `Get comprehensive coverage of ${team.name} including recent results, upcoming match schedules, live league table standings, and stadium facts on Golason.`;
+    } else {
+      throw new Error("API responded with error code");
+    }
+  } catch (err) {
+    const fallbackTeam = getFallbackTeamProfile(teamId);
+    title = `${fallbackTeam.name} Profile, Live Scores, Table & Fixtures | Golason`;
+    description = `Get comprehensive coverage of ${fallbackTeam.name} including recent results, upcoming match schedules, live league table standings, and stadium facts on Golason.`;
+  }
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `/team/${teamId}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `https://golason.com/team/${teamId}`,
+      type: "website",
+    }
+  };
+}
 
 export default async function TeamProfilePage({ params }: TeamPageProps) {
   // 1. Resolve unified route parameters supporting both Next.js 14 & 15 architectures

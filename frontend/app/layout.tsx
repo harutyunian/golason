@@ -25,9 +25,6 @@ export const metadata: Metadata = {
   },
   description:
     "Get real-time live sports scores, match statistics, lineups, head-to-head records, and prediction polls for soccer and other sports on Golason.",
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     title: {
       default: "Golason - Live Sports Scores & Real-Time Stats",

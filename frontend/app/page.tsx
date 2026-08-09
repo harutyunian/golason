@@ -1,8 +1,15 @@
 import React from "react";
+import type { Metadata } from "next";
 import DashboardFeed from "@/components/DashboardFeed";
 
 // Forces server-side dynamic rendering on runtime (vital for live scores and SEO!)
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
 
 interface SearchParams {
   date?: string;
