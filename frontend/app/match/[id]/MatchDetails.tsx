@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowLeft, Flame, Tv, Info, Sparkles, TrendingUp, Clock, MessageSquare } from "lucide-react";
 import { useWebSocket } from "@/hooks/useWebSocket";
 import { MatchStatus } from "@/components/MatchCard";
@@ -111,13 +112,13 @@ const TeamLogo = ({ logo, name }: { logo?: string | null; name: string }) => {
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img 
+    <Image 
       src={logo} 
       alt={`${name} Logo`} 
       className={styles.logoImage} 
+      width={90}
+      height={90}
       onError={() => setError(true)}
-      loading="lazy" 
     />
   );
 };
@@ -237,8 +238,7 @@ export default function MatchDetails({ initialMatch }: MatchDetailsProps) {
         <div className={styles.leagueHeader}>
           <span className={styles.leagueFlag} aria-hidden="true">
             {isUrl(match.league.logo) ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={match.league.logo} alt={`${match.league.name} Logo`} className={styles.leagueLogoImage} />
+              <Image src={match.league.logo} alt={`${match.league.name} Logo`} className={styles.leagueLogoImage} width={20} height={20} />
             ) : (
               match.league.logo
             )}

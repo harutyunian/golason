@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { Info, Search, X } from "lucide-react";
 import { getApiBaseUrl } from "@/utils/api";
 import styles from "./PlayerAttributeOverview.module.css";
@@ -373,10 +374,12 @@ export default function PlayerAttributeOverview({
         {comparedPlayer ? (
           <div className={styles.comparisonActiveBanner}>
             <div className={styles.comparisonMeta}>
-              <img
+              <Image
                 src={comparedPlayer.photo || "https://media.api-sports.io/football/players/placeholder.png"}
                 alt={comparedPlayer.name}
                 className={styles.dropdownPhoto}
+                width={32}
+                height={32}
               />
               <span>
                 Comparing with <span className={styles.comparisonTargetName}>{comparedPlayer.name}</span>
@@ -419,10 +422,12 @@ export default function PlayerAttributeOverview({
                         className={styles.dropdownItem}
                         onClick={() => handleSelectComparePlayer(p)}
                       >
-                        <img
+                        <Image
                           src={p.photo || "https://media.api-sports.io/football/players/placeholder.png"}
                           alt={p.name}
                           className={styles.dropdownPhoto}
+                          width={32}
+                          height={32}
                         />
                         <div className={styles.dropdownMeta}>
                           <span className={styles.dropdownName}>{p.name}</span>

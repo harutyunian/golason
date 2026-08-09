@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { AlertCircle } from "lucide-react";
 import TeamLogo from "./TeamLogo";
 import PlayerLink from "./PlayerLink";
@@ -219,8 +220,7 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                   {/* Round Photo circle frame with border colors */}
                   <div className={`${styles.avatarCircle} ${isGK ? styles.borderGK : styles.borderHome}`}>
                     {player.photo ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={player.photo} alt={player.name} className={styles.playerImg} />
+                      <Image src={player.photo} alt={player.name} className={styles.playerImg} width={48} height={48} />
                     ) : (
                       <div className={styles.imgPlaceholder}>{initials}</div>
                     )}
@@ -270,8 +270,7 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                   {/* Round Photo circle frame with border colors */}
                   <div className={`${styles.avatarCircle} ${isGK ? styles.borderGK : styles.borderAway}`}>
                     {player.photo ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={player.photo} alt={player.name} className={styles.playerImg} />
+                      <Image src={player.photo} alt={player.name} className={styles.playerImg} width={48} height={48} />
                     ) : (
                       <div className={styles.imgPlaceholder}>{initials}</div>
                     )}
@@ -308,8 +307,7 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
             <div className={styles.managerCard}>
               <div className={styles.managerPhotoWrapper}>
                 {lineups.home.coach.photo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={lineups.home.coach.photo} alt={lineups.home.coach.name} className={styles.managerImg} />
+                  <Image src={lineups.home.coach.photo} alt={lineups.home.coach.name} className={styles.managerImg} width={50} height={50} />
                 ) : (
                   <div className={styles.managerImgPlaceholder}>
                     {lineups.home.coach.name.substring(0, 2).toUpperCase()}
@@ -328,8 +326,7 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
             <div className={styles.managerCard}>
               <div className={styles.managerPhotoWrapper}>
                 {lineups.away.coach.photo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={lineups.away.coach.photo} alt={lineups.away.coach.name} className={styles.managerImg} />
+                  <Image src={lineups.away.coach.photo} alt={lineups.away.coach.name} className={styles.managerImg} width={50} height={50} />
                 ) : (
                   <div className={styles.managerImgPlaceholder}>
                     {lineups.away.coach.name.substring(0, 2).toUpperCase()}
@@ -358,8 +355,7 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                   <div className={styles.benchPlayerInfo}>
                     <div className={styles.benchAvatarWrap}>
                       {player.photo ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={player.photo} alt={player.name} className={styles.benchImg} />
+                        <Image src={player.photo} alt={player.name} className={styles.benchImg} width={32} height={32} />
                       ) : (
                         <div className={styles.benchImgPlaceholder}>{player.name.substring(0, 2).toUpperCase()}</div>
                       )}
@@ -388,8 +384,7 @@ export default function LineupPitch({ lineups, homeTeamName = "Home Team", awayT
                   <div className={styles.benchPlayerInfo}>
                     <div className={styles.benchAvatarWrap}>
                       {player.photo ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={player.photo} alt={player.name} className={styles.benchImg} />
+                        <Image src={player.photo} alt={player.name} className={styles.benchImg} width={32} height={32} />
                       ) : (
                         <div className={styles.benchImgPlaceholder}>{player.name.substring(0, 2).toUpperCase()}</div>
                       )}

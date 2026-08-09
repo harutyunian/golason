@@ -39,6 +39,7 @@ describe('FootballController', () => {
         ],
       }),
       getTeamProfile: jest.fn().mockResolvedValue({ response: [] }),
+      getTeamFixtures: jest.fn().mockResolvedValue({ response: [] }),
       getPlayerProfile: jest.fn().mockResolvedValue({ response: [] }),
       searchTeams: jest.fn().mockResolvedValue({ response: [] }),
       searchLeagues: jest.fn().mockResolvedValue({ response: [] }),
@@ -185,6 +186,100 @@ describe('FootballController', () => {
       const result = await controller.getStandings('39', '2026');
       expect(mockFootballNormalizer.normalizeStandings).toHaveBeenCalled();
       expect(Array.isArray(result)).toBe(true);
+    });
+  });
+
+  describe('getTeamProfile', () => {
+    it('should return cached team profile from Redis if available', async () => {
+      const cachedProfile = { id: 33, name: 'Manchester United' };
+      jest.spyOn(controller['redis'], 'get').mockResolvedValueOnce(JSON.stringify(cachedProfile));
+
+      const result = await controller.getTeamProfile('33');
+
+      expect(controller['redis'].get).toHaveBeenCalledWith('cache:team:33');
+      expect(mockApiFootballClient.getTeamProfile).not.toHaveBeenCalled();
+      expect(result).toEqual(cachedProfile);
+    });
+
+    it('should throw HttpException 404 if team profile is not found in API-Football', async () => {
+      jest.spyOn(controller['redis'], 'get').mockResolvedValueOnce(null);
+      mockApiFootballClient.getTeamProfile.mockResolvedValueOnce({ response: [] });
+
+      await expect(controller.getTeamProfile('999')).rejects.toThrow(
+        HttpException,
+      );
+    });
+
+    it('should fetch from API-Football, normalize fixtures, save to Redis, and return profile', async () => {
+      jest.spyOn(controller['redis'], 'get').mockResolvedValueOnce(null);
+      
+      const apiTeamResponse = {
+        response: [
+          {
+            team: {
+              id: 33,
+              name: 'Manchester United',
+              logo: 'logo-url',
+              founded: 1878,
+              country: 'England',
+            },
+            venue: {
+              name: 'Old Trafford',
+              city: 'Manchester',
+            },
+          },
+        ],
+      };
+
+      mockApiFootballClient.getTeamProfile.mockResolvedValueOnce(apiTeamResponse);
+
+      const getTeamFixturesSpy = jest
+        .spyOn(mockApiFootballClient, 'getTeamFixtures')
+        .mockImplementation((teamId, type, count) => {
+          if (type === 'last') {
+            return Promise.resolve({
+              response: [{ fixture: { id: 201 } }],
+            });
+          }
+          if (type === 'next') {
+            return Promise.resolve({
+              response: [{ fixture: { id: 301 } }],
+            });
+          }
+          return Promise.resolve({ response: [] });
+        });
+
+      mockFootballNormalizer.normalizeFixtures.mockImplementation((fixtures: any[]) => {
+        return fixtures.map(f => ({ id: f.fixture.id }));
+      });
+
+      const redisSetSpy = jest.spyOn(controller['redis'], 'set').mockResolvedValueOnce('OK');
+
+      const result = await controller.getTeamProfile('33');
+
+      expect(mockApiFootballClient.getTeamProfile).toHaveBeenCalledWith(33);
+      expect(getTeamFixturesSpy).toHaveBeenCalledWith(33, 'last', 5);
+      expect(getTeamFixturesSpy).toHaveBeenCalledWith(33, 'next', 5);
+      expect(mockFootballNormalizer.normalizeFixtures).toHaveBeenCalledTimes(2);
+
+      expect(redisSetSpy).toHaveBeenCalledWith(
+        'cache:team:33',
+        expect.any(String),
+        'EX',
+        43200,
+      );
+
+      expect(result).toEqual({
+        id: 33,
+        name: 'Manchester United',
+        logo: 'logo-url',
+        founded: 1878,
+        venueName: 'Old Trafford',
+        venueCity: 'Manchester',
+        country: 'England',
+        recentMatches: [{ id: 201 }],
+        upcomingMatches: [{ id: 301 }],
+      });
     });
   });
 });
