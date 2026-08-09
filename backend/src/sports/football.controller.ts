@@ -192,6 +192,18 @@ export class FootballController {
     { data: StandardStandingWithTeam[]; expiresAt: number }
   >();
 
+  // Controller-level cache for player profiles to protect API rate limits against search engine crawls
+  private readonly playerCache = new Map<
+    number,
+    { data: any; expiresAt: number }
+  >();
+
+  // Controller-level cache for team profiles (saves 3 API requests per page load!)
+  private readonly teamCache = new Map<
+    number,
+    { data: any; expiresAt: number }
+  >();
+
   constructor(
     private readonly apiFootballClient: ApiFootballClientService,
     private readonly footballNormalizer: FootballNormalizerService,
@@ -476,6 +488,18 @@ export class FootballController {
 
   @Get('teams/:id')
   async getTeamProfile(@Param('id') id: string): Promise<any> {
+    const teamId = Number(id);
+    const now = Date.now();
+
+    // 1. Check in-memory cache first to protect API quota against bot crawlers
+    const cached = this.teamCache.get(teamId);
+    if (cached && cached.expiresAt > now) {
+      console.log(
+        `[Controller Cache HIT] Serving Team ID ${teamId} from in-memory cache.`,
+      );
+      return cached.data;
+    }
+
     const key =
       process.env.SPORTS_API_KEY || '1623448fdc7994a7c7ce329610618cf4';
     const headers = this.getHeaders();
@@ -527,7 +551,7 @@ export class FootballController {
         `[API-Football] Successfully compiled profile for team ID: ${id} (${teamInfo.name})`,
       );
 
-      return {
+      const result = {
         id: teamInfo.id,
         name: teamInfo.name,
         logo: teamInfo.logo,
@@ -538,6 +562,14 @@ export class FootballController {
         recentMatches: normalizedRecent,
         upcomingMatches: normalizedUpcoming,
       };
+
+      // Save to cache for 12 hours (43,200,000 ms)
+      this.teamCache.set(teamId, {
+        data: result,
+        expiresAt: now + 43200000,
+      });
+
+      return result;
     } catch (err) {
       console.error(
         `[API-Football] Failed lookup for team ID: ${id}:`,
@@ -623,8 +655,19 @@ export class FootballController {
 
   @Get('players/:id')
   async getPlayerProfile(@Param('id') id: string): Promise<any> {
-    const headers = this.getHeaders();
     const playerId = Number(id);
+    const now = Date.now();
+
+    // 1. Check in-memory cache first to protect API quota against bot crawlers
+    const cached = this.playerCache.get(playerId);
+    if (cached && cached.expiresAt > now) {
+      console.log(
+        `[Controller Cache HIT] Serving Player ID ${playerId} from in-memory cache.`,
+      );
+      return cached.data;
+    }
+
+    const headers = this.getHeaders();
 
     console.log(
       `[API-Football] Requesting Player Profile details for ID: ${playerId}`,
@@ -648,6 +691,13 @@ export class FootballController {
       console.log(
         `[API-Football] Successfully fetched and normalized player profile for ID: ${playerId} (${mapped.name})`,
       );
+
+      // Save to cache for 24 hours (86,400,000 ms)
+      this.playerCache.set(playerId, {
+        data: mapped,
+        expiresAt: now + 86400000,
+      });
+
       return mapped;
     } catch (err) {
       console.error(
