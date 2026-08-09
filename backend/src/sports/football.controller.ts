@@ -26,10 +26,122 @@ export interface StandardMatchWithDetails extends StandardMatch {
   awayTeam: StandardTeam;
 }
 
+const calculatePlayerAttributes = (rawStats: any, playerId: number) => {
+  const position = rawStats.games?.position || 'Midfielder';
+
+  // Baseline values based on position
+  let attBase = 45;
+  let tecBase = 50;
+  let tacBase = 48;
+  let defBase = 40;
+  let creBase = 45;
+
+  if (position === 'Attacker') {
+    attBase = 68;
+    tecBase = 62;
+    tacBase = 44;
+    defBase = 28;
+    creBase = 55;
+  } else if (position === 'Midfielder') {
+    attBase = 52;
+    tecBase = 65;
+    tacBase = 58;
+    defBase = 46;
+    creBase = 68;
+  } else if (position === 'Defender') {
+    attBase = 32;
+    tecBase = 48;
+    tacBase = 65;
+    defBase = 72;
+    creBase = 38;
+  } else if (position === 'Goalkeeper') {
+    attBase = 15;
+    tecBase = 35;
+    tacBase = 70;
+    defBase = 80;
+    creBase = 20;
+  }
+
+  // Extract raw stats
+  const goals = rawStats.goals?.total || 0;
+  const assists = rawStats.goals?.assists || 0;
+  const shotsTotal = rawStats.shots?.total || 0;
+  const shotsOn = rawStats.shots?.on || 0;
+  const passesAccuracy = rawStats.passes?.accuracy || 70; // fallback to 70%
+  const passesKey = rawStats.passes?.key || 0;
+  const tackles = rawStats.tackles?.total || 0;
+  const blocks = rawStats.tackles?.blocks || 0;
+  const interceptions = rawStats.tackles?.interceptions || 0;
+  const duelsTotal = rawStats.duels?.total || 0;
+  const duelsWon = rawStats.duels?.won || 0;
+  const dribblesAttempts = rawStats.dribbles?.attempts || 0;
+  const dribblesSuccess = rawStats.dribbles?.success || 0;
+  const foulsCommitted = rawStats.fouls?.committed || 0;
+
+  // Compute calculated metrics
+  const shotAccuracyFactor = shotsTotal > 0 ? (shotsOn / shotsTotal) * 10 : 0;
+  const duelSuccessFactor = duelsTotal > 0 ? (duelsWon / duelsTotal) * 10 : 5;
+  const dribbleSuccessFactor =
+    dribblesAttempts > 0 ? (dribblesSuccess / dribblesAttempts) * 10 : 5;
+
+  // Let's make sure the ID has a deterministic randomizing factor so different players have distinct, unique attributes
+  const hash = (playerId * 17) % 25; // range 0 to 24
+  const offsetAtt = (hash % 7) - 3; // -3 to 3
+  const offsetTec = ((hash + 3) % 7) - 3;
+  const offsetTac = ((hash + 6) % 7) - 3;
+  const offsetDef = ((hash + 9) % 7) - 3;
+  const offsetCre = ((hash + 12) % 7) - 3;
+
+  // Formulas
+  let att =
+    attBase + goals * 1.5 + shotsOn * 0.5 + shotAccuracyFactor + offsetAtt;
+  let tec =
+    tecBase +
+    (passesAccuracy - 70) * 0.4 +
+    dribblesSuccess * 0.5 +
+    dribbleSuccessFactor +
+    offsetTec;
+  let tac =
+    tacBase +
+    interceptions * 0.8 +
+    blocks * 1.0 +
+    duelSuccessFactor * 0.5 -
+    foulsCommitted * 0.2 +
+    offsetTac;
+  let def =
+    defBase + tackles * 0.8 + interceptions * 0.8 + blocks * 1.2 + offsetDef;
+  let cre =
+    creBase +
+    assists * 2.0 +
+    passesKey * 0.6 +
+    (passesAccuracy - 70) * 0.3 +
+    offsetCre;
+
+  // Goalkeeper specific overrides
+  if (position === 'Goalkeeper') {
+    const saves = rawStats.goals?.saves || 0;
+    const conceded = rawStats.goals?.conceded || 0;
+    def = defBase + saves * 1.2 - conceded * 0.4 + offsetDef;
+    tac = tacBase + saves * 0.5 + offsetTac;
+  }
+
+  // Clamp values between 30 and 99
+  const clamp = (val: number) => Math.min(99, Math.max(30, Math.round(val)));
+
+  return {
+    att: clamp(att),
+    tec: clamp(tec),
+    tac: clamp(tac),
+    def: clamp(def),
+    cre: clamp(cre),
+  };
+};
+
 const mapApiFootballToStandardPlayer = (raw: any) => {
   const player = raw.player;
   const statsList = raw.statistics || [];
   const mainStats = statsList[0] || {};
+  const attributes = calculatePlayerAttributes(mainStats, player.id);
 
   return {
     id: player.id,
@@ -48,6 +160,7 @@ const mapApiFootballToStandardPlayer = (raw: any) => {
     rating: mainStats.games?.rating ? parseFloat(mainStats.games.rating) : null,
     jerseyNumber: mainStats.games?.number || null,
     foot: player.id % 2 === 0 ? 'Right' : 'Left', // Fallback preferred foot calculation based on ID parity
+    attributes,
     stats: {
       matches: {
         played: mainStats.games?.appearences || 0,
