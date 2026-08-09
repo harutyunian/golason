@@ -165,8 +165,8 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
   });
 
   const trendingLeagues = [
-    { name: "Premier League", country: "England", logo: "🇬🇧", rank: 1 },
-    { name: "La Liga", country: "Spain", logo: "🇪🇸", rank: 2 },
+    { name: "Premier League", country: "England", logo: "https://media.api-sports.io/football/leagues/39.png", rank: 1 },
+    { name: "La Liga", country: "Spain", logo: "https://media.api-sports.io/football/leagues/140.png", rank: 2 },
     { name: "Serie A", country: "Italy", logo: "🇮🇹", rank: 3 },
     { name: "Bundesliga", country: "Germany", logo: "🇩🇪", rank: 4 },
     { name: "Ligue 1", country: "France", logo: "🇫🇷", rank: 5 },

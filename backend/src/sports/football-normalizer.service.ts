@@ -492,7 +492,7 @@ export class FootballNormalizerService {
           id: 2,
           name: 'La Liga',
           country: 'Spain',
-          logo: '🇪🇸',
+          logo: 'https://media.api-sports.io/football/leagues/140.png',
           sport: 'FOOTBALL',
         },
         homeTeam: {
@@ -591,7 +591,7 @@ export class FootballNormalizerService {
           id: 2,
           name: 'La Liga',
           country: 'Spain',
-          logo: '🇪🇸',
+          logo: 'https://media.api-sports.io/football/leagues/140.png',
           sport: 'FOOTBALL',
         },
         homeTeam: {
