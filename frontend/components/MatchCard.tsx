@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Star } from 'lucide-react';
 import TeamLink from './TeamLink';
 import styles from './MatchCard.module.css';
@@ -92,13 +93,13 @@ const TeamLogo = ({ logo, name }: { logo?: string | null; name: string }) => {
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <Image
       src={logo}
       alt={`${name} Logo`}
       className={styles.logoImage}
+      width={22}
+      height={22}
       onError={() => setError(true)}
-      loading="lazy"
     />
   );
 };

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { Trophy, Star, Flame, Award } from "lucide-react";
 import AdBanner from "@/components/AdBanner";
@@ -216,8 +217,7 @@ export default function DashboardFeed({ initialMatches, selectedDate }: Dashboar
                   <div className={styles.leagueHeader}>
                     <span className={styles.leagueFlag} aria-hidden="true">
                       {isUrl(league.logo) ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={league.logo} alt={`${league.name} Logo`} className={styles.leagueLogoImage} />
+                        <Image src={league.logo} alt={`${league.name} Logo`} className={styles.leagueLogoImage} width={18} height={18} />
                       ) : (
                         league.logo
                       )}

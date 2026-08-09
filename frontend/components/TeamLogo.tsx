@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import styles from "./TeamLogo.module.css";
 
 export interface TeamLogoProps {
@@ -51,17 +52,17 @@ export default function TeamLogo({ logo, name, size = 60, className = "" }: Team
   }
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img 
+    <Image 
       src={logo} 
       alt={`${name} Logo`} 
       className={`${styles.logoImage} ${className}`}
-      style={{ width: `${size}px`, height: `${size}px`, objectFit: "contain" }}
+      width={size}
+      height={size}
+      style={{ objectFit: "contain" }}
       onError={() => {
         console.warn(`[TeamLogo] Failed to load logo image: ${logo}. Triggering initials fallback for: ${name}`);
         setError(true);
       }}
-      loading="lazy" 
     />
   );
 }
