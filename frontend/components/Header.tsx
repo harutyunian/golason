@@ -52,10 +52,17 @@ export default function Header() {
 
   const navLinks = [
     { label: "Scores", href: "/" },
+    { label: "News", href: "/news" },
     { label: "Leagues", href: "/" },
     { label: "Favorites", href: "/" },
     { label: "Predictor", href: "/" },
   ];
+
+  // Dynamically append Admin Dashboard link if user is ADMIN
+  const isAdmin = user && ((user as any).role === "ADMIN" || user.isAdmin === true);
+  if (isAdmin) {
+    navLinks.push({ label: "Admin Panel", href: "/admin" });
+  }
 
   return (
     <header className={styles.header}>

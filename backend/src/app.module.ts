@@ -7,6 +7,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { SportsModule } from './sports/sports.module';
 import { AuthModule } from './auth/auth.module';
 import { BookmarksModule } from './bookmarks/bookmarks.module';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [
@@ -14,8 +15,9 @@ import { BookmarksModule } from './bookmarks/bookmarks.module';
     SportsModule,
     AuthModule,
     BookmarksModule,
+    NewsModule,
   ],
   controllers: [AppController],
-  providers: [AppService, LiveScoreGateway, PrismaService],
+  providers: [AppService, PrismaService],
 })
 export class AppModule {}
