@@ -4,6 +4,7 @@ import Script from "next/script";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
+import YandexMetrika from "@/components/YandexMetrika";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -91,6 +92,7 @@ export default function RootLayout({
       <body>
         <AuthProvider>
           <Header />
+          <YandexMetrika />
           {children}
           <Footer />
         </AuthProvider>
@@ -106,7 +108,7 @@ export default function RootLayout({
             })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=111230462', 'ym');
 
             ym(111230462, 'init', {
-              ssr: true,
+              defer: true,
               clickmap: true,
               ecommerce: "dataLayer",
               referrer: document.referrer,
