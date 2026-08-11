@@ -10,6 +10,7 @@ describe('LiveSyncCronService', () => {
   let mockApiFootballClient: Record<string, jest.Mock>;
   let mockFootballNormalizer: Record<string, jest.Mock>;
   let mockRedis: Record<string, jest.Mock>;
+  let mockLiveScoreGateway: Record<string, jest.Mock>;
   let mockPrismaService: {
     league: { upsert: jest.Mock };
     team: { upsert: jest.Mock };
@@ -29,9 +30,14 @@ describe('LiveSyncCronService', () => {
 
     mockRedis = {
       on: jest.fn(),
+      get: jest.fn().mockResolvedValue(null),
       set: jest.fn(),
       del: jest.fn(),
       quit: jest.fn(),
+    };
+
+    mockLiveScoreGateway = {
+      broadcastMatchUpdate: jest.fn(),
     };
 
     mockPrismaService = {
@@ -65,6 +71,10 @@ describe('LiveSyncCronService', () => {
           provide: PrismaService,
           useValue: mockPrismaService,
         },
+        {
+          provide: LiveScoreGateway,
+          useValue: mockLiveScoreGateway,
+        },
       ],
     }).compile();
 
@@ -92,7 +102,7 @@ describe('LiveSyncCronService', () => {
 
       await service.handleLiveSync();
 
-      expect(mockRedis.set).toHaveBeenCalledWith('cron:live-sync:lock', 'locked', 'PX', 20000, 'NX');
+      expect(mockRedis.set).toHaveBeenCalledWith('cron:live-sync:lock', 'locked', 'PX', 45000, 'NX');
       expect(mockApiFootballClient.getLiveFixtures).not.toHaveBeenCalled();
     });
 
@@ -148,7 +158,7 @@ describe('LiveSyncCronService', () => {
 
       await service.handleLiveSync();
 
-      expect(mockRedis.set).toHaveBeenCalledWith('cron:live-sync:lock', 'locked', 'PX', 20000, 'NX');
+      expect(mockRedis.set).toHaveBeenCalledWith('cron:live-sync:lock', 'locked', 'PX', 45000, 'NX');
       expect(mockFootballNormalizer.normalizeFixtures).toHaveBeenCalledWith(mockRawResponse.response);
 
       expect(mockPrismaService.league.upsert).toHaveBeenCalledWith({

@@ -303,6 +303,20 @@ export class FootballController {
     }
   }
 
+  @Get('fixtures/live')
+  async getLiveFixtures(): Promise<StandardMatchWithDetails[]> {
+    try {
+      const cached = await this.redis.get('live:fixtures');
+      if (cached) {
+        return JSON.parse(cached);
+      }
+      return [];
+    } catch (err: any) {
+      console.error(`[FootballController] Failed to retrieve cached live matches: ${err.message}`);
+      return [];
+    }
+  }
+
   @Get('fixtures')
   async getFixtures(
     @Query('date') date?: string,
