@@ -184,6 +184,7 @@ export default function MatchCard({
         href={`/match/${resolvedId}`}
         className={styles.cardOverlay}
         aria-label="View match details"
+        prefetch={false}
       />
 
       {/* Left Section: Time/Status */}

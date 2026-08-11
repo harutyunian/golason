@@ -380,8 +380,18 @@ export class FootballController {
     @Param('id') id: string,
   ): Promise<StandardMatchWithDetails> {
     const numericId = Number(id);
+    const cacheKey = `match:details:${numericId}`;
 
     try {
+      // Check Redis cache first!
+      const cachedMatchStr = await this.redis.get(cacheKey);
+      if (cachedMatchStr) {
+        console.log(
+          `[Redis HIT] Serving Match ID ${numericId} from Redis cache.`
+        );
+        return JSON.parse(cachedMatchStr);
+      }
+
       // 1. Check database first!
       const dbMatch = await this.prisma.match.findUnique({
         where: { id: numericId },
@@ -461,8 +471,22 @@ export class FootballController {
         )
       };
 
-      // Async caching into database
-      this.saveMatchToDatabase(normalized);
+      // Async caching into database and Redis cache
+      Promise.all([
+        this.saveMatchToDatabase(normalized),
+        // Cache in Redis! If it is LIVE, cache for 15 seconds. If SCHEDULED/FINISHED, cache for 5 minutes (300 seconds)!
+        this.redis.set(
+          cacheKey,
+          JSON.stringify(normalized),
+          'EX',
+          normalized.status === 'LIVE' || normalized.status === 'HALFTIME' ? 15 : 300,
+        ),
+      ]).catch((err) => {
+        console.error(
+          `[FootballController] Background match save/cache failed for ID ${normalized.id}:`,
+          err.message,
+        );
+      });
 
       return normalized;
     } catch (err: any) {
